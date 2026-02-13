@@ -34,8 +34,8 @@ import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.util.ExpressionUtils;
+import net.sf.jasperreports.charts.JRChartPlot;
 import net.sf.jasperreports.charts.design.JRDesignBar3DPlot;
-import net.sf.jasperreports.engine.JRChartPlot;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 public class Bar3DPlot extends AbstractCategoryAxisPlot {
@@ -79,7 +79,7 @@ public class Bar3DPlot extends AbstractCategoryAxisPlot {
 	public Double getYOffset() {
 		return yOffset;
 	}
-	
+
 	/**
 	 * Sets the labels visibility.
 	 *
@@ -97,72 +97,87 @@ public class Bar3DPlot extends AbstractCategoryAxisPlot {
 	public Boolean getShowLabels() {
 		return showLabels;
 	}
-	
+
 	public void transform(DynamicJasperDesign design, JRChartPlot plot, String name) {
 		super.transform(design, plot, name);
-		JRDesignBar3DPlot barPlot = (JRDesignBar3DPlot) plot;
+		final JRDesignBar3DPlot barPlot = (JRDesignBar3DPlot) plot;
 
-		StringExpression categoryAxisLabelExp = getCategoryAxisFormat().getLabelExpression();
+		final StringExpression categoryAxisLabelExp = getCategoryAxisFormat().getLabelExpression();
 		if (categoryAxisLabelExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisLabel_" + name, categoryAxisLabelExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisLabel_" + name, categoryAxisLabelExp);
 			barPlot.setCategoryAxisLabelExpression(exp);
 		}
-		if (getCategoryAxisFormat().getTickLabelMask() != null) 
-			barPlot.setCategoryAxisTickLabelMask(getCategoryAxisFormat().getTickLabelMask());	
-		if (getCategoryAxisFormat().getLabelColor() != null)
-			barPlot.setCategoryAxisLabelColor(getCategoryAxisFormat().getLabelColor());
-		if (getCategoryAxisFormat().getLabelFont() != null)
-			barPlot.setCategoryAxisLabelFont(getCategoryAxisFormat().getLabelFont().transform());
-		if (getCategoryAxisFormat().getLineColor() != null)
-			barPlot.setCategoryAxisLineColor(getCategoryAxisFormat().getLineColor());		
-		if (getCategoryAxisFormat().getTickLabelColor() != null)
-			barPlot.setCategoryAxisTickLabelColor(getCategoryAxisFormat().getTickLabelColor());
-		if (getCategoryAxisFormat().getTickLabelFont() != null)
-			barPlot.setCategoryAxisTickLabelFont(getCategoryAxisFormat().getTickLabelFont().transform());
-		CustomExpression categoryAxisRangeMinValueExp = getCategoryAxisFormat().getRangeMinValueExpression();
+		if (getCategoryAxisFormat().getTickLabelMask() != null) {
+            barPlot.setCategoryAxisTickLabelMask(getCategoryAxisFormat().getTickLabelMask());
+        }
+		if (getCategoryAxisFormat().getLabelColor() != null) {
+            barPlot.setCategoryAxisLabelColor(getCategoryAxisFormat().getLabelColor());
+        }
+		if (getCategoryAxisFormat().getLabelFont() != null) {
+            barPlot.setCategoryAxisLabelFont(getCategoryAxisFormat().getLabelFont().transform());
+        }
+		if (getCategoryAxisFormat().getLineColor() != null) {
+            barPlot.setCategoryAxisLineColor(getCategoryAxisFormat().getLineColor());
+        }
+		if (getCategoryAxisFormat().getTickLabelColor() != null) {
+            barPlot.setCategoryAxisTickLabelColor(getCategoryAxisFormat().getTickLabelColor());
+        }
+		if (getCategoryAxisFormat().getTickLabelFont() != null) {
+            barPlot.setCategoryAxisTickLabelFont(getCategoryAxisFormat().getTickLabelFont().transform());
+        }
+		final CustomExpression categoryAxisRangeMinValueExp = getCategoryAxisFormat().getRangeMinValueExpression();
 		if (categoryAxisRangeMinValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMinValue_" + name, categoryAxisRangeMinValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMinValue_" + name, categoryAxisRangeMinValueExp);
 			barPlot.setDomainAxisMinValueExpression(exp);
 		}
-		CustomExpression categoryAxisRangeMaxValueExp = getCategoryAxisFormat().getRangeMaxValueExpression();
+		final CustomExpression categoryAxisRangeMaxValueExp = getCategoryAxisFormat().getRangeMaxValueExpression();
 		if (categoryAxisRangeMaxValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMaxValue_" + name, categoryAxisRangeMaxValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMaxValue_" + name, categoryAxisRangeMaxValueExp);
 			barPlot.setDomainAxisMaxValueExpression(exp);
 		}
-		
-		StringExpression valueAxisLabelExp = getValueAxisFormat().getLabelExpression();
+
+		final StringExpression valueAxisLabelExp = getValueAxisFormat().getLabelExpression();
 		if (valueAxisLabelExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisLabel_" + name, valueAxisLabelExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisLabel_" + name, valueAxisLabelExp);
 			barPlot.setValueAxisLabelExpression(exp);
 		}
-		if (getValueAxisFormat().getTickLabelMask() != null) 
-			barPlot.setValueAxisTickLabelMask(getValueAxisFormat().getTickLabelMask());	
-		if (getValueAxisFormat().getLabelColor() != null)
-			barPlot.setValueAxisLabelColor(getValueAxisFormat().getLabelColor());
-		if (getValueAxisFormat().getLabelFont() != null)
-			barPlot.setValueAxisLabelFont(getValueAxisFormat().getLabelFont().transform());
-		if (getValueAxisFormat().getLineColor() != null)
-			barPlot.setValueAxisLineColor(getValueAxisFormat().getLineColor());		
-		if (getValueAxisFormat().getTickLabelColor() != null)
-			barPlot.setValueAxisTickLabelColor(getValueAxisFormat().getTickLabelColor());
-		if (getValueAxisFormat().getTickLabelFont() != null)
-			barPlot.setValueAxisTickLabelFont(getValueAxisFormat().getTickLabelFont().transform());
-		CustomExpression valueAxisRangeMinValueExp = getValueAxisFormat().getRangeMinValueExpression();
+		if (getValueAxisFormat().getTickLabelMask() != null) {
+            barPlot.setValueAxisTickLabelMask(getValueAxisFormat().getTickLabelMask());
+        }
+		if (getValueAxisFormat().getLabelColor() != null) {
+            barPlot.setValueAxisLabelColor(getValueAxisFormat().getLabelColor());
+        }
+		if (getValueAxisFormat().getLabelFont() != null) {
+            barPlot.setValueAxisLabelFont(getValueAxisFormat().getLabelFont().transform());
+        }
+		if (getValueAxisFormat().getLineColor() != null) {
+            barPlot.setValueAxisLineColor(getValueAxisFormat().getLineColor());
+        }
+		if (getValueAxisFormat().getTickLabelColor() != null) {
+            barPlot.setValueAxisTickLabelColor(getValueAxisFormat().getTickLabelColor());
+        }
+		if (getValueAxisFormat().getTickLabelFont() != null) {
+            barPlot.setValueAxisTickLabelFont(getValueAxisFormat().getTickLabelFont().transform());
+        }
+		final CustomExpression valueAxisRangeMinValueExp = getValueAxisFormat().getRangeMinValueExpression();
 		if (valueAxisRangeMinValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMinValue_" + name, valueAxisRangeMinValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMinValue_" + name, valueAxisRangeMinValueExp);
 			barPlot.setRangeAxisMinValueExpression(exp);
 		}
-		CustomExpression valueAxisRangeMaxValueExp = getValueAxisFormat().getRangeMaxValueExpression();
+		final CustomExpression valueAxisRangeMaxValueExp = getValueAxisFormat().getRangeMaxValueExpression();
 		if (valueAxisRangeMaxValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMaxValue_" + name, valueAxisRangeMaxValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMaxValue_" + name, valueAxisRangeMaxValueExp);
 			barPlot.setRangeAxisMaxValueExpression(exp);
 		}
-		
-		if (showLabels != null)
-			barPlot.setShowLabels(showLabels);
-		if (xOffset != null)
-			barPlot.setXOffset(xOffset);
-		if (yOffset != null)
-			barPlot.setYOffset(yOffset);
+
+		if (showLabels != null) {
+            barPlot.setShowLabels(showLabels);
+        }
+		if (xOffset != null) {
+            barPlot.setXOffset(xOffset);
+        }
+		if (yOffset != null) {
+            barPlot.setYOffset(yOffset);
+        }
 	}
 }

@@ -1,12 +1,13 @@
 package ar.com.fdvs.dj.core.layout;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import ar.com.fdvs.dj.util.Utils;
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Created by mamana on 1/4/16.
@@ -28,10 +29,11 @@ public class ExtendedListLayoutManager extends ListLayoutManager {
         int yOffset = 0;
 
         //If title is not present then subtitle will be ignored
-        if (getReport().getTitle() == null)
+        if (getReport().getTitle() == null) {
             return;
+        }
 
-        if (band != null && !getDesign().isTitleNewPage()){
+        if ((band != null) && !getDesign().isTitleNewPage()){
             //Title and subtitle comes afer the page header
             yOffset = band.getHeight();
 
@@ -43,14 +45,13 @@ public class ExtendedListLayoutManager extends ListLayoutManager {
             }
         }
 
-        JRDesignTextField title = new JRDesignTextField();
-        JRDesignExpression exp = new JRDesignExpression();
+        final JRDesignTextField title = new JRDesignTextField();
+        final JRDesignExpression exp = new JRDesignExpression();
         if (getReport().isTitleIsJrExpression()){
             exp.setText(getReport().getTitle());
         }else {
             exp.setText("\"" + Utils.escapeTextForExpression( getReport().getTitle()) + "\"");
         }
-        exp.setValueClass(String.class);
         title.setExpression(exp);
         title.setWidth(getReport().getOptions().getPrintableWidth());
         title.setHeight(getReport().getOptions().getTitleHeight());
@@ -61,11 +62,10 @@ public class ExtendedListLayoutManager extends ListLayoutManager {
         title.setStretchType( StretchTypeEnum.NO_STRETCH );
         band.addElement(title);
 
-        JRDesignTextField subtitle = new JRDesignTextField();
+        final JRDesignTextField subtitle = new JRDesignTextField();
         if (getReport().getSubtitle() != null) {
-            JRDesignExpression exp2 = new JRDesignExpression();
+            final JRDesignExpression exp2 = new JRDesignExpression();
             exp2.setText("\"" + getReport().getSubtitle() + "\"");
-            exp2.setValueClass(String.class);
             subtitle.setExpression(exp2);
             subtitle.setWidth(getReport().getOptions().getPrintableWidth());
             subtitle.setHeight(getReport().getOptions().getSubtitleHeight());

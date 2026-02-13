@@ -29,18 +29,6 @@
 
 package ar.com.fdvs.dj.domain;
 
-import ar.com.fdvs.dj.core.DJConstants;
-import ar.com.fdvs.dj.core.JasperDesignDecorator;
-import ar.com.fdvs.dj.domain.builders.StyleBuilder;
-import ar.com.fdvs.dj.domain.constants.Stretching;
-import ar.com.fdvs.dj.domain.entities.DJGroup;
-import ar.com.fdvs.dj.domain.entities.DJVariable;
-import ar.com.fdvs.dj.domain.entities.Entity;
-import ar.com.fdvs.dj.domain.entities.Parameter;
-import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
-import ar.com.fdvs.dj.domain.entities.columns.ExpressionColumn;
-import ar.com.fdvs.dj.domain.entities.columns.SimpleColumn;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -48,13 +36,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import ar.com.fdvs.dj.core.DJConstants;
+import ar.com.fdvs.dj.core.JasperDesignDecorator;
+import ar.com.fdvs.dj.domain.builders.StyleBuilder;
+import ar.com.fdvs.dj.domain.entities.DJGroup;
+import ar.com.fdvs.dj.domain.entities.DJVariable;
+import ar.com.fdvs.dj.domain.entities.Entity;
+import ar.com.fdvs.dj.domain.entities.Parameter;
+import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import ar.com.fdvs.dj.domain.entities.columns.ExpressionColumn;
+import ar.com.fdvs.dj.domain.entities.columns.SimpleColumn;
+import net.sf.jasperreports.engine.type.StretchTypeEnum;
+
 /**
  * One of the main classes of this product. It represents the report itself.
  */
 public class DynamicReport extends DJBaseElement {
 
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	protected Map<String, java.awt.Font> fontsMap = new HashMap<String, java.awt.Font>(); //<String, java.awt.Font>
+	protected Map<String, java.awt.Font> fontsMap = new HashMap<>(); //<String, java.awt.Font>
 	private String reportName;
     /**
      Sets the language of the expressions used in the report
@@ -72,38 +72,38 @@ public class DynamicReport extends DJBaseElement {
 	private boolean titleIsJrExpression = false;
 	private String subtitle;
 	private Style titleStyle = new StyleBuilder(false,"reportTitleStyle")
-								.setStretching(Stretching.NO_STRETCH)
+								.setStretchType(StretchTypeEnum.NO_STRETCH)
 								.build();
 	private Style subtitleStyle = new StyleBuilder(false,"reportSubtitleStyle")
-									.setStretching(Stretching.NO_STRETCH)
+	                                .setStretchType(StretchTypeEnum.NO_STRETCH)
 									.build();
 	private Locale reportLocale = Locale.getDefault();
 	private String resourceBundle = null;
-	private List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
+	private List<AbstractColumn> columns = new ArrayList<>();
 
 	//<DJGroup>
-	private List<DJGroup> columnsGroups = new ArrayList<DJGroup>();
+	private List<DJGroup> columnsGroups = new ArrayList<>();
 
 	//<DJChart>
-	private List<DJChart> charts = new ArrayList<DJChart>();
+	private List<DJChart> charts = new ArrayList<>();
 
 	//<DJChart>
-	private List<ar.com.fdvs.dj.domain.chart.DJChart> newCharts = new ArrayList<ar.com.fdvs.dj.domain.chart.DJChart>();
-	
+	private List<ar.com.fdvs.dj.domain.chart.DJChart> newCharts = new ArrayList<>();
+
 	private DynamicReportOptions options;
 
 	/**
 	 * List of ColumnProperty
 	 * Other fields to register, not necessary assigned to columns
 	 */
-	private List<ColumnProperty> fields = new ArrayList<ColumnProperty>();
+	private List<ColumnProperty> fields = new ArrayList<>();
 
 	//Other parameters needed (E.g. Subreports)
-	private List<Parameter> parameters = new ArrayList<Parameter>();
-	
-	private List<DJVariable> variables = new ArrayList<DJVariable>();
+	private List<Parameter> parameters = new ArrayList<>();
 
-	private Map<String, String> properties = new HashMap<String, String>();
+	private List<DJVariable> variables = new ArrayList<>();
+
+	private Map<String, String> properties = new HashMap<>();
 
 	private String templateFileName = null;
 	private boolean templateImportDatasets = false;
@@ -111,9 +111,9 @@ public class DynamicReport extends DJBaseElement {
 	private boolean templateImportVariables = false;
 	private boolean templateImportParameters = true;
 
-	private List<AutoText> autoTexts = new ArrayList<AutoText>();
+	private List<AutoText> autoTexts = new ArrayList<>();
 
-	private Map<String, Style> styles = new LinkedHashMap<String, Style>();
+	private Map<String, Style> styles = new LinkedHashMap<>();
 	private DJQuery query;
 
 	private String whenNoDataText;
@@ -133,7 +133,7 @@ public class DynamicReport extends DJBaseElement {
 	 *
 	 * Defatul is: DJConstants.WHEN_NO_DATA_TYPE_NO_PAGES
 	 */
-	private byte whenNoDataType = DJConstants.WHEN_NO_DATA_TYPE_NO_PAGES;
+	private int whenNoDataType = DJConstants.WHEN_NO_DATA_TYPE_NO_PAGES;
 
 	/**********************
 	 * Defines what to show if a missing resource is referenced
@@ -143,14 +143,14 @@ public class DynamicReport extends DJBaseElement {
 	 * DJConstants.WHEN_RESOURCE_MISSING_TYPE_KEY: Shows the key of the missing resource.<br>
 	 * DJConstants.WHEN_RESOURCE_MISSING_TYPE_NULL: returns NULL
 	 **********************/
-	private byte whenResourceMissing = DJConstants.WHEN_RESOURCE_MISSING_TYPE_KEY;
+	private int whenResourceMissing = DJConstants.WHEN_RESOURCE_MISSING_TYPE_KEY;
 
 	private DJWaterMark waterMark;
 
 	private JasperDesignDecorator jasperDesignDecorator;
 
     private String defaultEncoding;
-	private List<DJCrosstab> summaryCrosstabs = new ArrayList<DJCrosstab>();
+	private final List<DJCrosstab> summaryCrosstabs = new ArrayList<>();
 
 	public DynamicReport() {}
 
@@ -228,7 +228,7 @@ public class DynamicReport extends DJBaseElement {
 
 	public void setTitleStyle(Style titleStyle, boolean isExp) {
 		this.titleStyle = titleStyle;
-		this.titleIsJrExpression = isExp;
+		titleIsJrExpression = isExp;
 	}
 
 	public String getTemplateFileName() {
@@ -260,9 +260,9 @@ public class DynamicReport extends DJBaseElement {
 	}
 
 	public void setNewCharts(List<ar.com.fdvs.dj.domain.chart.DJChart> charts) {
-		this.newCharts = charts;
+		newCharts = charts;
 	}
-	
+
 	public List<AutoText> getAutoTexts() {
 		return autoTexts;
 	}
@@ -303,19 +303,19 @@ public class DynamicReport extends DJBaseElement {
 		this.fontsMap = fontsMap;
 	}
 
-	public byte getWhenNoDataType() {
+	public int getWhenNoDataType() {
 		return whenNoDataType;
 	}
 
-	public void setWhenNoDataType(byte whenNoDataType) {
+	public void setWhenNoDataType(int whenNoDataType) {
 		this.whenNoDataType = whenNoDataType;
 	}
 
-	public byte getWhenResourceMissing() {
+	public int getWhenResourceMissing() {
 		return whenResourceMissing;
 	}
 
-	public void setWhenResourceMissing(byte whenResourceMissing) {
+	public void setWhenResourceMissing(int whenResourceMissing) {
 		this.whenResourceMissing = whenResourceMissing;
 	}
 
@@ -354,17 +354,17 @@ public class DynamicReport extends DJBaseElement {
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
-	
+
 	public void setParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
 	}
 
 	public void addParameter(String name, String className){
-		this.parameters.add(new Parameter(name, className));
+		parameters.add(new Parameter(name, className));
 	}
 
 	public void addParameter(Parameter parameter){
-		this.parameters.add(parameter);
+		parameters.add(parameter);
 	}
 
 	public boolean isAllowDetailSplit() {
@@ -426,22 +426,22 @@ public class DynamicReport extends DJBaseElement {
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
 	}
-	
+
 	/**
 	 * Collects all the fields from columns and also the fields not bounds to columns
 	 * @return List<ColumnProperty>
 	 */
 	public List<ColumnProperty> getAllFields(){
-		ArrayList<ColumnProperty> l = new ArrayList<ColumnProperty>();
-		for (AbstractColumn abstractColumn : this.getColumns()) {
-			if (abstractColumn instanceof SimpleColumn && !(abstractColumn instanceof ExpressionColumn)) {
+		final ArrayList<ColumnProperty> l = new ArrayList<>();
+		for (final AbstractColumn abstractColumn : getColumns()) {
+			if ((abstractColumn instanceof SimpleColumn) && !(abstractColumn instanceof ExpressionColumn)) {
 				l.add(((SimpleColumn)abstractColumn).getColumnProperty());
 			}
 		}
-		l.addAll(this.getFields());
+		l.addAll(getFields());
 
 		return l;
-		
+
 	}
 
 	public boolean isTitleIsJrExpression() {
@@ -497,9 +497,9 @@ public class DynamicReport extends DJBaseElement {
     }
 
     public void addSummaryCrosstab(DJCrosstab summaryCrosstab) {
-		this.summaryCrosstabs.add(summaryCrosstab);
+		summaryCrosstabs.add(summaryCrosstab);
     }
-    
+
 	public List<DJCrosstab> getSummaryCrosstabs() {
 		return summaryCrosstabs;
 	}

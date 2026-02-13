@@ -29,25 +29,24 @@
 
 package ar.com.fdvs.dj.domain.chart.plot;
 
-import ar.com.fdvs.dj.domain.DJBaseElement;
-import ar.com.fdvs.dj.domain.DynamicJasperDesign;
-import ar.com.fdvs.dj.domain.entities.Entity;
-import net.sf.jasperreports.charts.type.PlotOrientationEnum;
-import net.sf.jasperreports.engine.JRChartPlot;
-import net.sf.jasperreports.engine.base.JRBaseChartPlot;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+
+import ar.com.fdvs.dj.domain.DJBaseElement;
+import ar.com.fdvs.dj.domain.DynamicJasperDesign;
+import ar.com.fdvs.dj.domain.entities.Entity;
+import net.sf.jasperreports.charts.JRChartPlot;
+import net.sf.jasperreports.charts.base.JRBaseChartPlot;
 import net.sf.jasperreports.charts.type.PlotOrientationEnum;
 
 public abstract class AbstractPlot extends DJBaseElement {
-	
+
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	private Double labelRotation;
 	private PlotOrientationEnum orientation;
-	private final List<Color> seriesColors = new ArrayList<Color>();
+	private final List<Color> seriesColors = new ArrayList<>();
 
 	/**
 	 * Sets the plot orientation (PlotOrientationEnum.HORIZONTAL or PlotOrientationEnum.VERTICAL).
@@ -69,23 +68,23 @@ public abstract class AbstractPlot extends DJBaseElement {
 
 	/**
 	 * Adds the specified series color to the plot.
-	 * 
+	 *
 	 * @param color the series color
 	 **/
 	public void addSeriesColor(Color color) {
-		this.seriesColors.add(color);
+		seriesColors.add(color);
 	}
-	
+
 	/**
 	 * Removes all defined series colors.
 	 */
 	public void clearSeriesColors()	{
-		this.seriesColors.clear();
+		seriesColors.clear();
 	}
-	
+
 	/**
 	 * Set the specified series colors to the plot.
-	 * 
+	 *
 	 * @param seriesColors the series colors
 	 **/
 	public void setSeriesColors(List<Color> seriesColors) {
@@ -95,19 +94,19 @@ public abstract class AbstractPlot extends DJBaseElement {
 
 	/**
 	 * Returns a list of all the defined series colors.  Every entry in the list is of type JRChartPlot.JRSeriesColor.
-	 * If there are no defined series colors this method will return an empty list, not null. 
+	 * If there are no defined series colors this method will return an empty list, not null.
 	 *
 	 * @return	the list of series colors
 	 **/
 	public List getSeriesColors() {
 		return seriesColors;
 	}
-	
+
 	/**
 	 * Sets the angle in degrees to rotate the data axis labels.  The range is -360 to 360.  A positive value angles
 	 * the label so it reads downwards wile a negative value angles the label so it reads upwards.  Only charts that
 	 * use a category based axis (such as line or bar charts) support label rotation.
-	 * 
+	 *
 	 * @param labelRotation the label rotation
 	 **/
 	public void setLabelRotation(Double labelRotation) {
@@ -123,15 +122,17 @@ public abstract class AbstractPlot extends DJBaseElement {
 	public Double getLabelRotation() {
 		return labelRotation;
 	}
-	
+
 	public void transform(DynamicJasperDesign design, JRChartPlot plot, String name) {
-		if (getLabelRotation() != null)
-			plot.setLabelRotation(getLabelRotation());
-		if (orientation != null)
-			plot.setOrientation(orientation);
-		List<JRBaseChartPlot.JRSeriesColor> colors = new ArrayList<JRBaseChartPlot.JRSeriesColor>();
+		if (getLabelRotation() != null) {
+            plot.setLabelRotation(getLabelRotation());
+        }
+		if (orientation != null) {
+            plot.setOrientation(orientation);
+        }
+		final List<JRBaseChartPlot.JRSeriesColor> colors = new ArrayList<JRBaseChartPlot.JRSeriesColor>();
 		int i = 1;
-		for (Color color : seriesColors) {
+		for (final Color color : seriesColors) {
             colors.add(new JRBaseChartPlot.JRBaseSeriesColor(i++, color));
         }
 		plot.setSeriesColors(colors);

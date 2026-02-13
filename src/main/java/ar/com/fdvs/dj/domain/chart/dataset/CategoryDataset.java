@@ -29,6 +29,11 @@
 
 package ar.com.fdvs.dj.domain.chart.dataset;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.entities.Entity;
@@ -38,25 +43,20 @@ import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 import ar.com.fdvs.dj.util.ExpressionUtils;
 import net.sf.jasperreports.charts.design.JRDesignCategoryDataset;
 import net.sf.jasperreports.charts.design.JRDesignCategorySeries;
+import net.sf.jasperreports.charts.design.JRDesignChartDataset;
 import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.design.JRDesignChartDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class CategoryDataset extends AbstractDataset {
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	private PropertyColumn category = null;
-	private final List<AbstractColumn> series = new ArrayList<AbstractColumn>();
-	private final Map<AbstractColumn, StringExpression> seriesLabels = new HashMap<AbstractColumn, StringExpression>();
+	private final List<AbstractColumn> series = new ArrayList<>();
+	private final Map<AbstractColumn, StringExpression> seriesLabels = new HashMap<>();
 	private boolean useSeriesAsCategory = false;
-		
+
 	/**
 	 * Sets the category column.
 	 *
@@ -65,7 +65,7 @@ public class CategoryDataset extends AbstractDataset {
 	public void setCategory(PropertyColumn category) {
 		this.category = category;
 	}
-	
+
 	/**
 	 * Returns the category column.
 	 *
@@ -74,19 +74,20 @@ public class CategoryDataset extends AbstractDataset {
 	public PropertyColumn getCategory() {
 		return category;
 	}
-	
+
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public void addSerie(AbstractColumn column) {
+	@Override
+    public void addSerie(AbstractColumn column) {
 		series.add(column);
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param label column the custom label
 	 **/
@@ -96,7 +97,7 @@ public class CategoryDataset extends AbstractDataset {
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label expression.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param labelExpression column the custom label expression
 	 **/
@@ -104,11 +105,11 @@ public class CategoryDataset extends AbstractDataset {
 		series.add(column);
 		seriesLabels.put(column, labelExpression);
 	}
-	
+
 	/**
 	 * Removes the specified serie column from the dataset.
-	 * 
-	 * @param column the serie column	 
+	 *
+	 * @param column the serie column
 	 **/
 	public void removeSerie(AbstractColumn column) {
 		series.remove(column);
@@ -122,17 +123,17 @@ public class CategoryDataset extends AbstractDataset {
 		series.clear();
 		seriesLabels.clear();
 	}
-	
+
 	/**
 	 * Returns a list of all the defined series.  Every entry in the list is of type AbstractColumn.
-	 * If there are no defined series this method will return an empty list, not null. 
+	 * If there are no defined series this method will return an empty list, not null.
 	 *
 	 * @return	the list of series
 	 **/
 	public List getSeries()	{
 		return series;
 	}
-	
+
 	public void setUseSeriesAsCategory(boolean useSeriesAsCategory) {
 		this.useSeriesAsCategory = useSeriesAsCategory;
 	}
@@ -140,19 +141,20 @@ public class CategoryDataset extends AbstractDataset {
 	public boolean isUseSeriesAsCategory() {
 		return useSeriesAsCategory;
 	}
-	
-	public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
-		JRDesignCategoryDataset data = new JRDesignCategoryDataset(null);
 
-		for (AbstractColumn sery : series) {
-			JRDesignCategorySeries serie = new JRDesignCategorySeries();
+	@Override
+    public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
+		final JRDesignCategoryDataset data = new JRDesignCategoryDataset(null);
+
+		for (final AbstractColumn sery : series) {
+			final JRDesignCategorySeries serie = new JRDesignCategorySeries();
 
 			//And use it as value for each bar
-			JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
+			final JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
 			serie.setValueExpression(varExp);
 
 			//The key for each bar
-			JRExpression exp2 = group.getExpression();
+			final JRExpression exp2 = group.getExpression();
 
 			JRDesignExpression exp3;
 			if (seriesLabels.containsKey(sery)) {
@@ -161,7 +163,6 @@ public class CategoryDataset extends AbstractDataset {
 				exp3 = new JRDesignExpression();
 				exp3.setText("\"" + sery.getTitle() + "\"");
 			}
-			exp3.setValueClass(String.class);
 
 			//Here you can set subgroups of bars
 			if (useSeriesAsCategory) {
@@ -185,11 +186,13 @@ public class CategoryDataset extends AbstractDataset {
 		return data;
 	}
 
-	public List getColumns() {
+	@Override
+    public List getColumns() {
 		return series;
 	}
 
-	public PropertyColumn getColumnsGroup() {
+	@Override
+    public PropertyColumn getColumnsGroup() {
 		return category;
 	}
 }

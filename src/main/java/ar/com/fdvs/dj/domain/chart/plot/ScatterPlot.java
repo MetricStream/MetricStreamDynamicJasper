@@ -34,8 +34,8 @@ import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.util.ExpressionUtils;
+import net.sf.jasperreports.charts.JRChartPlot;
 import net.sf.jasperreports.charts.design.JRDesignScatterPlot;
-import net.sf.jasperreports.engine.JRChartPlot;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 public class ScatterPlot extends AbstractPlot {
@@ -44,7 +44,7 @@ public class ScatterPlot extends AbstractPlot {
 	private DJAxisFormat yAxisFormat = new DJAxisFormat();
 	private Boolean showShapes = null;
 	private Boolean showLines = null;
-	
+
 	/**
 	 * Sets the shapes visibility.
 	 *
@@ -80,7 +80,7 @@ public class ScatterPlot extends AbstractPlot {
 	public Boolean getShowLines() {
 		return showLines;
 	}
-	
+
 	/**
 	 * Sets the x axis format.
 	 *
@@ -116,70 +116,84 @@ public class ScatterPlot extends AbstractPlot {
 	public DJAxisFormat getYAxisFormat() {
 		return yAxisFormat;
 	}
-	
+
 	public void transform(DynamicJasperDesign design, JRChartPlot plot, String name) {
 		super.transform(design, plot, name);
-		JRDesignScatterPlot scatterPlot = (JRDesignScatterPlot) plot;
-		
-		StringExpression xAxisLabelExp = getXAxisFormat().getLabelExpression();
+		final JRDesignScatterPlot scatterPlot = (JRDesignScatterPlot) plot;
+
+		final StringExpression xAxisLabelExp = getXAxisFormat().getLabelExpression();
 		if (xAxisLabelExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "xAxisLabel_" + name, xAxisLabelExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "xAxisLabel_" + name, xAxisLabelExp);
 			scatterPlot.setXAxisLabelExpression(exp);
 		}
-		if (xAxisFormat.getTickLabelMask() != null) 
-			scatterPlot.setXAxisTickLabelMask(xAxisFormat.getTickLabelMask());	
-		if (xAxisFormat.getLabelColor() != null)
-			scatterPlot.setXAxisLabelColor(xAxisFormat.getLabelColor());
-		if (xAxisFormat.getLabelFont() != null)
-			scatterPlot.setXAxisLabelFont(xAxisFormat.getLabelFont().transform());
-		if (xAxisFormat.getLineColor() != null)
-			scatterPlot.setXAxisLineColor(xAxisFormat.getLineColor());		
-		if (xAxisFormat.getTickLabelColor() != null)
-			scatterPlot.setXAxisTickLabelColor(xAxisFormat.getTickLabelColor());
-		if (xAxisFormat.getTickLabelFont() != null)
-			scatterPlot.setXAxisTickLabelFont(xAxisFormat.getTickLabelFont().transform());
-		CustomExpression xAxisRangeMinValueExp = getXAxisFormat().getRangeMinValueExpression();
+		if (xAxisFormat.getTickLabelMask() != null) {
+            scatterPlot.setXAxisTickLabelMask(xAxisFormat.getTickLabelMask());
+        }
+		if (xAxisFormat.getLabelColor() != null) {
+            scatterPlot.setXAxisLabelColor(xAxisFormat.getLabelColor());
+        }
+		if (xAxisFormat.getLabelFont() != null) {
+            scatterPlot.setXAxisLabelFont(xAxisFormat.getLabelFont().transform());
+        }
+		if (xAxisFormat.getLineColor() != null) {
+            scatterPlot.setXAxisLineColor(xAxisFormat.getLineColor());
+        }
+		if (xAxisFormat.getTickLabelColor() != null) {
+            scatterPlot.setXAxisTickLabelColor(xAxisFormat.getTickLabelColor());
+        }
+		if (xAxisFormat.getTickLabelFont() != null) {
+            scatterPlot.setXAxisTickLabelFont(xAxisFormat.getTickLabelFont().transform());
+        }
+		final CustomExpression xAxisRangeMinValueExp = getXAxisFormat().getRangeMinValueExpression();
 		if (xAxisRangeMinValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "xAxisRangeMinValue_" + name, xAxisRangeMinValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "xAxisRangeMinValue_" + name, xAxisRangeMinValueExp);
 			scatterPlot.setDomainAxisMinValueExpression(exp);
 		}
-		CustomExpression xAxisRangeMaxValueExp = getXAxisFormat().getRangeMaxValueExpression();
+		final CustomExpression xAxisRangeMaxValueExp = getXAxisFormat().getRangeMaxValueExpression();
 		if (xAxisRangeMaxValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "xAxisRangeMaxValue_" + name, xAxisRangeMaxValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "xAxisRangeMaxValue_" + name, xAxisRangeMaxValueExp);
 			scatterPlot.setDomainAxisMaxValueExpression(exp);
 		}
-		
-		StringExpression yAxisLabelExp = getYAxisFormat().getLabelExpression();
+
+		final StringExpression yAxisLabelExp = getYAxisFormat().getLabelExpression();
 		if (yAxisLabelExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "yAxisLabel_" + name, yAxisLabelExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "yAxisLabel_" + name, yAxisLabelExp);
 			scatterPlot.setYAxisLabelExpression(exp);
 		}
-		if (yAxisFormat.getTickLabelMask() != null) 
-			scatterPlot.setYAxisTickLabelMask(yAxisFormat.getTickLabelMask());	
-		if (yAxisFormat.getLabelColor() != null)
-			scatterPlot.setYAxisLabelColor(yAxisFormat.getLabelColor());
-		if (yAxisFormat.getLabelFont() != null)
-			scatterPlot.setYAxisLabelFont(yAxisFormat.getLabelFont().transform());
-		if (yAxisFormat.getLineColor() != null)
-			scatterPlot.setYAxisLineColor(yAxisFormat.getLineColor());		
-		if (yAxisFormat.getTickLabelColor() != null)
-			scatterPlot.setYAxisTickLabelColor(yAxisFormat.getTickLabelColor());
-		if (yAxisFormat.getTickLabelFont() != null)
-			scatterPlot.setYAxisTickLabelFont(yAxisFormat.getTickLabelFont().transform());
-		CustomExpression yAxisRangeMinValueExp = getYAxisFormat().getRangeMinValueExpression();
+		if (yAxisFormat.getTickLabelMask() != null) {
+            scatterPlot.setYAxisTickLabelMask(yAxisFormat.getTickLabelMask());
+        }
+		if (yAxisFormat.getLabelColor() != null) {
+            scatterPlot.setYAxisLabelColor(yAxisFormat.getLabelColor());
+        }
+		if (yAxisFormat.getLabelFont() != null) {
+            scatterPlot.setYAxisLabelFont(yAxisFormat.getLabelFont().transform());
+        }
+		if (yAxisFormat.getLineColor() != null) {
+            scatterPlot.setYAxisLineColor(yAxisFormat.getLineColor());
+        }
+		if (yAxisFormat.getTickLabelColor() != null) {
+            scatterPlot.setYAxisTickLabelColor(yAxisFormat.getTickLabelColor());
+        }
+		if (yAxisFormat.getTickLabelFont() != null) {
+            scatterPlot.setYAxisTickLabelFont(yAxisFormat.getTickLabelFont().transform());
+        }
+		final CustomExpression yAxisRangeMinValueExp = getYAxisFormat().getRangeMinValueExpression();
 		if (yAxisRangeMinValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "yAxisRangeMinValue_" + name, yAxisRangeMinValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "yAxisRangeMinValue_" + name, yAxisRangeMinValueExp);
 			scatterPlot.setRangeAxisMinValueExpression(exp);
 		}
-		CustomExpression yAxisRangeMaxValueExp = getYAxisFormat().getRangeMaxValueExpression();
+		final CustomExpression yAxisRangeMaxValueExp = getYAxisFormat().getRangeMaxValueExpression();
 		if (yAxisRangeMaxValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "yAxisRangeMaxValue_" + name, yAxisRangeMaxValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "yAxisRangeMaxValue_" + name, yAxisRangeMaxValueExp);
 			scatterPlot.setRangeAxisMaxValueExpression(exp);
 		}
-		
-		if (showShapes != null)
-			scatterPlot.setShowShapes(showShapes);
-		if (showLines != null)
-			scatterPlot.setShowLines(showLines);
+
+		if (showShapes != null) {
+            scatterPlot.setShowShapes(showShapes);
+        }
+		if (showLines != null) {
+            scatterPlot.setShowLines(showLines);
+        }
 	}
 }

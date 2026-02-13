@@ -29,28 +29,28 @@
 
 package ar.com.fdvs.dj.domain.chart.dataset;
 
-import ar.com.fdvs.dj.domain.DynamicJasperDesign;
-import ar.com.fdvs.dj.domain.entities.Entity;
-import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
-import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-import net.sf.jasperreports.charts.design.JRDesignPieDataset;
-import net.sf.jasperreports.charts.design.JRDesignPieSeries;
-import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.design.JRDesignChartDataset;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JRDesignGroup;
-import net.sf.jasperreports.engine.design.JRDesignVariable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ar.com.fdvs.dj.domain.DynamicJasperDesign;
+import ar.com.fdvs.dj.domain.entities.Entity;
+import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
+import net.sf.jasperreports.charts.design.JRDesignChartDataset;
+import net.sf.jasperreports.charts.design.JRDesignPieDataset;
+import net.sf.jasperreports.charts.design.JRDesignPieSeries;
+import net.sf.jasperreports.engine.JRExpression;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.design.JRDesignGroup;
+import net.sf.jasperreports.engine.design.JRDesignVariable;
+
 public class PieDataset extends AbstractDataset {
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	private PropertyColumn key = null;
-	private List<AbstractColumn> series = new ArrayList<AbstractColumn>();
-		
+	private final List<AbstractColumn> series = new ArrayList<>();
+
 	/**
 	 * Sets the key column.
 	 *
@@ -59,7 +59,7 @@ public class PieDataset extends AbstractDataset {
 	public void setKey(PropertyColumn key) {
 		this.key = key;
 	}
-	
+
 	/**
 	 * Returns the key column.
 	 *
@@ -68,20 +68,21 @@ public class PieDataset extends AbstractDataset {
 	public PropertyColumn getKey() {
 		return key;
 	}
-	
+
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public void addSerie(AbstractColumn column) {
+	@Override
+    public void addSerie(AbstractColumn column) {
 		series.add(column);
 	}
-	
+
 	/**
 	 * Removes the specified serie column from the dataset.
-	 * 
-	 * @param column the serie column	 
+	 *
+	 * @param column the serie column
 	 **/
 	public void removeSerie(AbstractColumn column) {
 		series.remove(column);
@@ -93,44 +94,47 @@ public class PieDataset extends AbstractDataset {
 	public void clearSeries() {
 		series.clear();
 	}
-	
+
 	/**
 	 * Returns a list of all the defined series.  Every entry in the list is of type AbstractColumn.
-	 * If there are no defined series this method will return an empty list, not null. 
+	 * If there are no defined series this method will return an empty list, not null.
 	 *
 	 * @return	the list of series
 	 **/
 	public List getSeries()	{
 		return series;
 	}
-	
-	public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
-		JRDesignPieDataset data = new JRDesignPieDataset(null);
 
-		for (AbstractColumn sery : series) {
-			JRDesignPieSeries serie = new JRDesignPieSeries();
+	@Override
+    public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
+		final JRDesignPieDataset data = new JRDesignPieDataset(null);
+
+		for (final AbstractColumn sery : series) {
+			final JRDesignPieSeries serie = new JRDesignPieSeries();
 
 			//And use it as value for each bar
-			JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
+			final JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
 			serie.setValueExpression(varExp);
 
 			//The key for each bar
-			JRExpression exp2 = group.getExpression();
+			final JRExpression exp2 = group.getExpression();
 			serie.setKeyExpression(exp2);
 
 			data.addPieSeries(serie);
 		}
-		
+
 		setResetStyle(data, group, parentGroup);
 
 		return data;
 	}
 
-	public List getColumns() {
+	@Override
+    public List getColumns() {
 		return series;
 	}
 
-	public PropertyColumn getColumnsGroup() {
+	@Override
+    public PropertyColumn getColumnsGroup() {
 		return key;
 	}
 

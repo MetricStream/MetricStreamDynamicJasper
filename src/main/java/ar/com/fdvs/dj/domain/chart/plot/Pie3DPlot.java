@@ -31,13 +31,13 @@ package ar.com.fdvs.dj.domain.chart.plot;
 
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.entities.Entity;
+import net.sf.jasperreports.charts.JRChartPlot;
 import net.sf.jasperreports.charts.design.JRDesignPie3DPlot;
-import net.sf.jasperreports.engine.JRChartPlot;
 
 public class Pie3DPlot extends AbstractPiePlot {
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
 	private Double depthFactor = null;
-	
+
 	/**
 	 * Sets the depth factor.
 	 *
@@ -55,17 +55,21 @@ public class Pie3DPlot extends AbstractPiePlot {
 	public Double getDepthFactor() {
 		return depthFactor;
 	}
-	
+
 	public void transform(DynamicJasperDesign design, JRChartPlot plot, String name) {
 		super.transform(design, plot, name);
-		JRDesignPie3DPlot piePlot = (JRDesignPie3DPlot) plot;
-		if (getCircular() != null)
-			piePlot.setCircular(getCircular());
-		if (getLabelFormat() != null)
-			piePlot.setLabelFormat(getLabelFormat());
-		if (getLegendLabelFormat() != null)
-			piePlot.setLegendLabelFormat(getLegendLabelFormat());
-		if (getDepthFactor() != null)
-			piePlot.setDepthFactor(getDepthFactor());
+		final JRDesignPie3DPlot piePlot = (JRDesignPie3DPlot) plot;
+		if (getCircular() != null) {
+            piePlot.setCircular(getCircular());
+        }
+		if (getLabelFormat() != null) {
+            piePlot.setLabelFormat(getLabelFormat());
+        }
+		if (getLegendLabelFormat() != null) {
+            piePlot.setLegendLabelFormat(getLegendLabelFormat());
+        }
+		if (getDepthFactor() != null) {
+            piePlot.setDepthFactor(getDepthFactor());
+        }
 	}
 }

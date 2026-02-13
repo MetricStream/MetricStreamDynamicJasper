@@ -29,11 +29,11 @@
 
 package ar.com.fdvs.dj.util;
 
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.design.JRJdtCompiler;
-import net.sf.jasperreports.engine.util.JRClassLoader;
-
 import java.util.Map;
+
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.util.JRClassLoader;
+import net.sf.jasperreports.jdt.JRJdtCompiler;
 
 /**
  * @author Alejandro Gomez (alejandro.gomez@fdvsolutions.com)
@@ -49,6 +49,7 @@ public class DJJRJdtCompiler extends JRJdtCompiler {
         super(jasperReportsContext);
     }
 
+    @Override
     protected Map<String,String> getJdtSettings() {
         final Map<String,String> settings = super.getJdtSettings();
         final String encoding = System.getProperty("file.encoding");
@@ -62,9 +63,7 @@ public class DJJRJdtCompiler extends JRJdtCompiler {
     public static boolean isValid() {
         try {
             return JRClassLoader.loadClassForName("org.eclipse.jdt.internal.compiler.Compiler") != null;
-        } catch (ClassNotFoundException ex) {
-            return false;
-        } catch (NoClassDefFoundError e) {
+        } catch (final ClassNotFoundException | NoClassDefFoundError e) {
 			return false;
 		}
     }

@@ -29,6 +29,11 @@
 
 package ar.com.fdvs.dj.domain.chart.dataset;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.entities.Entity;
@@ -36,23 +41,21 @@ import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 import ar.com.fdvs.dj.util.ExpressionUtils;
+import net.sf.jasperreports.charts.design.JRDesignChartDataset;
 import net.sf.jasperreports.charts.design.JRDesignXyDataset;
 import net.sf.jasperreports.charts.design.JRDesignXySeries;
 import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.design.JRDesignChartDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 
-import java.util.*;
-
 public class XYDataset extends AbstractDataset {
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	private PropertyColumn xValue = null;
-	private final List<AbstractColumn> series = new ArrayList<AbstractColumn>();
-	private final Map<AbstractColumn, StringExpression> seriesLabels = new HashMap<AbstractColumn, StringExpression>();
-		
+	private final List<AbstractColumn> series = new ArrayList<>();
+	private final Map<AbstractColumn, StringExpression> seriesLabels = new HashMap<>();
+
 	/**
 	 * Sets the x value column.
 	 *
@@ -61,7 +64,7 @@ public class XYDataset extends AbstractDataset {
 	public void setXValue(PropertyColumn xValue) {
 		this.xValue = xValue;
 	}
-	
+
 	/**
 	 * Returns the x value column.
 	 *
@@ -70,19 +73,20 @@ public class XYDataset extends AbstractDataset {
 	public PropertyColumn getXValue() {
 		return xValue;
 	}
-	
+
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public void addSerie(AbstractColumn column) {
+	@Override
+    public void addSerie(AbstractColumn column) {
 		series.add(column);
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param label column the custom label
 	 **/
@@ -92,7 +96,7 @@ public class XYDataset extends AbstractDataset {
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label expression.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param labelExpression column the custom label expression
 	 **/
@@ -100,11 +104,11 @@ public class XYDataset extends AbstractDataset {
 		series.add(column);
 		seriesLabels.put(column, labelExpression);
 	}
-	
+
 	/**
 	 * Removes the specified serie column from the dataset.
-	 * 
-	 * @param column the serie column	 
+	 *
+	 * @param column the serie column
 	 **/
 	public void removeSerie(AbstractColumn column) {
 		series.remove(column);
@@ -118,29 +122,30 @@ public class XYDataset extends AbstractDataset {
 		series.clear();
 		seriesLabels.clear();
 	}
-	
+
 	/**
 	 * Returns a list of all the defined series.  Every entry in the list is of type AbstractColumn.
-	 * If there are no defined series this method will return an empty list, not null. 
+	 * If there are no defined series this method will return an empty list, not null.
 	 *
 	 * @return	the list of series
 	 **/
 	public List getSeries()	{
 		return series;
 	}
-	
-	public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
-		JRDesignXyDataset data = new JRDesignXyDataset(null);
 
-		for (AbstractColumn sery : series) {
-			JRDesignXySeries serie = new JRDesignXySeries();
+	@Override
+    public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
+		final JRDesignXyDataset data = new JRDesignXyDataset(null);
+
+		for (final AbstractColumn sery : series) {
+			final JRDesignXySeries serie = new JRDesignXySeries();
 
 			//And use it as value for each bar
-			JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
+			final JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
 			serie.setYValueExpression(varExp);
 
 			//The key for each bar
-			JRExpression exp2 = group.getExpression();
+			final JRExpression exp2 = group.getExpression();
 
 			JRDesignExpression exp3;
 			if (seriesLabels.containsKey(sery)) {
@@ -149,7 +154,6 @@ public class XYDataset extends AbstractDataset {
 				exp3 = new JRDesignExpression();
 				exp3.setText("\"" + sery.getTitle() + "\"");
 			}
-			exp3.setValueClass(String.class);
 
 			serie.setXValueExpression(exp2);
 
@@ -164,11 +168,13 @@ public class XYDataset extends AbstractDataset {
 		return data;
 	}
 
-	public List getColumns() {
+	@Override
+    public List getColumns() {
 		return series;
 	}
 
-	public PropertyColumn getColumnsGroup() {
+	@Override
+    public PropertyColumn getColumnsGroup() {
 		return xValue;
 	}
 }

@@ -29,10 +29,18 @@
 
 package ar.com.fdvs.dj.util;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.Collection;
+
 import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.core.DJDefaultScriptlet;
 import ar.com.fdvs.dj.core.DJException;
-import ar.com.fdvs.dj.domain.*;
+import ar.com.fdvs.dj.domain.ColumnProperty;
+import ar.com.fdvs.dj.domain.CustomExpression;
+import ar.com.fdvs.dj.domain.DJCalculation;
+import ar.com.fdvs.dj.domain.DJDataSource;
+import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.customexpression.DJSimpleExpression;
 import ar.com.fdvs.dj.domain.entities.Subreport;
 import ar.com.fdvs.dj.domain.entities.SubreportParameter;
@@ -45,13 +53,7 @@ import net.sf.jasperreports.engine.JRVariable;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
-import net.sf.jasperreports.engine.design.JRDesignField;
-import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JasperDesign;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.Collection;
 
 public class ExpressionUtils {
 
@@ -69,15 +71,15 @@ public class ExpressionUtils {
      * @return
      */
     public static JRDesignExpression getParameterExpression(Subreport sr) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClassName(java.util.Map.class.getName());
+        final JRDesignExpression exp = new JRDesignExpression();
         if (sr.isUseParentReportParameters()) {
             exp.setText(REPORT_PARAMETERS_MAP);
             return exp;
         }
 
-        if (sr.getParametersExpression() == null)
+        if (sr.getParametersExpression() == null) {
             return null;
+        }
 
         if (sr.getParametersMapOrigin() == DJConstants.SUBREPORT_PARAMETER_MAP_ORIGIN_PARAMETER) {
             exp.setText(REPORT_PARAMETERS_MAP + ".get( \"" + sr.getParametersExpression() + "\" )");
@@ -99,16 +101,13 @@ public class ExpressionUtils {
      * @return
      */
     public static JRDesignExpression getDataSourceExpression(DJDataSource ds) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClass(JRDataSource.class);
+        final JRDesignExpression exp = new JRDesignExpression();
 
-        String dsType = getDataSourceTypeStr(ds.getDataSourceType());
+        final String dsType = getDataSourceTypeStr(ds.getDataSourceType());
         String expText = null;
         if (ds.getDataSourceOrigin() == DJConstants.DATA_SOURCE_ORIGIN_FIELD) {
             expText = dsType + "$F{" + ds.getDataSourceExpression() + "})";
-        } else if (ds.getDataSourceOrigin() == DJConstants.DATA_SOURCE_ORIGIN_PARAMETER) {
-            expText = dsType + REPORT_PARAMETERS_MAP + ".get( \"" + ds.getDataSourceExpression() + "\" ) )";
-        } else if (ds.getDataSourceOrigin() == DJConstants.DATA_SOURCE_TYPE_SQL_CONNECTION) {
+        } else if ((ds.getDataSourceOrigin() == DJConstants.DATA_SOURCE_ORIGIN_PARAMETER) || (ds.getDataSourceOrigin() == DJConstants.DATA_SOURCE_TYPE_SQL_CONNECTION)) {
             expText = dsType + REPORT_PARAMETERS_MAP + ".get( \"" + ds.getDataSourceExpression() + "\" ) )";
         } else if (ds.getDataSourceOrigin() == DJConstants.DATA_SOURCE_ORIGIN_REPORT_DATASOURCE) {
             expText = "((" + JRDataSource.class.getName() + ") $P{REPORT_DATA_SOURCE})";
@@ -122,11 +121,10 @@ public class ExpressionUtils {
     }
 
     public static JRDesignExpression getConnectionExpression(DJDataSource ds) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClass(Connection.class);
+        final JRDesignExpression exp = new JRDesignExpression();
 
-        String dsType = getDataSourceTypeStr(ds.getDataSourceType());
-        String expText = dsType + REPORT_PARAMETERS_MAP + ".get( \"" + ds.getDataSourceExpression() + "\" ) )";
+        final String dsType = getDataSourceTypeStr(ds.getDataSourceType());
+        final String expText = dsType + REPORT_PARAMETERS_MAP + ".get( \"" + ds.getDataSourceExpression() + "\" ) )";
 
         exp.setText(expText);
 
@@ -139,64 +137,59 @@ public class ExpressionUtils {
      * @return
      */
     public static JRDesignExpression getReportConnectionExpression() {
-        JRDesignExpression connectionExpression = new JRDesignExpression();
-        connectionExpression.setText("$P{" + JRDesignParameter.REPORT_CONNECTION + "}");
-        connectionExpression.setValueClass(Connection.class);
+        final JRDesignExpression connectionExpression = new JRDesignExpression();
+        connectionExpression.setText("$P{" + JRParameter.REPORT_CONNECTION + "}");
         return connectionExpression;
     }
 
     protected static String getDataSourceTypeStr(int datasourceType) {
         //TODO Complete all other possible types
         String dsType = "(";
-        if (DJConstants.DATA_SOURCE_TYPE_COLLECTION == datasourceType) {
-            dsType = "new " + JRBeanCollectionDataSource.class.getName() + "((java.util.Collection)";
-        } else if (DJConstants.DATA_SOURCE_TYPE_ARRAY == datasourceType) {
-            dsType = "new " + JRBeanArrayDataSource.class.getName() + "((Object[])";
-        } else if (DJConstants.DATA_SOURCE_TYPE_RESULTSET == datasourceType) {
-            dsType = "new " + JRResultSetDataSource.class.getName() + "((" + ResultSet.class.getName() + ")";
-        } else if (DJConstants.DATA_SOURCE_TYPE_JRDATASOURCE == datasourceType) {
-            dsType = "((" + JRDataSource.class.getName() + ")";
-        } else if (DJConstants.DATA_SOURCE_TYPE_SQL_CONNECTION == datasourceType) {
-            dsType = "((" + Connection.class.getName() + ")";
+        switch (datasourceType) {
+            case DJConstants.DATA_SOURCE_TYPE_COLLECTION:
+                dsType = "new " + JRBeanCollectionDataSource.class.getName() + "((java.util.Collection)";
+                break;
+            case DJConstants.DATA_SOURCE_TYPE_ARRAY:
+                dsType = "new " + JRBeanArrayDataSource.class.getName() + "((Object[])";
+                break;
+            case DJConstants.DATA_SOURCE_TYPE_RESULTSET:
+                dsType = "new " + JRResultSetDataSource.class.getName() + "((" + ResultSet.class.getName() + ")";
+                break;
+            case DJConstants.DATA_SOURCE_TYPE_JRDATASOURCE:
+                dsType = "((" + JRDataSource.class.getName() + ")";
+                break;
+            case DJConstants.DATA_SOURCE_TYPE_SQL_CONNECTION:
+                dsType = "((" + Connection.class.getName() + ")";
+                break;
+            default:
+                break;
         }
         return dsType;
     }
 
     public static JRDesignExpression createStringExpression(String text) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClass(String.class);
+        final JRDesignExpression exp = new JRDesignExpression();
         exp.setText(text);
         return exp;
     }
 
     public static JRDesignExpression createExpression(String text, Class clazz) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClass(clazz);
+        final JRDesignExpression exp = new JRDesignExpression();
         exp.setText(text);
         return exp;
     }
 
     public static JRDesignExpression createExpression(String text, String className) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClassName(className);
+        final JRDesignExpression exp = new JRDesignExpression();
         exp.setText(text);
         return exp;
     }
 
     public static JRDesignExpression createExpression(JasperDesign jasperDesign, SubreportParameter sp) {
-        JRDesignExpression exp = new JRDesignExpression();
-        exp.setValueClassName(sp.getClassName());
+        final JRDesignExpression exp = new JRDesignExpression();
         String text;
         if (sp.getParameterOrigin() == DJConstants.SUBREPORT_PARAM_ORIGIN_FIELD) {
             text = "$F{" + sp.getExpression() + "}";
-            //We need to set proper class type to expression according to field class
-            if (sp.getClassName() == null) {
-                JRDesignField jrField = (JRDesignField) jasperDesign.getFieldsMap().get(sp.getExpression());
-                if (jrField != null)
-                    exp.setValueClass(jrField.getValueClass());
-                else
-                    exp.setValueClass(Object.class);
-            }
         } else if (sp.getParameterOrigin() == DJConstants.SUBREPORT_PARAM_ORIGIN_PARAMETER) {
             text = REPORT_PARAMETERS_MAP + ".get( \"" + sp.getExpression() + "\")";
         } else if (sp.getParameterOrigin() == DJConstants.SUBREPORT_PARAM_ORIGIN_VARIABLE) {
@@ -235,7 +228,7 @@ public class ExpressionUtils {
      * @return
      */
     public static JRDesignExpression createExpression(String name, CustomExpression expression, boolean usePreviousFieldValues) {
-        String text = ExpressionUtils.createCustomExpressionInvocationText(expression, name, usePreviousFieldValues);
+        final String text = ExpressionUtils.createCustomExpressionInvocationText(expression, name, usePreviousFieldValues);
         return createExpression(text, expression.getClassName());
     }
 
@@ -243,12 +236,12 @@ public class ExpressionUtils {
      * @return
      */
     public static String getFieldsMapExpression(Collection columnsAndFields) {
-        StringBuilder fieldsMap = new StringBuilder("new  " + PropertiesMap.class.getName() + "()");
-        for (Object columnsAndField : columnsAndFields) {
-            ColumnProperty columnProperty = (ColumnProperty) columnsAndField;
+        final StringBuilder fieldsMap = new StringBuilder("new  " + PropertiesMap.class.getName() + "()");
+        for (final Object columnsAndField : columnsAndFields) {
+            final ColumnProperty columnProperty = (ColumnProperty) columnsAndField;
 
             if (columnProperty != null) {
-                String propname = columnProperty.getProperty();
+                final String propname = columnProperty.getProperty();
                 fieldsMap.append(".with(\"").append(propname).append("\",$F{").append(propname).append("})");
             }
         }
@@ -263,10 +256,10 @@ public class ExpressionUtils {
      * @return
      */
     public static String getVariablesMapExpression(Collection variables) {
-        StringBuilder variablesMap = new StringBuilder("new  " + PropertiesMap.class.getName() + "()");
-        for (Object variable : variables) {
-            JRVariable jrvar = (JRVariable) variable;
-            String varname = jrvar.getName();
+        final StringBuilder variablesMap = new StringBuilder("new  " + PropertiesMap.class.getName() + "()");
+        for (final Object variable : variables) {
+            final JRVariable jrvar = (JRVariable) variable;
+            final String varname = jrvar.getName();
             variablesMap.append(".with(\"").append(varname).append("\",$V{").append(varname).append("})");
         }
         return variablesMap.toString();
@@ -279,7 +272,7 @@ public class ExpressionUtils {
 
 
     public static String createParameterName(String preffix, Object obj) {
-        String name = obj.toString().substring(obj.toString().lastIndexOf(".") + 1).replaceAll("[\\$@]", "_");
+        final String name = obj.toString().substring(obj.toString().lastIndexOf(".") + 1).replaceAll("[\\$@]", "_");
         return preffix + name;
     }
 
@@ -299,7 +292,7 @@ public class ExpressionUtils {
     public static String createCustomExpressionInvocationText(CustomExpression customExpression, String customExpName, boolean usePreviousFieldValues) {
         String stringExpression;
         if (customExpression instanceof DJSimpleExpression) {
-            DJSimpleExpression varexp = (DJSimpleExpression) customExpression;
+            final DJSimpleExpression varexp = (DJSimpleExpression) customExpression;
             String symbol;
             switch (varexp.getType()) {
                 case DJSimpleExpression.TYPE_FIELD:
@@ -322,8 +315,8 @@ public class ExpressionUtils {
                 fieldsMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getPreviousFields()";
             }
 
-            String parametersMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentParams()";
-            String variablesMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentVariables()";
+            final String parametersMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentParams()";
+            final String variablesMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentVariables()";
 
             stringExpression = "((" + CustomExpression.class.getName() + ")$P{REPORT_PARAMETERS_MAP}.get(\"" + customExpName + "\"))."
                     + CustomExpression.EVAL_METHOD_NAME + "( " + fieldsMap + ", " + variablesMap + ", " + parametersMap + " )";
@@ -340,9 +333,9 @@ public class ExpressionUtils {
      */
     public static String createCustomExpressionInvocationText2(String customExpName) {
 
-        String fieldsMap = getTextForFieldsFromScriptlet();
-        String parametersMap = getTextForParametersFromScriptlet();
-        String variablesMap = getTextForVariablesFromScriptlet();
+        final String fieldsMap = getTextForFieldsFromScriptlet();
+        final String parametersMap = getTextForParametersFromScriptlet();
+        final String variablesMap = getTextForVariablesFromScriptlet();
 
 //		String stringExpression = "((("+CustomExpression.class.getName()+")$P{"+customExpName+"})."
 //				+CustomExpression.EVAL_METHOD_NAME+"( "+ fieldsMap +", " + variablesMap + ", " + parametersMap +" ))";
@@ -364,36 +357,35 @@ public class ExpressionUtils {
     }
 
     public static String getValueClassNameForOperation(DJCalculation calc, ColumnProperty prop) {
-        if (calc == DJCalculation.COUNT || calc == DJCalculation.DISTINCT_COUNT)
+        if ((calc == DJCalculation.COUNT) || (calc == DJCalculation.DISTINCT_COUNT)) {
             return Number.class.getName();
-        else
+        } else {
             return prop.getValueClassName();
+        }
 
     }
 
     public static String getInitialValueExpressionForOperation(DJCalculation calc, ColumnProperty prop) {
-        if (calc == DJCalculation.COUNT || calc == DJCalculation.DISTINCT_COUNT)
+        if ((calc == DJCalculation.COUNT) || (calc == DJCalculation.DISTINCT_COUNT)) {
             return "new java.lang.Long(\"0\")";
-        else if (calc == DJCalculation.SUM)
+        } else if (calc == DJCalculation.SUM) {
             return "new " + prop.getValueClassName() + "(\"0\")";
-        else return null;
+        } else {
+            return null;
+        }
 
     }
 
-
     public static JRDesignExpression getExpressionForConditionalStyle(ConditionalStyle condition, String columExpression) {
-        String fieldsMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentFields()";
-        String parametersMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentParams()";
-        String variablesMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentVariables()";
+        final String fieldsMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentFields()";
+        final String parametersMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentParams()";
+        final String variablesMap = "((" + DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentVariables()";
 
-        String evalMethodParams = fieldsMap + ", " + variablesMap + ", " + parametersMap + ", " + columExpression;
+        final String evalMethodParams = fieldsMap + ", " + variablesMap + ", " + parametersMap + ", " + columExpression;
 
-        String text = "((" + ConditionStyleExpression.class.getName() + ")$P{" + JRParameter.REPORT_PARAMETERS_MAP + "}.get(\"" + condition.getName() + "\"))." + CustomExpression.EVAL_METHOD_NAME + "(" + evalMethodParams + ")";
-        JRDesignExpression expression = new JRDesignExpression();
-        expression.setValueClass(Boolean.class);
+        final String text = "((" + ConditionStyleExpression.class.getName() + ")$P{" + JRParameter.REPORT_PARAMETERS_MAP + "}.get(\"" + condition.getName() + "\"))." + CustomExpression.EVAL_METHOD_NAME + "(" + evalMethodParams + ")";
+        final JRDesignExpression expression = new JRDesignExpression();
         expression.setText(text);
         return expression;
     }
-
-
 }

@@ -29,18 +29,20 @@
 
 package ar.com.fdvs.dj.output;
 
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperPrint;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 
 /**
  * @author Alejandro Gomez
@@ -51,15 +53,16 @@ public class FileReportWriter extends ReportWriter {
 
     private static final Log LOGGER = LogFactory.getLog(FileReportWriter.class);
 
-    public FileReportWriter(final JasperPrint _jasperPrint, final JRExporter _exporter) {
+    public FileReportWriter(final JasperPrint _jasperPrint, final Exporter _exporter) {
         super(_jasperPrint, _exporter);
     }
 
+    @Override
     public void writeTo(final HttpServletResponse _response) throws IOException, JRException {
         LOGGER.info("entering FileReportWriter.writeTo()");
         final File file = File.createTempFile("djreport", ".tmp");
         try {
-            exporter.setParameter(JRExporterParameter.OUTPUT_FILE, file);
+            exporter.setExporterOutput(new SimpleWriterExporterOutput(file));
             exporter.exportReport();
             _response.setContentLength((int)file.length());
             copyStreams(new FileInputStream(file), _response.getOutputStream());
@@ -75,7 +78,7 @@ public class FileReportWriter extends ReportWriter {
         final File file = File.createTempFile("djreport", ".tmp");
 
         file.deleteOnExit();
-        exporter.setParameter(JRExporterParameter.OUTPUT_FILE, file);
+        exporter.setExporterOutput(new SimpleWriterExporterOutput(file));
         exporter.exportReport();
 
         return new FileInputStream(file);

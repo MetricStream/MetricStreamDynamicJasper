@@ -29,11 +29,12 @@
 
 package ar.com.fdvs.dj.domain.chart.builder;
 
-import ar.com.fdvs.dj.domain.chart.DJChart;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 
 public class DJStackedBar3DChartBuilder extends DJBar3DChartBuilder {
-	
-	protected byte getChartType() {
-		return DJChart.STACKEDBAR3D_CHART;
+
+	@Override
+    protected ChartTypeEnum getChartType() {
+		return ChartTypeEnum.STACKEDBAR3D;
 	}
 }

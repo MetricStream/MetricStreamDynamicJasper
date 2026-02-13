@@ -27,39 +27,24 @@
 	~
 	~
 -->
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ar.com.fdvs</groupId>
-    <artifactId>DynamicJasper</artifactId>
-    <version>5.3.9</version>
-    <name>DynamicJasper</name>
+    <groupId>tech.nostrum.jasper</groupId>
+    <artifactId>nostrum-dynamic-jasper</artifactId>
+    <version>1.0.0</version>
+    <name>Nostrum Dynamic Jasper (Maintained Fork)</name>
     <packaging>jar</packaging>
     <description>
-
-        DynamicJasper (DJ) is an API that hides the complexity of Jasper
-        Reports, it helps developers to save time when designing
-        simple/medium complexity reports generating the layout of the
-        report elements automatically. It creates reports dynamically,
-        defining at runtime the columns, column width (auto width), groups,
-        variables, fonts, charts, crosstabs, sub reports (that can also be dynamic), page size
-        and everything else that you can define at design time.
-
-        DJ keeps full compatibility with Jasper Reports since
-        it's a tool that helps create reports programmatically in
-        a easy way (it only interferes with the creation of the report
-        design doing the layout of the elements).
-
-        You can use the classic .jrxml files as templates while the
-        content and layout of the report elements are handled by the DJ
-        API.
-
-        http://dynamicjasper.com
-
+        Maintained fork of DynamicJasper originally created by FDV Solutions.
+        Library for generating JasperReports dynamically at runtime.
     </description>
-    <url>https://github.com/FDVSolutions/DynamicJasper</url>
+    <url>https://github.com/nostrum-tech/NostrumDynamicJasper</url>
     <issueManagement>
         <system>GitHub Tracker</system>
-        <url>https://github.com/FDVSolutions/DynamicJasper/issues</url>
+        <url>https://github.com/nostrum-tech/NostrumDynamicJasper/issues</url>
     </issueManagement>
     <inceptionYear>2006</inceptionYear>
     <build>
@@ -180,13 +165,19 @@
                     </instructions>
                 </configuration>
                 <executions>
-                  <execution>
-                  <phase>prepare-package</phase>
-                  <goals>
-                    <goal>manifest</goal>
-                  </goals>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
                   </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>
@@ -316,7 +307,6 @@
         </profile>
     </profiles>
 
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -328,7 +318,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>[6.20.1, 6.20.4]</version>
+            <version>7.0.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-collections</groupId>
@@ -347,6 +337,54 @@
                     <artifactId>bcprov-jdk14</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-chart-customizers</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-charts</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-excel-poi</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-hibernate</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-javaflow</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-jdt</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-pdf</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-servlets</artifactId>
+            <version>7.0.1</version>
         </dependency>
 
         <dependency>
@@ -510,46 +548,21 @@
             <url>https://jaspersoft.jfrog.io/jaspersoft/jr-ce-releases</url>
         </repository>
     </repositories>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
-    <mailingLists>
-        <mailingList>
-            <name>DynamicJasper News List</name>
-            <post>dynamicjasper-news@lists.sourceforge.net</post>
-            <subscribe>
-                dynamicjasper-news-subscribe@lists.sourceforge.net
-            </subscribe>
-            <unsubscribe>
-                dynamicjasper-news-unsubscribe@lists.sourceforge.net
-            </unsubscribe>
-            <archive>
-                http://sourceforge.net/mailarchive/forum.php?forum=dynamicjasper-news
-            </archive>
-        </mailingList>
-    </mailingLists>
     <licenses>
         <license>
             <name>
                 GNU Library or Lesser General Public License (LGPL)
             </name>
-            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <url>https://www.gnu.org/licenses/lgpl.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:FDVSolutions/DynamicJasper.git</connection>
-        <developerConnection>scm:git:git@github.com:FDVSolutions/DynamicJasper.git</developerConnection>
-        <url>git@github.com:FDVSolutions/DynamicJasper.git</url>
+        <connection>scm:git:git://github.com/nostrum-tech/NostrumDynamicJasper.git</connection>
+        <developerConnection>scm:git:ssh://github.com:nostrum-tech/NostrumDynamicJasper.git</developerConnection>
+        <url>https://github.com/nostrum-tech/NostrumDynamicJasper</url>
     </scm>
 
     <!-- =============================== -->
@@ -557,57 +570,13 @@
     <!-- =============================== -->
     <developers>
         <developer>
-            <name>Juan Manuel Alvarez</name>
-            <id>djmamana</id>
-            <email>juan.alvarez@fdvsolutions.com</email>
-            <organization>FDV Solutions</organization>
+            <name>Leonel Francisco Martins Filho</name>
+            <id>leonelfmfilho</id>
+            <email>leonel.martins@nostrum.tech</email>
+            <organization>Nostrum Tech</organization>
             <roles>
                 <role>Project lead</role>
                 <role>Java Developer</role>
-            </roles>
-            <timezone>-3</timezone>
-        </developer>
-        <developer>
-            <name>Martin Gorostegui</name>
-            <id>martingoros</id>
-            <email>martin.gorostegui@fdvsolutions.com</email>
-            <organization>FDV Solutions</organization>
-            <roles>
-                <role>Project admin</role>
-                <role>Java Developer</role>
-            </roles>
-            <timezone>-3</timezone>
-        </developer>
-        <developer>
-            <name>Mariano Simone</name>
-            <id>marianosimone</id>
-            <email>mariano.simone@fdvsolutions.com</email>
-            <organization>FDV Solutions</organization>
-            <roles>
-                <role>Java Developer</role>
-                <role>Charting integration</role>
-            </roles>
-            <timezone>-3</timezone>
-        </developer>
-        <developer>
-            <name>Alejandro Gomez</name>
-            <email>alejandro.gomez@fdvsolutions.com</email>
-            <organization>FDV Solutions</organization>
-            <roles>
-                <role>Super Gurú</role>
-                <role>Doc supervisor</role>
-                <role>webwork Integration</role>
-            </roles>
-            <timezone>-3</timezone>
-        </developer>
-        <developer>
-            <name>Ricardo Mariaca</name>
-            <id>ricardomariaca</id>
-            <email>nospam@nospam.com</email>
-            <organization>Other</organization>
-            <roles>
-                <role>Java Developer</role>
-                <role>Charting integration (new charts)</role>
             </roles>
             <timezone>-3</timezone>
         </developer>
@@ -615,8 +584,8 @@
 
 
     <organization>
-        <name>FDV Solutions</name>
-        <url>http://www.fdvsolutions.com/</url>
+        <name>Nostrum Tech</name>
+        <url>http://www.nostrum.tech/</url>
     </organization>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

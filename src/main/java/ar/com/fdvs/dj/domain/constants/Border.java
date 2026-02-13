@@ -29,12 +29,12 @@
 
 package ar.com.fdvs.dj.domain.constants;
 
+import java.awt.Color;
+
 import net.sf.jasperreports.engine.type.LineStyleEnum;
 
-import java.awt.*;
-
 /**
- * See value of constants here: 
+ * See value of constants here:
  * http://jasperreports.sourceforge.net/api/constant-values.html
  *
  * Default border is: black, thin (0.5f), solid
@@ -45,8 +45,8 @@ import java.awt.*;
 public class Border  extends BaseDomainConstant {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static Border NO_BORDER() {return  new Border(BORDER_WIDTH_NONE, LineStyleEnum.SOLID.getValue()); }
+
+	public static Border NO_BORDER() {return  new Border(BORDER_WIDTH_NONE, LineStyleEnum.SOLID.ordinal()); }
 
     public static Border THIN() {return new Border( BORDER_WIDTH_THIN );}
 
@@ -56,14 +56,14 @@ public class Border  extends BaseDomainConstant {
 
     public static Border PEN_4_POINT() {return  new Border( BORDER_WIDTH_4POINT );}
 
-    public static Border DOTTED() {return  new Border( BORDER_WIDTH_1POINT, LineStyleEnum.DOTTED.getValue() );}
+    public static Border DOTTED() {return  new Border( BORDER_WIDTH_1POINT, LineStyleEnum.DOTTED.ordinal() );}
 
-    public static Border DASHED() {return  new Border( BORDER_WIDTH_1POINT, LineStyleEnum.DASHED.getValue() );}
+    public static Border DASHED() {return  new Border( BORDER_WIDTH_1POINT, LineStyleEnum.DASHED.ordinal() );}
 
-    public static byte BORDER_STYLE_SOLID = LineStyleEnum.SOLID.getValue();
-    public static byte BORDER_STYLE_DASHED = LineStyleEnum.DASHED.getValue();
-    public static byte BORDER_STYLE_DOTTED = LineStyleEnum.DOTTED.getValue();
-    public static byte BORDER_STYLE_DOUBLE = LineStyleEnum.DOUBLE.getValue();
+    public static int BORDER_STYLE_SOLID = LineStyleEnum.SOLID.ordinal();
+    public static int BORDER_STYLE_DASHED = LineStyleEnum.DASHED.ordinal();
+    public static int BORDER_STYLE_DOTTED = LineStyleEnum.DOTTED.ordinal();
+    public static int BORDER_STYLE_DOUBLE = LineStyleEnum.DOUBLE.ordinal();
 
     public static float BORDER_WIDTH_NONE = 0f;
     public static float BORDER_WIDTH_THIN = 0.5f;
@@ -73,7 +73,7 @@ public class Border  extends BaseDomainConstant {
 
     private float width = BORDER_WIDTH_THIN;
     private Color color = Color.BLACK;
-    private byte lineStyle = LineStyleEnum.SOLID.getValue();
+    private int lineStyle = LineStyleEnum.SOLID.ordinal();
 
 
     /**
@@ -81,8 +81,8 @@ public class Border  extends BaseDomainConstant {
      * @param width
      */
     public Border(float width) {
-        this.lineStyle = BORDER_STYLE_SOLID;
-        this.width = width; 
+        lineStyle = BORDER_STYLE_SOLID;
+        this.width = width;
     }
 
     /**
@@ -90,7 +90,7 @@ public class Border  extends BaseDomainConstant {
      * @param width the width, use #Border.BORDER_WIDTH_XXXX or a float number
      * @param lineStyle use #Border.BORDER_STYLE_XXXXX for different styles
      */
-    public Border(float width, byte lineStyle) {
+    public Border(float width, int lineStyle) {
         this.lineStyle = lineStyle;
         this.width = width;
     }
@@ -101,7 +101,7 @@ public class Border  extends BaseDomainConstant {
      * @param lineStyle use #Border.BORDER_STYLE_XXXXX for different styles
      * @param color the color of the border
      */
-    public Border(float width, byte lineStyle, Color color) {
+    public Border(float width, int lineStyle, Color color) {
         this.lineStyle = lineStyle;
         this.width = width;
         this.color = color;
@@ -123,11 +123,11 @@ public class Border  extends BaseDomainConstant {
         this.color = color;
     }
 
-    public byte getLineStyle() {
+    public int getLineStyle() {
         return lineStyle;
     }
 
-    public void setLineStyle(byte lineStyle) {
+    public void setLineStyle(int lineStyle) {
         this.lineStyle = lineStyle;
     }
 }

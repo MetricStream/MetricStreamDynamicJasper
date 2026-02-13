@@ -29,14 +29,15 @@
 
 package ar.com.fdvs.dj.core.layout;
 
-import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
-import net.sf.jasperreports.engine.design.JRDesignBand;
-import net.sf.jasperreports.engine.design.JRDesignTextField;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import net.sf.jasperreports.engine.design.JRDesignBand;
+import net.sf.jasperreports.engine.design.JRDesignTextField;
 
 /**
  * Simple Layout Manager recommended when we want to get a ready to operate <br>
@@ -47,14 +48,16 @@ import java.util.Map;
 public class ListLayoutManager extends AbstractLayoutManager {
 
 	private static final Log log = LogFactory.getLog(ListLayoutManager.class);
-	
-	protected Map<String, Object> referencesMap = new HashMap<String, Object>();
 
-	public Map<String, Object> getReferencesMap() {
+	protected Map<String, Object> referencesMap = new HashMap<>();
+
+	@Override
+    public Map<String, Object> getReferencesMap() {
 		return referencesMap;
-	}	
+	}
 
-	protected void startLayout() {
+	@Override
+    protected void startLayout() {
 		getReport().getOptions().setColumnsPerPage(1);
 		getReport().getOptions().setColumnSpace(0);
 		getDesign().setColumnCount(1);
@@ -66,16 +69,10 @@ public class ListLayoutManager extends AbstractLayoutManager {
 		getDesign().setIgnorePagination(getReport().getOptions().isIgnorePagination());
 	}
 
-	protected void transformDetailBandTextField(AbstractColumn column, JRDesignTextField textField) {
+	@Override
+    protected void transformDetailBandTextField(AbstractColumn column, JRDesignTextField textField) {
 		log.debug("transforming detail band text field...");
 		textField.setPrintRepeatedValues(true);
-		try {
-			//if we have a java.lang.Number then the pattern must be ignored in order to let Excel recognize the number correctly.
-			if (Number.class.isAssignableFrom(Class.forName(textField.getExpression().getValueClassName())))
-				textField.setPattern(null);
-		} catch (ClassNotFoundException e) {
-			throw new LayoutException(e.getMessage(),e);
-		}
 	}
 
 	protected void generateHeaderBand() {

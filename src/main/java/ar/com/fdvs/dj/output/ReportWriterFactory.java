@@ -29,11 +29,10 @@
 
 package ar.com.fdvs.dj.output;
 
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperPrint;
-
-import java.util.Map;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.ExporterConfiguration;
+import net.sf.jasperreports.export.ReportExportConfiguration;
 
 /**
  * @author Alejandro Gomez
@@ -50,8 +49,9 @@ public class ReportWriterFactory {
     }
 
     public ReportWriterFactory(int pagesThreshold){
-        if (pagesThreshold >= 0)
+        if (pagesThreshold >= 0) {
             PAGES_THRESHHOLD = pagesThreshold;
+        }
     }
 
     /**
@@ -61,9 +61,13 @@ public class ReportWriterFactory {
      * @param _parameters
      * @return
      */
-    public ReportWriter getReportWriter(final JasperPrint _jasperPrint, final String _format, final Map<JRExporterParameter,Object> _parameters) {
-        final JRExporter exporter = FormatInfoRegistry.getInstance().getExporter(_format);
-        exporter.setParameters(_parameters);
+    public ReportWriter getReportWriter(final JasperPrint _jasperPrint,
+                                        final String _format,
+                                        final ExporterConfiguration exporterConfiguration,
+                                        ReportExportConfiguration reportExportConfguration) {
+        final Exporter exporter = FormatInfoRegistry.getInstance().getExporter(_format);
+        exporter.setConfiguration(exporterConfiguration);
+        exporter.setConfiguration(reportExportConfguration);
 
         if (_jasperPrint.getPages().size() > PAGES_THRESHHOLD) {
             return new FileReportWriter(_jasperPrint, exporter);

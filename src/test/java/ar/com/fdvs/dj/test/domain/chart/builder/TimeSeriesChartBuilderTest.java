@@ -29,47 +29,61 @@
 
 package ar.com.fdvs.dj.test.domain.chart.builder;
 
-import ar.com.fdvs.dj.domain.*;
+import java.awt.Color;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.jfree.data.time.Month;
+
+import ar.com.fdvs.dj.domain.DJCalculation;
+import ar.com.fdvs.dj.domain.DJHyperLink;
+import ar.com.fdvs.dj.domain.DynamicJasperDesign;
+import ar.com.fdvs.dj.domain.DynamicReport;
+import ar.com.fdvs.dj.domain.StringExpression;
+import ar.com.fdvs.dj.domain.Style;
 import ar.com.fdvs.dj.domain.builders.ColumnBuilder;
 import ar.com.fdvs.dj.domain.builders.DynamicReportBuilder;
 import ar.com.fdvs.dj.domain.chart.DJChart;
 import ar.com.fdvs.dj.domain.chart.DJChartOptions;
 import ar.com.fdvs.dj.domain.chart.builder.DJTimeSeriesChartBuilder;
 import ar.com.fdvs.dj.domain.chart.plot.DJAxisFormat;
-import ar.com.fdvs.dj.domain.constants.*;
+import ar.com.fdvs.dj.domain.constants.Border;
 import ar.com.fdvs.dj.domain.constants.Font;
+import ar.com.fdvs.dj.domain.constants.HorizontalAlign;
 import ar.com.fdvs.dj.domain.constants.Transparency;
+import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 import ar.com.fdvs.dj.test.BaseDjReportTest;
+import net.sf.jasperreports.charts.design.JRDesignChart;
 import net.sf.jasperreports.charts.design.JRDesignTimeSeriesDataset;
 import net.sf.jasperreports.charts.design.JRDesignTimeSeriesPlot;
+import net.sf.jasperreports.charts.type.EdgeEnum;
+import net.sf.jasperreports.charts.type.TimePeriodEnum;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRFont;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JRDesignChart;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.type.LineStyleEnum;
 import net.sf.jasperreports.view.JasperViewer;
-import org.jfree.data.time.Month;
-
-import java.awt.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.List;
 
 public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
-	private DynamicReportBuilder drb; 
+	private DynamicReportBuilder drb;
 	private JRDesignChart chart;
-	
-	protected void setUp() throws Exception {
+
+	@Override
+    protected void setUp() throws Exception {
 		super.setUp();
 		drb = new DynamicReportBuilder();
 
-		Style headerStyle = new Style();
+		final Style headerStyle = new Style();
 		headerStyle.setFont(Font.VERDANA_MEDIUM_BOLD);
 		headerStyle.setBorderBottom(Border.PEN_2_POINT());
 		headerStyle.setHorizontalAlign(HorizontalAlign.CENTER);
@@ -77,45 +91,45 @@ public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
 		headerStyle.setBackgroundColor(Color.DARK_GRAY);
 		headerStyle.setTextColor(Color.WHITE);
 		headerStyle.setTransparency(Transparency.OPAQUE);
-		drb.setDefaultStyles(null, null, headerStyle, null);			
-		
-		AbstractColumn columnDate = ColumnBuilder.getNew()
+		drb.setDefaultStyles(null, null, headerStyle, null);
+
+		final AbstractColumn columnDate = ColumnBuilder.getNew()
 		.setColumnProperty("date", Date.class.getName()).setTitle(
-				"Date").setWidth(new Integer(85)).build();
-		AbstractColumn columnaQuantity = ColumnBuilder.getNew()
+				"Date").setWidth(85).build();
+		final AbstractColumn columnaQuantity = ColumnBuilder.getNew()
 		.setColumnProperty("quantity", Long.class.getName()).setTitle(
-				"Quantity").setWidth(new Integer(80)).build();
-		AbstractColumn columnAmount = ColumnBuilder.getNew()
+				"Quantity").setWidth(80).build();
+		final AbstractColumn columnAmount = ColumnBuilder.getNew()
 		.setColumnProperty("amount", Float.class.getName()).setTitle(
-				"Amount").setWidth(new Integer(90)).build();
+				"Amount").setWidth(90).build();
 
 		drb.addColumn(columnDate);
 		drb.addColumn(columnaQuantity);
 		drb.addColumn(columnAmount);
-		
+
 		drb.addGlobalVariable("min_date", columnDate, DJCalculation.LOWEST);
 		drb.addGlobalVariable("max_date", columnDate, DJCalculation.HIGHEST);
-		
+
 		drb.setUseFullPageWidth(true);
-		
-		DJAxisFormat timeAxisFormat = new DJAxisFormat("date");
+
+		final DJAxisFormat timeAxisFormat = new DJAxisFormat("date");
 		timeAxisFormat.setLabelFont(Font.ARIAL_SMALL);
 		timeAxisFormat.setLabelColor(Color.DARK_GRAY);
 		timeAxisFormat.setTickLabelFont(Font.ARIAL_SMALL);
 		timeAxisFormat.setTickLabelColor(Color.DARK_GRAY);
 		timeAxisFormat.setTickLabelMask("MMM-yy");
 		timeAxisFormat.setLineColor(Color.DARK_GRAY);
-		
-		DJAxisFormat valueAxisFormat = new DJAxisFormat("value");
+
+		final DJAxisFormat valueAxisFormat = new DJAxisFormat("value");
 		valueAxisFormat.setLabelFont(Font.ARIAL_SMALL);
 		valueAxisFormat.setLabelColor(Color.DARK_GRAY);
 		valueAxisFormat.setTickLabelFont(Font.ARIAL_SMALL);
 		valueAxisFormat.setTickLabelColor(Color.DARK_GRAY);
 		valueAxisFormat.setTickLabelMask("#,##0.0");
 		valueAxisFormat.setLineColor(Color.DARK_GRAY);
-		
-		DJChart djChart = new DJTimeSeriesChartBuilder()
-		//chart		
+
+		final DJChart djChart = new DJTimeSeriesChartBuilder()
+		//chart
 		.setX(20)
 		.setY(10)
 		.setWidth(500)
@@ -124,9 +138,10 @@ public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
 		.setBackColor(Color.LIGHT_GRAY)
 		.setShowLegend(true)
 		.setPosition(DJChartOptions.POSITION_FOOTER)
-		.setTitle(new StringExpression() {			
-			private SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy");
-			public Object evaluate(Map fields, Map variables, Map parameters) {
+		.setTitle(new StringExpression() {
+			private final SimpleDateFormat format = new SimpleDateFormat("MMMM yyyy");
+			@Override
+            public Object evaluate(Map fields, Map variables, Map parameters) {
 				return "From " + format.format((Date)variables.get("min_date")) + " to " + format.format((Date)variables.get("max_date"));
 			}
 		})
@@ -146,7 +161,7 @@ public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
 		.setPadding(5)
 		//dataset
 		.setTimePeriod((PropertyColumn) columnDate)
-		.setTimePeriodClass(Month.class)
+		.setTimePeriodValue(TimePeriodEnum.MONTH)
 		.addSerie(columnaQuantity, "quant.")
 		.addSerie(columnAmount)
 		//plot
@@ -156,23 +171,24 @@ public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
 		.setValueAxisFormat(valueAxisFormat)
 		.build();
 		drb.addChart(djChart);
-		
-		DJHyperLink djlink = new DJHyperLink();
+
+		final DJHyperLink djlink = new DJHyperLink();
 		djlink.setExpression(new StringExpression() {
-			public Object evaluate(Map fields, Map variables, Map parameters) {				
+			@Override
+            public Object evaluate(Map fields, Map variables, Map parameters) {
 				return "http://thisIsAURL?count=" + variables.get("REPORT_COUNT");
 			}
 		});
-		djlink.setTooltip(new LiteralExpression("I'm a literal tootltip"));		
+		djlink.setTooltip(new LiteralExpression("I'm a literal tootltip"));
 		djChart.setLink(djlink);
-		
-		Map<AbstractColumn, JRDesignVariable> vars = new HashMap<AbstractColumn, JRDesignVariable>();
+
+		final Map<AbstractColumn, JRDesignVariable> vars = new HashMap<>();
 		vars.put(columnaQuantity, new JRDesignVariable());
 		vars.put(columnAmount, new JRDesignVariable());
-		JRDesignGroup group = new JRDesignGroup();
+		final JRDesignGroup group = new JRDesignGroup();
 		chart = djChart.transform(new DynamicJasperDesign(), "", group, group, vars, 0);
 	}
-	
+
 	public void testChart() {
 		assertEquals(20, chart.getX());
 		assertEquals(10, chart.getY());
@@ -182,103 +198,103 @@ public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
 		assertEquals(Boolean.TRUE, chart.getShowLegend());
 		assertNotNull(chart.getTitleExpression().getText());
 		assertEquals(Color.DARK_GRAY, chart.getTitleColor());
-		testFont(Font.ARIAL_BIG_BOLD, chart.getTitleFont());		
+		testFont(Font.ARIAL_BIG_BOLD, chart.getTitleFont());
 		assertNotNull(chart.getSubtitleExpression().getText());
 		assertEquals(Color.DARK_GRAY, chart.getSubtitleColor());
 		testFont(Font.COURIER_NEW_BIG_BOLD, chart.getSubtitleFont());
 		assertEquals(Color.DARK_GRAY, chart.getLegendColor());
 		testFont(Font.COURIER_NEW_MEDIUM_BOLD, chart.getLegendFont());
 		assertEquals(Color.WHITE, chart.getLegendBackgroundColor());
-		assertEquals(new Byte(DJChartOptions.EDGE_BOTTOM), chart.getLegendPositionValue().getValueByte() );
-		assertEquals(new Byte(DJChartOptions.EDGE_TOP), chart.getTitlePositionValue().getValueByte());
-        assertEquals(LineStyleEnum.getByValue(new Byte(DJChartOptions.LINE_STYLE_DOTTED)), chart.getLineBox().getPen().getLineStyleValue());
+        assertEquals(EdgeEnum.values()[DJChartOptions.EDGE_BOTTOM], chart.getLegendPosition());
+        assertEquals(EdgeEnum.values()[DJChartOptions.EDGE_TOP], chart.getTitlePosition());
+        assertEquals(LineStyleEnum.values()[DJChartOptions.LINE_STYLE_DOTTED], chart.getLineBox().getPen().getLineStyle());
 		assertEquals(1f, chart.getLineBox().getPen().getLineWidth());
 		assertEquals(Color.DARK_GRAY, chart.getLineBox().getPen().getLineColor());
-		assertEquals(new Integer(5), chart.getLineBox().getPadding());
+		assertEquals(Integer.valueOf(5), chart.getLineBox().getPadding());
 	}
-	
+
 	public void testDataset() {
-		JRDesignTimeSeriesDataset dataset = (JRDesignTimeSeriesDataset) chart.getDataset();
+		final JRDesignTimeSeriesDataset dataset = (JRDesignTimeSeriesDataset) chart.getDataset();
 		assertEquals(Month.class, dataset.getTimePeriod());
 		assertEquals(2, dataset.getSeriesList().size());
 		assertNotNull(dataset.getSeries()[0].getLabelExpression().getText());
 		assertNotNull(dataset.getSeries()[0].getSeriesExpression().getText());
 	}
-	
+
 	public void testPlot() {
-		JRDesignTimeSeriesPlot plot = (JRDesignTimeSeriesPlot) chart.getPlot();
+		final JRDesignTimeSeriesPlot plot = (JRDesignTimeSeriesPlot) chart.getPlot();
 		assertEquals(Boolean.TRUE, plot.getShowShapes());
 		assertEquals(Boolean.TRUE, plot.getShowLines());
-		
+
 		assertNotNull(plot.getTimeAxisLabelExpression().getText());
 		testFont(Font.ARIAL_SMALL, plot.getTimeAxisLabelFont());
-		assertEquals(Color.DARK_GRAY, plot.getTimeAxisLabelColor());		
+		assertEquals(Color.DARK_GRAY, plot.getTimeAxisLabelColor());
 		testFont(Font.ARIAL_SMALL, plot.getTimeAxisTickLabelFont());
 		assertEquals(Color.DARK_GRAY, plot.getTimeAxisTickLabelColor());
 		assertEquals("MMM-yy", plot.getTimeAxisTickLabelMask());
 		assertEquals(Color.DARK_GRAY, plot.getTimeAxisLineColor());
-		
+
 		assertNotNull(plot.getValueAxisLabelExpression().getText());
 		testFont(Font.ARIAL_SMALL, plot.getValueAxisLabelFont());
-		assertEquals(Color.DARK_GRAY, plot.getValueAxisLabelColor());		
+		assertEquals(Color.DARK_GRAY, plot.getValueAxisLabelColor());
 		testFont(Font.ARIAL_SMALL, plot.getValueAxisTickLabelFont());
 		assertEquals(Color.DARK_GRAY, plot.getValueAxisTickLabelColor());
 		assertEquals("#,##0.0", plot.getValueAxisTickLabelMask());
 		assertEquals(Color.DARK_GRAY, plot.getValueAxisLineColor());
 	}
-	
-	public DynamicReport buildReport() throws Exception {		
+
+	@Override
+    public DynamicReport buildReport() throws Exception {
 		return drb.build();
 	}
 
 	private void testFont(Font djFont, JRFont jrFont) {
 		assertEquals(djFont.getFontName(), jrFont.getFontName());
-		assertEquals(djFont.getFontSize(), jrFont.getFontsize());
+		assertEquals(djFont.getFontSize(), jrFont.getFontSize());
 		assertEquals(djFont.isBold(), jrFont.isBold());
 		assertEquals(djFont.isItalic(), jrFont.isItalic());
 	}
-	
+
 	public static void main(String[] args) throws Exception {
-		TimeSeriesChartBuilderTest test = new TimeSeriesChartBuilderTest();
+		final TimeSeriesChartBuilderTest test = new TimeSeriesChartBuilderTest();
 		test.setUp();
 		test.testReport();
 		JasperViewer.viewReport(test.jp);
 	}
-	
-	protected JRDataSource getDataSource() {
-			List col =  new ArrayList();
+
+	@Override
+    protected JRDataSource getDataSource() {
+			final List<Product> col =  new ArrayList<>();
 			try {
-				col.add(new Product("1.2008", "Harry Potter 7", new Long("2500"), new Float("10000")));
-				col.add(new Product("2.2008", "Harry Potter 7", new Long("1400"), new Float("2831.32")));
-				col.add(new Product("3.2008", "Harry Potter 7", new Long("4000"), new Float("38347")));
-				col.add(new Product("4.2008", "Harry Potter 7", new Long("3000"), new Float("9482.4")));
-				col.add(new Product("5.2008", "Harry Potter 7", new Long("2500"), new Float("27475.5")));
-				col.add(new Product("6.2008", "Harry Potter 7", new Long("1400"), new Float("3322")));
-				col.add(new Product("7.2008", "Harry Potter 7", new Long("4000"), new Float("78482")));
-				col.add(new Product("8.2008", "Harry Potter 7", new Long("3000"), new Float("5831.32")));
-				col.add(new Product("9.2008", "Harry Potter 7", new Long("1500"), new Float("8329.2")));
-				col.add(new Product("10.2008", "Harry Potter 7", new Long("2500"), new Float("27475.5")));
-				col.add(new Product("11.2008", "Harry Potter 7", new Long("2500"), new Float("38347")));
-				col.add(new Product("12.2008", "Harry Potter 7", new Long("1400"), new Float("9482.4")));
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
+				col.add(new Product("1.2008", "Harry Potter 7", Long.valueOf("2500"), Float.valueOf("10000")));
+				col.add(new Product("2.2008", "Harry Potter 7", Long.valueOf("1400"), Float.valueOf("2831.32")));
+				col.add(new Product("3.2008", "Harry Potter 7", Long.valueOf("4000"), Float.valueOf("38347")));
+				col.add(new Product("4.2008", "Harry Potter 7", Long.valueOf("3000"), Float.valueOf("9482.4")));
+				col.add(new Product("5.2008", "Harry Potter 7", Long.valueOf("2500"), Float.valueOf("27475.5")));
+				col.add(new Product("6.2008", "Harry Potter 7", Long.valueOf("1400"), Float.valueOf("3322")));
+				col.add(new Product("7.2008", "Harry Potter 7", Long.valueOf("4000"), Float.valueOf("78482")));
+				col.add(new Product("8.2008", "Harry Potter 7", Long.valueOf("3000"), Float.valueOf("5831.32")));
+				col.add(new Product("9.2008", "Harry Potter 7", Long.valueOf("1500"), Float.valueOf("8329.2")));
+				col.add(new Product("10.2008", "Harry Potter 7", Long.valueOf("2500"), Float.valueOf("27475.5")));
+				col.add(new Product("11.2008", "Harry Potter 7", Long.valueOf("2500"), Float.valueOf("38347")));
+				col.add(new Product("12.2008", "Harry Potter 7", Long.valueOf("1400"), Float.valueOf("9482.4")));
+			} catch (final NumberFormatException | ParseException e) {
 				e.printStackTrace();
 			}
 			return new JRBeanCollectionDataSource(col);
 	}
-	
+
 	public class Product {
 		private Date date;
 		private String item;
 		private Long quantity;
 		private Float amount;
-		
+
 		Product(String date, String item, Long quantity, Float amount) throws ParseException {
 			this.date = new SimpleDateFormat("MM.yyyy").parse(date);
 			this.item = item;
 			this.quantity = quantity;
-			this.amount = amount;			
+			this.amount = amount;
 		}
 
 		public Date getDate() {
@@ -311,6 +327,6 @@ public class TimeSeriesChartBuilderTest extends BaseDjReportTest {
 
 		public void setAmount(Float amount) {
 			this.amount = amount;
-		}		
+		}
 	}
 }

@@ -29,6 +29,9 @@
 
 package ar.com.fdvs.dj.domain.chart.builder;
 
+import java.awt.Color;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.builders.ChartBuilderException;
@@ -39,26 +42,28 @@ import ar.com.fdvs.dj.domain.chart.plot.AbstractPlot;
 import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-
-import java.awt.*;
-import java.util.List;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	protected DJChart chart;
-	
+
 	public AbstractChartBuilder() {
 		chart = new DJChart(getChartType());
 	}
-	
-	protected abstract byte getChartType();
-	
+
+	protected abstract ChartTypeEnum getChartType();
+
 	public DJChart build() throws ChartBuilderException {
-		if (chart.getDataset().getColumnsGroup() == null) throw new ChartBuilderException("The group to which the chart is related must be specified");
-		if (chart.getDataset().getColumns().isEmpty()) throw new ChartBuilderException("At least one column to which the chart is related must be specified");
+		if (chart.getDataset().getColumnsGroup() == null) {
+            throw new ChartBuilderException("The group to which the chart is related must be specified");
+        }
+		if (chart.getDataset().getColumns().isEmpty()) {
+            throw new ChartBuilderException("At least one column to which the chart is related must be specified");
+        }
 		return chart;
 	}
-	
+
 	/**
 	 * Sets a bunch of parameters from a DJChartOptions object.
 	 * This overwrites every other option included in DJChartOptions
@@ -69,10 +74,10 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 		chart.setOptions(chartOptions);
 		return (T) this;
 	}
-	
+
 	/**
 	 * Sets the category for any kind of builder
-	 * 
+	 *
 	 * @author esteban.invernizzi@fdvsolutions.com
 	 * @param column
 	 * @return
@@ -81,7 +86,7 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 		this.setCategory(column);
 		return (T) this;
 	}
-	
+
 	//chart
 	/**
 	 * Sets the chart data operation (DJChart.CALCULATION_COUNT or DJChart.CALCULATION_SUM).
@@ -89,14 +94,14 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	 * @param operation the chart data operation
 	 **/
 	public abstract T setOperation(byte operation);
-	
+
 	/**
 	 * Sets the hyperlink.
 	 *
 	 * @param link the hyperlink
 	 **/
 	public abstract T setLink(DJHyperLink link);
-	
+
 	//chart options
 	/**
 	 * Sets the background color.
@@ -125,7 +130,7 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	 * @param centered the centered
 	 **/
 	public abstract T setCentered(boolean centered);
-	
+
 	/**
 	 * Sets the position (DJChartOptions.POSITION_FOOTER or DJChartOptions.POSITION_HEADER).
 	 *
@@ -173,7 +178,7 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	 * @param legendColor the legend color
 	 **/
 	public abstract T setLegendColor(Color legendColor);
-	
+
 	/**
 	 * Sets the legend background color.
 	 *
@@ -202,7 +207,7 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	 * @param subtitleFont the subtitle font
 	 **/
 	public abstract T setSubtitleFont(Font subtitleFont);
-	
+
 	/**
 	 * Sets the legend font.
 	 *
@@ -215,14 +220,14 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	 *
 	 * @param legendPosition the legend position
 	 **/
-	public abstract T setLegendPosition(byte legendPosition);
+	public abstract T setLegendPosition(int legendPosition);
 
 	/**
 	 * Sets the title position (DJChartOptions.EDGE_TOP, DJChartOptions.EDGE_BOTTOM, DJChartOptions.EDGE_LEFT, DJChartOptions.EDGE_RIGHT).
 	 *
 	 * @param titlePosition the title position
 	 **/
-	public abstract T setTitlePosition(byte titlePosition);
+	public abstract T setTitlePosition(int titlePosition);
 
 	/**
 	 * Sets the title.
@@ -254,10 +259,10 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 
 	/**
 	 * Sets the line style (DJChartOptions.LINE_STYLE_SOLID, DJChartOptions.LINE_STYLE_DASHED, DJChartOptions.LINE_STYLE_DOTTED, DJChartOptions.LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @param lineStyle one of the line style constants in DJChartOptions class
 	 */
-	public abstract T setLineStyle(byte lineStyle);
+	public abstract T setLineStyle(int lineStyle);
 
 	/**
 	 * Sets the line width.
@@ -287,37 +292,37 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 	 * Sets a user specified chart customizer class name.
 	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
-	public abstract T setCustomizerClass(String customizerClass);	
-	
+	public abstract T setCustomizerClass(String customizerClass);
+
 	//dataset
 	protected abstract T setCategory(PropertyColumn column);
-	
+
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
 	public abstract T addSerie(AbstractColumn column);
-	
-	
+
+
 	//plot
 	/**
 	 * Adds the specified series color to the plot.
-	 * 
+	 *
 	 * @param color the series color
 	 **/
 	public abstract T addSeriesColor(Color color);
-	
+
 	/**
 	 * Set the specified series colors to the plot.
-	 * 
+	 *
 	 * @param seriesColors the series colors
 	 **/
 	public abstract T setSeriesColors(List<Color> seriesColors);
-	
+
 	protected abstract AbstractDataset getDataset();
-	
+
 	protected abstract AbstractPlot getPlot();
-	
-	
+
+
 }

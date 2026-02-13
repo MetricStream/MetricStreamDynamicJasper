@@ -29,18 +29,18 @@
 
 package ar.com.fdvs.dj.domain.chart.builder;
 
+import java.awt.Color;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.StringExpression;
-import ar.com.fdvs.dj.domain.chart.DJChart;
 import ar.com.fdvs.dj.domain.chart.dataset.PieDataset;
 import ar.com.fdvs.dj.domain.chart.plot.PiePlot;
 import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
-
-import java.awt.*;
-import java.util.List;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 
 public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	//chart
@@ -49,29 +49,32 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param operation the chart data operation
 	 **/
-	public DJPieChartBuilder setOperation(byte operation) {
-		this.chart.setOperation(operation);
+	@Override
+    public DJPieChartBuilder setOperation(byte operation) {
+		chart.setOperation(operation);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the hyperlink.
 	 *
 	 * @param link the hyperlink
 	 **/
-	public DJPieChartBuilder setLink(DJHyperLink link) {
-		this.chart.setLink(link);
+	@Override
+    public DJPieChartBuilder setLink(DJHyperLink link) {
+		chart.setLink(link);
 		return this;
 	}
-	
+
 	//chart options
 	/**
 	 * Sets the background color.
 	 *
 	 * @param backColor the background color
 	 **/
-	public DJPieChartBuilder setBackColor(Color backColor) {
-		this.chart.getOptions().setBackColor(backColor);
+	@Override
+    public DJPieChartBuilder setBackColor(Color backColor) {
+		chart.getOptions().setBackColor(backColor);
 		return this;
 	}
 
@@ -80,8 +83,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param height the chart height
 	 **/
-	public DJPieChartBuilder setHeight(int height) {
-		this.chart.getOptions().setHeight(height);
+	@Override
+    public DJPieChartBuilder setHeight(int height) {
+		chart.getOptions().setHeight(height);
 		return this;
 	}
 
@@ -90,8 +94,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param width the chart width
 	 **/
-	public DJPieChartBuilder setWidth(int width) {
-		this.chart.getOptions().setWidth(width);
+	@Override
+    public DJPieChartBuilder setWidth(int width) {
+		chart.getOptions().setWidth(width);
 		return this;
 	}
 
@@ -100,8 +105,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param centered the centered
 	 **/
-	public DJPieChartBuilder setCentered(boolean centered) {
-		this.chart.getOptions().setCentered(centered);
+	@Override
+    public DJPieChartBuilder setCentered(boolean centered) {
+		chart.getOptions().setCentered(centered);
 		return this;
 	}
 
@@ -110,8 +116,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param position the position
 	 **/
-	public DJPieChartBuilder setPosition(byte position) {
-		this.chart.getOptions().setPosition(position);
+	@Override
+    public DJPieChartBuilder setPosition(byte position) {
+		chart.getOptions().setPosition(position);
 		return this;
 	}
 
@@ -120,8 +127,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param y the y position
 	 **/
-	public DJPieChartBuilder setY(int y) {
-		this.chart.getOptions().setY(y);
+	@Override
+    public DJPieChartBuilder setY(int y) {
+		chart.getOptions().setY(y);
 		return this;
 	}
 
@@ -129,8 +137,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 * Sets the x position.
 	 *
 	 **/
-	public DJPieChartBuilder setX(int x) {
-		this.chart.getOptions().setX(x);
+	@Override
+    public DJPieChartBuilder setX(int x) {
+		chart.getOptions().setX(x);
 		return this;
 	}
 
@@ -139,8 +148,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param showLegend the legend visibility
 	 **/
-	public DJPieChartBuilder setShowLegend(boolean showLegend) {
-		this.chart.getOptions().setShowLegend(showLegend);
+	@Override
+    public DJPieChartBuilder setShowLegend(boolean showLegend) {
+		chart.getOptions().setShowLegend(showLegend);
 		return this;
 	}
 
@@ -149,8 +159,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param titleColor the title color
 	 **/
-	public DJPieChartBuilder setTitleColor(Color titleColor) {
-		this.chart.getOptions().setTitleColor(titleColor);
+	@Override
+    public DJPieChartBuilder setTitleColor(Color titleColor) {
+		chart.getOptions().setTitleColor(titleColor);
 		return this;
 	}
 
@@ -159,8 +170,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param subtitleColor the subtitle color
 	 **/
-	public DJPieChartBuilder setSubtitleColor(Color subtitleColor) {
-		this.chart.getOptions().setSubtitleColor(subtitleColor);
+	@Override
+    public DJPieChartBuilder setSubtitleColor(Color subtitleColor) {
+		chart.getOptions().setSubtitleColor(subtitleColor);
 		return this;
 	}
 
@@ -169,8 +181,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param legendColor the legend color
 	 **/
-	public DJPieChartBuilder setLegendColor(Color legendColor) {
-		this.chart.getOptions().setLegendColor(legendColor);
+	@Override
+    public DJPieChartBuilder setLegendColor(Color legendColor) {
+		chart.getOptions().setLegendColor(legendColor);
 		return this;
 	}
 
@@ -179,8 +192,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param legendBackgroundColor the legend background color
 	 **/
-	public DJPieChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
-		this.chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
+	@Override
+    public DJPieChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
+		chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
 		return this;
 	}
 
@@ -190,8 +204,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param theme the theme
 	 **/
-	public DJPieChartBuilder setTheme(String theme) {
-		this.chart.getOptions().setTheme(theme);
+	@Override
+    public DJPieChartBuilder setTheme(String theme) {
+		chart.getOptions().setTheme(theme);
 		return this;
 	}
 
@@ -200,8 +215,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param titleFont the title font
 	 **/
-	public DJPieChartBuilder setTitleFont(Font titleFont) {
-		this.chart.getOptions().setTitleFont(titleFont);
+	@Override
+    public DJPieChartBuilder setTitleFont(Font titleFont) {
+		chart.getOptions().setTitleFont(titleFont);
 		return this;
 	}
 
@@ -210,8 +226,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param subtitleFont the subtitle font
 	 **/
-	public DJPieChartBuilder setSubtitleFont(Font subtitleFont) {
-		this.chart.getOptions().setSubtitleFont(subtitleFont);
+	@Override
+    public DJPieChartBuilder setSubtitleFont(Font subtitleFont) {
+		chart.getOptions().setSubtitleFont(subtitleFont);
 		return this;
 	}
 
@@ -220,8 +237,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param legendFont the legend font
 	 **/
-	public DJPieChartBuilder setLegendFont(Font legendFont) {
-		this.chart.getOptions().setLegendFont(legendFont);
+	@Override
+    public DJPieChartBuilder setLegendFont(Font legendFont) {
+		chart.getOptions().setLegendFont(legendFont);
 		return this;
 	}
 
@@ -230,8 +248,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param legendPosition the legend position
 	 **/
-	public DJPieChartBuilder setLegendPosition(byte legendPosition) {
-		this.chart.getOptions().setLegendPosition(legendPosition);
+	@Override
+    public DJPieChartBuilder setLegendPosition(int legendPosition) {
+		chart.getOptions().setLegendPosition(legendPosition);
 		return this;
 	}
 
@@ -240,8 +259,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param titlePosition the title position
 	 **/
-	public DJPieChartBuilder setTitlePosition(byte titlePosition) {
-		this.chart.getOptions().setTitlePosition(titlePosition);
+	@Override
+    public DJPieChartBuilder setTitlePosition(int titlePosition) {
+		chart.getOptions().setTitlePosition(titlePosition);
 		return this;
 	}
 
@@ -250,8 +270,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param title the title
 	 **/
-	public DJPieChartBuilder setTitle(String title) {
-		this.chart.getOptions().setTitleExpression(new LiteralExpression(title));
+	@Override
+    public DJPieChartBuilder setTitle(String title) {
+		chart.getOptions().setTitleExpression(new LiteralExpression(title));
 		return this;
 	}
 
@@ -260,8 +281,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param titleExpression the title expression
 	 **/
-	public DJPieChartBuilder setTitle(StringExpression titleExpression) {
-		this.chart.getOptions().setTitleExpression(titleExpression);
+	@Override
+    public DJPieChartBuilder setTitle(StringExpression titleExpression) {
+		chart.getOptions().setTitleExpression(titleExpression);
 		return this;
 	}
 
@@ -270,8 +292,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param subtitle the subtitle
 	 **/
-	public DJPieChartBuilder setSubtitle(String subtitle) {
-		this.chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
+	@Override
+    public DJPieChartBuilder setSubtitle(String subtitle) {
+		chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
 		return this;
 	}
 
@@ -280,18 +303,20 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param subtitleExpression the subtitle expression
 	 **/
-	public DJPieChartBuilder setSubtitle(StringExpression subtitleExpression) {
-		this.chart.getOptions().setSubtitleExpression(subtitleExpression);
+	@Override
+    public DJPieChartBuilder setSubtitle(StringExpression subtitleExpression) {
+		chart.getOptions().setSubtitleExpression(subtitleExpression);
 		return this;
 	}
 
 	/**
 	 * Sets the line style (DJChartOptions.LINE_STYLE_SOLID, DJChartOptions.LINE_STYLE_DASHED, DJChartOptions.LINE_STYLE_DOTTED, DJChartOptions.LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @param lineStyle one of the line style constants in DJChartOptions class
 	 */
-	public DJPieChartBuilder setLineStyle(byte lineStyle) {
-		this.chart.getOptions().setLineStyle(lineStyle);
+	@Override
+    public DJPieChartBuilder setLineStyle(int lineStyle) {
+		chart.getOptions().setLineStyle(lineStyle);
 		return this;
 	}
 
@@ -300,8 +325,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param lineWidth the line width
 	 **/
-	public DJPieChartBuilder setLineWidth(float lineWidth) {
-		this.chart.getOptions().setLineWidth(lineWidth);
+	@Override
+    public DJPieChartBuilder setLineWidth(float lineWidth) {
+		chart.getOptions().setLineWidth(lineWidth);
 		return this;
 	}
 
@@ -310,8 +336,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param lineColor the line color
 	 **/
-	public DJPieChartBuilder setLineColor(Color lineColor) {
-		this.chart.getOptions().setLineColor(lineColor);
+	@Override
+    public DJPieChartBuilder setLineColor(Color lineColor) {
+		chart.getOptions().setLineColor(lineColor);
 		return this;
 	}
 
@@ -320,8 +347,9 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 *
 	 * @param padding the padding
 	 **/
-	public DJPieChartBuilder setPadding(int padding) {
-		this.chart.getOptions().setPadding(padding);
+	@Override
+    public DJPieChartBuilder setPadding(int padding) {
+		chart.getOptions().setPadding(padding);
 		return this;
 	}
 
@@ -329,20 +357,22 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 	 * Sets a user specified chart customizer class name.
 	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
-	public DJPieChartBuilder setCustomizerClass(String customizerClass) {
-		this.chart.getOptions().setCustomizerClass(customizerClass);
+	@Override
+    public DJPieChartBuilder setCustomizerClass(String customizerClass) {
+		chart.getOptions().setCustomizerClass(customizerClass);
 		return this;
 	}
-	
+
 	//dataset
-	/** 
+	/**
 	 * Allows AbstractChartBuilder to set the key column
 	 */
-	protected DJPieChartBuilder setCategory(PropertyColumn key) {
+	@Override
+    protected DJPieChartBuilder setCategory(PropertyColumn key) {
 		setKey(key);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the key column.
 	 *
@@ -355,39 +385,42 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public DJPieChartBuilder addSerie(AbstractColumn column) {
+	@Override
+    public DJPieChartBuilder addSerie(AbstractColumn column) {
 		getDataset().addSerie(column);
 		return this;
 	}
-	
-	//plot	
+
+	//plot
 	/**
 	 * Adds the specified series color to the plot.
-	 * 
+	 *
 	 * @param color the series color
 	 **/
-	public DJPieChartBuilder addSeriesColor(Color color) {
+	@Override
+    public DJPieChartBuilder addSeriesColor(Color color) {
 		getPlot().addSeriesColor(color);
 		return this;
 	}
 
 	/**
 	 * Set the specified series colors to the plot.
-	 * 
+	 *
 	 * @param seriesColors the series colors
 	 **/
-	public DJPieChartBuilder setSeriesColors(List<Color> seriesColors) {
+	@Override
+    public DJPieChartBuilder setSeriesColors(List<Color> seriesColors) {
 		getPlot().setSeriesColors(seriesColors);
 		return this;
 	}
-	
+
 	//pie plot
 	/**
 	 * Sets the circular.
-	 * 
+	 *
 	 * @param circular the circular
 	 **/
 	public DJPieChartBuilder setCircular(boolean circular) {
@@ -397,33 +430,36 @@ public class DJPieChartBuilder extends AbstractChartBuilder<DJPieChartBuilder> {
 
 	/**
 	 * Sets the label format.
-	 * 
+	 *
 	 * @param labelFormat the label format
 	 **/
 	public DJPieChartBuilder setLabelFormat(String labelFormat) {
 		getPlot().setLabelFormat(labelFormat);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the legend label format.
-	 * 
+	 *
 	 * @param legendLabelFormat the legend label format
 	 **/
 	public DJPieChartBuilder setLegendLabelFormat(String legendLabelFormat) {
 		getPlot().setLegendLabelFormat(legendLabelFormat);
 		return this;
 	}
-	
-	protected PieDataset getDataset() {
+
+	@Override
+    protected PieDataset getDataset() {
 		return (PieDataset) chart.getDataset();
 	}
-	
-	protected PiePlot getPlot() {
+
+	@Override
+    protected PiePlot getPlot() {
 		return (PiePlot) chart.getPlot();
 	}
-	
-	protected byte getChartType() {
-		return DJChart.PIE_CHART;
+
+	@Override
+    protected ChartTypeEnum getChartType() {
+		return ChartTypeEnum.PIE;
 	}
 }
