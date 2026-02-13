@@ -29,9 +29,11 @@
 
 package ar.com.fdvs.dj.domain.chart.builder;
 
+import java.awt.Color;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.StringExpression;
-import ar.com.fdvs.dj.domain.chart.DJChart;
 import ar.com.fdvs.dj.domain.chart.dataset.CategoryDataset;
 import ar.com.fdvs.dj.domain.chart.plot.BarPlot;
 import ar.com.fdvs.dj.domain.chart.plot.DJAxisFormat;
@@ -39,10 +41,8 @@ import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 import net.sf.jasperreports.charts.type.PlotOrientationEnum;
-
-import java.awt.*;
-import java.util.List;
 
 public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	//chart
@@ -51,29 +51,32 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param operation the chart data operation
 	 **/
-	public DJBarChartBuilder setOperation(byte operation) {
-		this.chart.setOperation(operation);
+	@Override
+    public DJBarChartBuilder setOperation(byte operation) {
+		chart.setOperation(operation);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the hyperlink.
 	 *
 	 * @param link the hyperlink
 	 **/
-	public DJBarChartBuilder setLink(DJHyperLink link) {
-		this.chart.setLink(link);
+	@Override
+    public DJBarChartBuilder setLink(DJHyperLink link) {
+		chart.setLink(link);
 		return this;
 	}
-	
+
 	//chart options
 	/**
 	 * Sets the background color.
 	 *
 	 * @param backColor the background color
 	 **/
-	public DJBarChartBuilder setBackColor(Color backColor) {
-		this.chart.getOptions().setBackColor(backColor);
+	@Override
+    public DJBarChartBuilder setBackColor(Color backColor) {
+		chart.getOptions().setBackColor(backColor);
 		return this;
 	}
 
@@ -82,8 +85,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param height the chart height
 	 **/
-	public DJBarChartBuilder setHeight(int height) {
-		this.chart.getOptions().setHeight(height);
+	@Override
+    public DJBarChartBuilder setHeight(int height) {
+		chart.getOptions().setHeight(height);
 		return this;
 	}
 
@@ -92,8 +96,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param width the chart width
 	 **/
-	public DJBarChartBuilder setWidth(int width) {
-		this.chart.getOptions().setWidth(width);
+	@Override
+    public DJBarChartBuilder setWidth(int width) {
+		chart.getOptions().setWidth(width);
 		return this;
 	}
 
@@ -102,8 +107,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param centered the centered
 	 **/
-	public DJBarChartBuilder setCentered(boolean centered) {
-		this.chart.getOptions().setCentered(centered);
+	@Override
+    public DJBarChartBuilder setCentered(boolean centered) {
+		chart.getOptions().setCentered(centered);
 		return this;
 	}
 
@@ -112,8 +118,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param position the position
 	 **/
-	public DJBarChartBuilder setPosition(byte position) {
-		this.chart.getOptions().setPosition(position);
+	@Override
+    public DJBarChartBuilder setPosition(byte position) {
+		chart.getOptions().setPosition(position);
 		return this;
 	}
 
@@ -122,8 +129,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param y the y position
 	 **/
-	public DJBarChartBuilder setY(int y) {
-		this.chart.getOptions().setY(y);
+	@Override
+    public DJBarChartBuilder setY(int y) {
+		chart.getOptions().setY(y);
 		return this;
 	}
 
@@ -131,8 +139,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 * Sets the x position.
 	 *
 	 **/
-	public DJBarChartBuilder setX(int x) {
-		this.chart.getOptions().setX(x);
+	@Override
+    public DJBarChartBuilder setX(int x) {
+		chart.getOptions().setX(x);
 		return this;
 	}
 
@@ -141,8 +150,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param showLegend the legend visibility
 	 **/
-	public DJBarChartBuilder setShowLegend(boolean showLegend) {
-		this.chart.getOptions().setShowLegend(showLegend);
+	@Override
+    public DJBarChartBuilder setShowLegend(boolean showLegend) {
+		chart.getOptions().setShowLegend(showLegend);
 		return this;
 	}
 
@@ -151,8 +161,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param titleColor the title color
 	 **/
-	public DJBarChartBuilder setTitleColor(Color titleColor) {
-		this.chart.getOptions().setTitleColor(titleColor);
+	@Override
+    public DJBarChartBuilder setTitleColor(Color titleColor) {
+		chart.getOptions().setTitleColor(titleColor);
 		return this;
 	}
 
@@ -161,8 +172,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param subtitleColor the subtitle color
 	 **/
-	public DJBarChartBuilder setSubtitleColor(Color subtitleColor) {
-		this.chart.getOptions().setSubtitleColor(subtitleColor);
+	@Override
+    public DJBarChartBuilder setSubtitleColor(Color subtitleColor) {
+		chart.getOptions().setSubtitleColor(subtitleColor);
 		return this;
 	}
 
@@ -171,8 +183,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param legendColor the legend color
 	 **/
-	public DJBarChartBuilder setLegendColor(Color legendColor) {
-		this.chart.getOptions().setLegendColor(legendColor);
+	@Override
+    public DJBarChartBuilder setLegendColor(Color legendColor) {
+		chart.getOptions().setLegendColor(legendColor);
 		return this;
 	}
 
@@ -181,8 +194,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param legendBackgroundColor the legend background color
 	 **/
-	public DJBarChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
-		this.chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
+	@Override
+    public DJBarChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
+		chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
 		return this;
 	}
 
@@ -192,8 +206,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param theme the theme
 	 **/
-	public DJBarChartBuilder setTheme(String theme) {
-		this.chart.getOptions().setTheme(theme);
+	@Override
+    public DJBarChartBuilder setTheme(String theme) {
+		chart.getOptions().setTheme(theme);
 		return this;
 	}
 
@@ -202,8 +217,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param titleFont the title font
 	 **/
-	public DJBarChartBuilder setTitleFont(Font titleFont) {
-		this.chart.getOptions().setTitleFont(titleFont);
+	@Override
+    public DJBarChartBuilder setTitleFont(Font titleFont) {
+		chart.getOptions().setTitleFont(titleFont);
 		return this;
 	}
 
@@ -212,8 +228,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param subtitleFont the subtitle font
 	 **/
-	public DJBarChartBuilder setSubtitleFont(Font subtitleFont) {
-		this.chart.getOptions().setSubtitleFont(subtitleFont);
+	@Override
+    public DJBarChartBuilder setSubtitleFont(Font subtitleFont) {
+		chart.getOptions().setSubtitleFont(subtitleFont);
 		return this;
 	}
 
@@ -222,8 +239,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param legendFont the legend font
 	 **/
-	public DJBarChartBuilder setLegendFont(Font legendFont) {
-		this.chart.getOptions().setLegendFont(legendFont);
+	@Override
+    public DJBarChartBuilder setLegendFont(Font legendFont) {
+		chart.getOptions().setLegendFont(legendFont);
 		return this;
 	}
 
@@ -232,8 +250,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param legendPosition the legend position
 	 **/
-	public DJBarChartBuilder setLegendPosition(byte legendPosition) {
-		this.chart.getOptions().setLegendPosition(legendPosition);
+	@Override
+    public DJBarChartBuilder setLegendPosition(int legendPosition) {
+		chart.getOptions().setLegendPosition(legendPosition);
 		return this;
 	}
 
@@ -242,8 +261,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param titlePosition the title position
 	 **/
-	public DJBarChartBuilder setTitlePosition(byte titlePosition) {
-		this.chart.getOptions().setTitlePosition(titlePosition);
+	@Override
+    public DJBarChartBuilder setTitlePosition(int titlePosition) {
+		chart.getOptions().setTitlePosition(titlePosition);
 		return this;
 	}
 
@@ -252,8 +272,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param title the title
 	 **/
-	public DJBarChartBuilder setTitle(String title) {
-		this.chart.getOptions().setTitleExpression(new LiteralExpression(title));
+	@Override
+    public DJBarChartBuilder setTitle(String title) {
+		chart.getOptions().setTitleExpression(new LiteralExpression(title));
 		return this;
 	}
 
@@ -262,8 +283,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param titleExpression the title expression
 	 **/
-	public DJBarChartBuilder setTitle(StringExpression titleExpression) {
-		this.chart.getOptions().setTitleExpression(titleExpression);
+	@Override
+    public DJBarChartBuilder setTitle(StringExpression titleExpression) {
+		chart.getOptions().setTitleExpression(titleExpression);
 		return this;
 	}
 
@@ -272,8 +294,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param subtitle the subtitle
 	 **/
-	public DJBarChartBuilder setSubtitle(String subtitle) {
-		this.chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
+	@Override
+    public DJBarChartBuilder setSubtitle(String subtitle) {
+		chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
 		return this;
 	}
 
@@ -282,18 +305,20 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param subtitleExpression the subtitle expression
 	 **/
-	public DJBarChartBuilder setSubtitle(StringExpression subtitleExpression) {
-		this.chart.getOptions().setSubtitleExpression(subtitleExpression);
+	@Override
+    public DJBarChartBuilder setSubtitle(StringExpression subtitleExpression) {
+		chart.getOptions().setSubtitleExpression(subtitleExpression);
 		return this;
 	}
 
 	/**
 	 * Sets the line style (DJChartOptions.LINE_STYLE_SOLID, DJChartOptions.LINE_STYLE_DASHED, DJChartOptions.LINE_STYLE_DOTTED, DJChartOptions.LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @param lineStyle one of the line style constants in DJChartOptions class
 	 */
-	public DJBarChartBuilder setLineStyle(byte lineStyle) {
-		this.chart.getOptions().setLineStyle(lineStyle);
+	@Override
+    public DJBarChartBuilder setLineStyle(int lineStyle) {
+		chart.getOptions().setLineStyle(lineStyle);
 		return this;
 	}
 
@@ -302,8 +327,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param lineWidth the line width
 	 **/
-	public DJBarChartBuilder setLineWidth(float lineWidth) {
-		this.chart.getOptions().setLineWidth(lineWidth);
+	@Override
+    public DJBarChartBuilder setLineWidth(float lineWidth) {
+		chart.getOptions().setLineWidth(lineWidth);
 		return this;
 	}
 
@@ -312,8 +338,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param lineColor the line color
 	 **/
-	public DJBarChartBuilder setLineColor(Color lineColor) {
-		this.chart.getOptions().setLineColor(lineColor);
+	@Override
+    public DJBarChartBuilder setLineColor(Color lineColor) {
+		chart.getOptions().setLineColor(lineColor);
 		return this;
 	}
 
@@ -322,8 +349,9 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 *
 	 * @param padding the padding
 	 **/
-	public DJBarChartBuilder setPadding(int padding) {
-		this.chart.getOptions().setPadding(padding);
+	@Override
+    public DJBarChartBuilder setPadding(int padding) {
+		chart.getOptions().setPadding(padding);
 		return this;
 	}
 
@@ -331,35 +359,38 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 * Sets a user specified chart customizer class name.
 	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
-	public DJBarChartBuilder setCustomizerClass(String customizerClass) {
-		this.chart.getOptions().setCustomizerClass(customizerClass);
+	@Override
+    public DJBarChartBuilder setCustomizerClass(String customizerClass) {
+		chart.getOptions().setCustomizerClass(customizerClass);
 		return this;
-	}	
-	
+	}
+
 	//dataset
 	/**
 	 * Sets the category column.
 	 *
 	 * @param category the category column
 	 **/
-	public DJBarChartBuilder setCategory(PropertyColumn category) {
+	@Override
+    public DJBarChartBuilder setCategory(PropertyColumn category) {
 		getDataset().setCategory(category);
 		return this;
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public DJBarChartBuilder addSerie(AbstractColumn column) {
+	@Override
+    public DJBarChartBuilder addSerie(AbstractColumn column) {
 		getDataset().addSerie(column);
 		return this;
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param label column the custom label
 	 **/
@@ -370,14 +401,14 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
 	public DJBarChartBuilder addSerie(AbstractColumn column, StringExpression labelExpression) {
 		getDataset().addSerie(column, labelExpression);
 		return this;
 	}
-	
+
 	public DJBarChartBuilder setUseSeriesAsCategory(boolean useSeriesAsCategory) {
 		getDataset().setUseSeriesAsCategory(useSeriesAsCategory);
 		return this;
@@ -388,11 +419,11 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 	 * Sets the angle in degrees to rotate the data axis labels.  The range is -360 to 360.  A positive value angles
 	 * the label so it reads downwards wile a negative value angles the label so it reads upwards.  Only charts that
 	 * use a category based axis (such as line or bar charts) support label rotation.
-	 * 
+	 *
 	 * @param labelRotation the label rotation
 	 **/
 	public DJBarChartBuilder setLabelRotation(double labelRotation) {
-		this.getPlot().setLabelRotation(labelRotation);
+		getPlot().setLabelRotation(labelRotation);
 		return this;
 	}
 
@@ -405,48 +436,50 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 		getPlot().setOrientation(orientation);
 		return this;
 	}
-	
+
 	/**
 	 * Adds the specified series color to the plot.
-	 * 
+	 *
 	 * @param color the series color
 	 **/
-	public DJBarChartBuilder addSeriesColor(Color color) {
+	@Override
+    public DJBarChartBuilder addSeriesColor(Color color) {
 		getPlot().addSeriesColor(color);
 		return this;
 	}
 
 	/**
 	 * Set the specified series colors to the plot.
-	 * 
+	 *
 	 * @param seriesColors the series colors
 	 **/
-	public DJBarChartBuilder setSeriesColors(List<Color> seriesColors) {
+	@Override
+    public DJBarChartBuilder setSeriesColors(List<Color> seriesColors) {
 		getPlot().setSeriesColors(seriesColors);
 		return this;
 	}
-	
+
 	//category plot
 	/**
 	 * Sets the category axis format.
-	 * 
+	 *
 	 * @param categoryAxisFormat the category axis format
 	 **/
 	public DJBarChartBuilder setCategoryAxisFormat(DJAxisFormat categoryAxisFormat) {
 		getPlot().setCategoryAxisFormat(categoryAxisFormat);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the value axis format.
-	 * 
+	 *
 	 * @param valueAxisFormat the value axis format
 	 **/
 	public DJBarChartBuilder setValueAxisFormat(DJAxisFormat valueAxisFormat) {
 		getPlot().setValueAxisFormat(valueAxisFormat);
 		return this;
 	}
-	
+
 	//bar plot
 	/**
 	 * Sets the labels visibility.
@@ -477,16 +510,19 @@ public class DJBarChartBuilder extends AbstractChartBuilder<DJBarChartBuilder> {
 		getPlot().setShowTickMarks(showTickMarks);
 		return this;
 	}
-	
-	protected CategoryDataset getDataset() {
+
+	@Override
+    protected CategoryDataset getDataset() {
 		return (CategoryDataset) chart.getDataset();
 	}
-	
-	protected BarPlot getPlot() {
+
+	@Override
+    protected BarPlot getPlot() {
 		return (BarPlot) chart.getPlot();
 	}
-	
-	protected byte getChartType() {
-		return DJChart.BAR_CHART;
+
+	@Override
+    protected ChartTypeEnum getChartType() {
+		return ChartTypeEnum.BAR;
 	}
 }

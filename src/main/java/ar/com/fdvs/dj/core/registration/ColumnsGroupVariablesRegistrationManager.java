@@ -29,6 +29,11 @@
 
 package ar.com.fdvs.dj.core.registration;
 
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import ar.com.fdvs.dj.core.layout.LayoutManager;
 import ar.com.fdvs.dj.domain.DJCalculation;
 import ar.com.fdvs.dj.domain.DJValueFormatter;
@@ -43,16 +48,13 @@ import ar.com.fdvs.dj.domain.entities.columns.PercentageColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.util.LayoutUtils;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignParameter;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.type.CalculationEnum;
 import net.sf.jasperreports.engine.type.ResetTypeEnum;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.List;
 
 /**
  * Manager invoked to register variables for groups of columns. <br>
@@ -67,8 +69,8 @@ public class ColumnsGroupVariablesRegistrationManager extends AbstractEntityRegi
     /**
      * It can be "header" o "footer"
      */
-	private String type;
-	private String columnToGroupByProperty;
+	private final String type;
+	private final String columnToGroupByProperty;
 
 	public ColumnsGroupVariablesRegistrationManager(String type, String columnToGroupByProperty, DynamicJasperDesign jd,  DynamicReport dr, LayoutManager layoutManager) {
 		super(jd,dr,layoutManager);
@@ -76,31 +78,32 @@ public class ColumnsGroupVariablesRegistrationManager extends AbstractEntityRegi
 		this.columnToGroupByProperty = columnToGroupByProperty;
 	}
 
-	protected void registerEntity(Entity entity) {
-		DJGroupVariable columnsGroupVariable = (DJGroupVariable) entity;
+	@Override
+    protected void registerEntity(Entity entity) {
+		final DJGroupVariable columnsGroupVariable = (DJGroupVariable) entity;
 		try {
-			String name = this.getDjd().getName() +"_" + columnsGroupVariable.getColumnToApplyOperation().getGroupVariableName(type, columnToGroupByProperty);
+			final String name = getDjd().getName() +"_" + columnsGroupVariable.getColumnToApplyOperation().getGroupVariableName(type, columnToGroupByProperty);
 			columnsGroupVariable.setName(name);
 			if (columnsGroupVariable.getValueExpression() == null) {
-				JRDesignVariable jrVariable = (JRDesignVariable)transformEntity(entity);
-				
+				final JRDesignVariable jrVariable = (JRDesignVariable)transformEntity(entity);
+
 				log.debug("registering group variable " + jrVariable.getName() + " (" + jrVariable.getValueClassName() + ")");
 				getDjd().addVariable(jrVariable);
-			
+
 				registerValueFormatter( columnsGroupVariable, jrVariable.getName() );
-			} 
+			}
 			else {
 				registerCustomExpressionParameter(name + "_valueExpression", columnsGroupVariable.getValueExpression());
 			}
-			
+
 			if (columnsGroupVariable.getPrintWhenExpression() != null){
-				registerCustomExpressionParameter(name + "_printWhenExpression", columnsGroupVariable.getPrintWhenExpression());	
+				registerCustomExpressionParameter(name + "_printWhenExpression", columnsGroupVariable.getPrintWhenExpression());
 			}
-			if (columnsGroupVariable.getLabel() != null && columnsGroupVariable.getLabel().getLabelExpression() != null) {
+			if ((columnsGroupVariable.getLabel() != null) && (columnsGroupVariable.getLabel().getLabelExpression() != null)) {
 				registerCustomExpressionParameter(name + "_labelExpression", columnsGroupVariable.getLabel().getLabelExpression());
 			}
-			
-		} catch (JRException e) {
+
+		} catch (final JRException e) {
 			throw new EntitiesRegistrationException(e.getMessage(),e);
 		}
 	}
@@ -115,84 +118,77 @@ public class ColumnsGroupVariablesRegistrationManager extends AbstractEntityRegi
 		if ( djVariable.getValueFormatter() == null){
 			return;
 		}
-		
-		JRDesignParameter dparam = new JRDesignParameter();
+
+		final JRDesignParameter dparam = new JRDesignParameter();
 		dparam.setName(variableName + "_vf"); //value formater suffix
 		dparam.setValueClassName(DJValueFormatter.class.getName());
 		log.debug("Registering value formatter parameter for property " + dparam.getName() );
 		try {
 			getDjd().addParameter(dparam);
-		} catch (JRException e) {
+		} catch (final JRException e) {
 			throw new EntitiesRegistrationException(e.getMessage(),e);
 		}
-		getDjd().getParametersWithValues().put(dparam.getName(), djVariable.getValueFormatter());		
-		
+		getDjd().getParametersWithValues().put(dparam.getName(), djVariable.getValueFormatter());
+
 	}
 
-	protected Object transformEntity(Entity entity) {
+	@Override
+    protected Object transformEntity(Entity entity) {
 
-		DJGroupVariable groupVariable = (DJGroupVariable) entity;
-		AbstractColumn col = groupVariable.getColumnToApplyOperation();
+		final DJGroupVariable groupVariable = (DJGroupVariable) entity;
+		final AbstractColumn col = groupVariable.getColumnToApplyOperation();
 
-        String variableName =  groupVariable.getName();
+        final String variableName =  groupVariable.getName();
         log.debug("transforming group variable " +variableName);
-		DJCalculation op = groupVariable.getOperation();
+		final DJCalculation op = groupVariable.getOperation();
 
-		JRDesignExpression expression = new JRDesignExpression();
+		final JRDesignExpression expression = new JRDesignExpression();
 
 		//only variables from the last registered group are important now
-		List groupsList = getDjd().getGroupsList();
+		final List<JRGroup> groupsList = getDjd().getGroupsList();
 		JRDesignGroup registeredGroup = (JRDesignGroup)groupsList.get(groupsList.size()-1);
 
-		if (col instanceof ExpressionColumn && ((ExpressionColumn)col).getExpressionForCalculation() != null){
-			ExpressionColumn expcol = (ExpressionColumn)col;
+		if ((col instanceof ExpressionColumn) && (((ExpressionColumn)col).getExpressionForCalculation() != null)){
+			final ExpressionColumn expcol = (ExpressionColumn)col;
 			expression.setText(expcol.getTextForExpressionForCalculartion());
-			expression.setValueClassName(expcol.getExpressionForCalculation().getClassName());
-		} 
+		}
 		else if (col instanceof PercentageColumn) {
-			PercentageColumn pcol = (PercentageColumn) col;
+			final PercentageColumn pcol = (PercentageColumn) col;
 			expression.setText(pcol.getPercentageColumn().getTextForExpression());
-			expression.setValueClassName(pcol.getPercentageColumn().getValueClassNameForExpression());
-			
-			DJGroup djgroup = groupVariable.getGroup();
+
+			final DJGroup djgroup = groupVariable.getGroup();
 			registeredGroup = LayoutUtils.findParentJRGroup(djgroup, getDynamicReport(), getDjd(), getLayoutManager());
-		}
-		else {
-			if (col.getTextFormatter() != null){
-				PropertyColumn pcol = (PropertyColumn) col; 
-				expression.setText("$F{" + pcol.getColumnProperty().getProperty() + "}");
-				expression.setValueClassName(pcol.getColumnProperty().getValueClassName());
-			} else {
-				expression.setText(col.getTextForExpression());
-				expression.setValueClassName(col.getValueClassNameForExpression());
-			}
-		}
-		
-		JRDesignVariable variable = new JRDesignVariable();
+		} else if (col.getTextFormatter() != null){
+        	final PropertyColumn pcol = (PropertyColumn) col;
+        	expression.setText("$F{" + pcol.getColumnProperty().getProperty() + "}");
+        } else {
+        	expression.setText(col.getTextForExpression());
+        }
+
+		final JRDesignVariable variable = new JRDesignVariable();
 		variable.setExpression(expression);
-		variable.setCalculation(CalculationEnum.getByValue(groupVariable.getOperation().getValue()));
-		variable.setName(variableName);		
+		variable.setCalculation(CalculationEnum.values()[groupVariable.getOperation().getValue()]);
+		variable.setName(variableName);
 
 		variable.setResetType(ResetTypeEnum.GROUP );
-		variable.setResetGroup(registeredGroup);
+		variable.setResetGroup(registeredGroup.getName());
 
-		String valueClassName = col.getVariableClassName(op);
-		String initialExpression = col.getInitialExpression(op);
+		final String valueClassName = col.getVariableClassName(op);
+		final String initialExpression = col.getInitialExpression(op);
 
 //		if (DJCalculation.SYSTEM.equals(groupVariable.getOperation())){
 //			variable.setValueClassName(Object.class.getName());
 //		} else {
 //		}
 		variable.setValueClassName(valueClassName);
-				
+
 		if (initialExpression != null){
-			JRDesignExpression initialExp = new JRDesignExpression();
+			final JRDesignExpression initialExp = new JRDesignExpression();
 			initialExp.setText(initialExpression);
-			initialExp.setValueClassName(valueClassName);
 			variable.setInitialValueExpression(initialExp);
 		}
 
-		Class incrementerFactoryClass = groupVariable.getIncrementerFactoryClass();
+		final Class<?> incrementerFactoryClass = groupVariable.getIncrementerFactoryClass();
 		if (incrementerFactoryClass != null) {
 			variable.setIncrementerFactoryClass(incrementerFactoryClass);
 		}

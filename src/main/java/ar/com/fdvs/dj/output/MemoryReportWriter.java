@@ -29,18 +29,20 @@
 
 package ar.com.fdvs.dj.output;
 
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperPrint;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 /**
  * @author Alejandro Gomez
@@ -51,14 +53,15 @@ public class MemoryReportWriter extends ReportWriter {
 
     private static final Log LOGGER = LogFactory.getLog(MemoryReportWriter.class);
 
-    public MemoryReportWriter(final JasperPrint _jasperPrint, final JRExporter _exporter) {
+    public MemoryReportWriter(final JasperPrint _jasperPrint, final Exporter _exporter) {
         super(_jasperPrint, _exporter);
     }
 
+    @Override
     public void writeTo(final HttpServletResponse _response) throws IOException, JRException {
         LOGGER.info("entering MemoryReportWriter.writeTo(HttpServletResponse)");
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, stream);
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(stream));
         exporter.exportReport();
         _response.setContentLength(stream.size());
         copyStreams(new ByteArrayInputStream(stream.toByteArray()), _response.getOutputStream());
@@ -68,7 +71,7 @@ public class MemoryReportWriter extends ReportWriter {
     public InputStream write() throws IOException, JRException {
         LOGGER.info("entering MemoryReportWriter.write()");
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, stream);
+        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(stream));
         exporter.exportReport();
 
         return new ByteArrayInputStream(stream.toByteArray());

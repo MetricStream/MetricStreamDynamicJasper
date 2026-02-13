@@ -31,7 +31,8 @@ package ar.com.fdvs.dj.core.layout;
 
 import net.sf.jasperreports.engine.design.JRDesignBand;
 import net.sf.jasperreports.engine.design.JRDesignElement;
-import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalImageAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 
 /**
  * @author msimone
@@ -45,51 +46,57 @@ public abstract class HorizontalBandAlignment {
 	 * @return
 	 */
 	public static HorizontalBandAlignment buildAligment(byte aligment){
-		if (aligment == RIGHT.getAlignment())
-			return RIGHT;
-		else if (aligment == LEFT.getAlignment())
-			return LEFT;
-		else if (aligment == CENTER.getAlignment())
-			return CENTER;
+		if (aligment == RIGHT.getAlignment()) {
+            return RIGHT;
+        } else if (aligment == LEFT.getAlignment()) {
+        } else if (aligment == CENTER.getAlignment()) {
+            return CENTER;
+        }
 
 		return LEFT;
 	}
 
 	public static final HorizontalBandAlignment RIGHT = new HorizontalBandAlignment() {
-		public void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element) {
-			int width = totalWidth - element.getWidth() - offset;
+		@Override
+        public void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element) {
+			final int width = totalWidth - element.getWidth() - offset;
 			element.setX(width);
 			band.addElement(element);
 		}
 
-		public byte getAlignment() {
-			return HorizontalAlignEnum.RIGHT.getValue();
+		@Override
+        public int getAlignment() {
+			return HorizontalTextAlignEnum.RIGHT.ordinal();
 		}
 	};
 
 	public static final HorizontalBandAlignment LEFT = new HorizontalBandAlignment() {
-		public void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element) {
+		@Override
+        public void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element) {
 			element.setX(element.getX() + offset);
 			band.addElement(element);
 		}
 
-		public byte getAlignment() {
-			return HorizontalAlignEnum.LEFT.getValue();
+		@Override
+        public int getAlignment() {
+			return HorizontalImageAlignEnum.LEFT.ordinal();
 		}
 	};
 
 	public static final HorizontalBandAlignment CENTER = new HorizontalBandAlignment() {
-		public void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element) {
-			element.setX(totalWidth/2 - element.getWidth()/2 + offset);
+		@Override
+        public void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element) {
+			element.setX(((totalWidth/2) - (element.getWidth()/2)) + offset);
 			band.addElement(element);
 		}
 
-		public byte getAlignment() {
-			return HorizontalAlignEnum.CENTER.getValue();
+		@Override
+        public int getAlignment() {
+			return HorizontalImageAlignEnum.CENTER.ordinal();
 		}
 	};
 
-	public abstract byte getAlignment();
+	public abstract int getAlignment();
 	public abstract void align(int totalWidth, int offset, JRDesignBand band, JRDesignElement element);
 
 }

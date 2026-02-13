@@ -29,59 +29,59 @@
 
 package ar.com.fdvs.dj.domain.chart;
 
+import java.awt.Color;
+
 import ar.com.fdvs.dj.domain.DJBaseElement;
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.util.ExpressionUtils;
+import net.sf.jasperreports.charts.design.JRDesignChart;
 import net.sf.jasperreports.charts.type.EdgeEnum;
-import net.sf.jasperreports.engine.design.JRDesignChart;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.type.LineStyleEnum;
 
-import java.awt.*;
-
 public class DJChartOptions extends DJBaseElement {
-	
+
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	public static final byte POSITION_FOOTER = 1;
 	public static final byte POSITION_HEADER = 2;
 
-	public static final byte EDGE_TOP = EdgeEnum.TOP.getValue();
-	public static final byte EDGE_BOTTOM = EdgeEnum.BOTTOM.getValue();
-	public static final byte EDGE_LEFT = EdgeEnum.LEFT.getValue();
-	public static final byte EDGE_RIGHT = EdgeEnum.RIGHT.getValue();
-	
+	public static final int EDGE_TOP = EdgeEnum.TOP.ordinal();
+	public static final int EDGE_BOTTOM = EdgeEnum.BOTTOM.ordinal();
+	public static final int EDGE_LEFT = EdgeEnum.LEFT.ordinal();
+	public static final int EDGE_RIGHT = EdgeEnum.RIGHT.ordinal();
+
 	/**
 	 * Constant useful for specifying solid line style.
 	 */
-	public static final byte LINE_STYLE_SOLID =  LineStyleEnum.SOLID.getValue();
+	public static final int LINE_STYLE_SOLID =  LineStyleEnum.SOLID.ordinal();
 
 	/**
 	 * Constant useful for specifying dashed line style.
 	 */
-	public static final byte LINE_STYLE_DASHED = LineStyleEnum.DASHED.getValue();
+	public static final int LINE_STYLE_DASHED = LineStyleEnum.DASHED.ordinal();
 
 	/**
 	 * Constant useful for specifying dotted line style.
 	 */
-	public static final byte LINE_STYLE_DOTTED = LineStyleEnum.DOTTED.getValue();
+	public static final int LINE_STYLE_DOTTED = LineStyleEnum.DOTTED.ordinal();
 
 	/**
 	 * Constant useful for specifying double line style.
 	 */
-	public static final byte LINE_STYLE_DOUBLE = LineStyleEnum.DOUBLE.getValue();
-	
+	public static final int LINE_STYLE_DOUBLE = LineStyleEnum.DOUBLE.ordinal();
+
 	private Color backColor;
 	private int height;
 	private int width;
 	private boolean centered;
 	private byte position;
 	private int y;
-	private int x;	
-	
+	private int x;
+
 	private Boolean showLegend = null;
 	private Color titleColor = null;
 	private Color subtitleColor = null;
@@ -91,30 +91,30 @@ public class DJChartOptions extends DJBaseElement {
 	private Font titleFont = null;
 	private Font subtitleFont = null;
 	private Font legendFont = null;
-	private Byte legendPosition = null;
-	private Byte titlePosition = null;
+	private Integer legendPosition = null;
+	private Integer titlePosition = null;
 	private StringExpression titleExpression = null;
 	private StringExpression subtitleExpression = null;
-	
-	private Byte lineStyle = null;
+
+	private Integer lineStyle = null;
 	private Float lineWidth = null;
 	private Color lineColor = null;
 	private Integer padding = null;
-	
+
 	private String customizerClass = null;
-		
+
 	public DJChartOptions() {
-		this.showLegend = Boolean.TRUE;
-		this.backColor = Color.WHITE;
-		this.height = 200;
-		this.width = 200;
-		this.centered = true;
-		this.position = POSITION_FOOTER;
-		this.x = 0;
-		this.y = 0;		
-		this.padding = 10;
+		showLegend = Boolean.TRUE;
+		backColor = Color.WHITE;
+		height = 200;
+		width = 200;
+		centered = true;
+		position = POSITION_FOOTER;
+		x = 0;
+		y = 0;
+		padding = 10;
 	}
-		
+
 	/**
 	 * Returns the background color.
 	 *
@@ -410,7 +410,7 @@ public class DJChartOptions extends DJBaseElement {
 	 *
 	 * @return	the legend position
 	 **/
-	public Byte getLegendPosition() {
+	public Integer getLegendPosition() {
 		return legendPosition;
 	}
 
@@ -419,7 +419,7 @@ public class DJChartOptions extends DJBaseElement {
 	 *
 	 * @param legendPosition the legend position
 	 **/
-	public void setLegendPosition(byte legendPosition) {
+	public void setLegendPosition(int legendPosition) {
 		this.legendPosition = legendPosition;
 	}
 
@@ -428,7 +428,7 @@ public class DJChartOptions extends DJBaseElement {
 	 *
 	 * @return	the title position
 	 **/
-	public Byte getTitlePosition() {
+	public Integer getTitlePosition() {
 		return titlePosition;
 	}
 
@@ -437,7 +437,7 @@ public class DJChartOptions extends DJBaseElement {
 	 *
 	 * @param titlePosition the title position
 	 **/
-	public void setTitlePosition(byte titlePosition) {
+	public void setTitlePosition(int titlePosition) {
 		this.titlePosition = titlePosition;
 	}
 
@@ -479,25 +479,25 @@ public class DJChartOptions extends DJBaseElement {
 
 	/**
 	 * Gets the line style (LINE_STYLE_SOLID, LINE_STYLE_DASHED, LINE_STYLE_DOTTED, LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @return one of the line style constants in this class
 	 */
-	public Byte getLineStyle() {
+	public Integer getLineStyle() {
 		return lineStyle;
 	}
 
 	/**
 	 * Sets the line style (LINE_STYLE_SOLID, LINE_STYLE_DASHED, LINE_STYLE_DOTTED, LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @param lineStyle one of the line style constants in this class
 	 */
-	public void setLineStyle(byte lineStyle) {
+	public void setLineStyle(int lineStyle) {
 		this.lineStyle = lineStyle;
 	}
 
 	/**
 	 * Returns the line width.
-	 * 
+	 *
 	 * @return the line width
 	 */
 	public Float getLineWidth() {
@@ -566,14 +566,15 @@ public class DJChartOptions extends DJBaseElement {
 	public String getCustomizerClass() {
 		return customizerClass;
 	}
-	
+
 	public void transform(DynamicJasperDesign design, String name, JRDesignChart chart, int width) {
 
 		// size
-		if (centered)
-			chart.setWidth(width);
-		else
-			chart.setWidth(this.width);
+		if (centered) {
+            chart.setWidth(width);
+        } else {
+            chart.setWidth(this.width);
+        }
 
 		chart.setHeight(height);
 
@@ -582,52 +583,69 @@ public class DJChartOptions extends DJBaseElement {
 		chart.setY(y);
 
 		// options
-		if (showLegend != null)
-			chart.setShowLegend(showLegend);
-		if (backColor != null)
-			chart.setBackcolor(backColor);
-		if (titleColor != null)
-			chart.setTitleColor(titleColor);
-		if (subtitleColor != null)
-			chart.setSubtitleColor(subtitleColor);
-		if (legendColor != null)
-			chart.setLegendColor(legendColor);
-		if (legendBackgroundColor != null)
-			chart.setLegendBackgroundColor(legendBackgroundColor);
-		if (theme != null)
-			chart.setTheme(theme);
-		if (titleFont != null)
-			chart.setTitleFont(titleFont.transform());
-		if (subtitleFont != null)
-			chart.setSubtitleFont(subtitleFont.transform());
-		if (legendFont != null)
-			chart.setLegendFont(legendFont.transform());
-		if (legendPosition != null)
-			chart.setLegendPosition( EdgeEnum.getByValue(legendPosition) );
-		if (titlePosition != null)
-			chart.setTitlePosition( EdgeEnum.getByValue(titlePosition) );
-		
-		if (padding != null)
-			chart.getLineBox().setPadding(padding);
-		
-		if (lineStyle != null)
-			chart.getLineBox().getPen().setLineStyle( LineStyleEnum.getByValue(lineStyle) );
-		if (lineWidth != null)
-			chart.getLineBox().getPen().setLineWidth(lineWidth);
-		if (lineColor != null)
-			chart.getLineBox().getPen().setLineColor(lineColor);		
-		
+		if (showLegend != null) {
+            chart.setShowLegend(showLegend);
+        }
+		if (backColor != null) {
+            chart.setBackcolor(backColor);
+        }
+		if (titleColor != null) {
+            chart.setTitleColor(titleColor);
+        }
+		if (subtitleColor != null) {
+            chart.setSubtitleColor(subtitleColor);
+        }
+		if (legendColor != null) {
+            chart.setLegendColor(legendColor);
+        }
+		if (legendBackgroundColor != null) {
+            chart.setLegendBackgroundColor(legendBackgroundColor);
+        }
+		if (theme != null) {
+            chart.setTheme(theme);
+        }
+		if (titleFont != null) {
+            chart.setTitleFont(titleFont.transform());
+        }
+		if (subtitleFont != null) {
+            chart.setSubtitleFont(subtitleFont.transform());
+        }
+		if (legendFont != null) {
+            chart.setLegendFont(legendFont.transform());
+        }
+		if (legendPosition != null) {
+            chart.setLegendPosition( EdgeEnum.values()[legendPosition] );
+        }
+		if (titlePosition != null) {
+            chart.setTitlePosition( EdgeEnum.values()[titlePosition] );
+        }
+
+		if (padding != null) {
+            chart.getLineBox().setPadding(padding);
+        }
+
+		if (lineStyle != null) {
+            chart.getLineBox().getPen().setLineStyle( LineStyleEnum.values()[lineStyle] );
+        }
+		if (lineWidth != null) {
+            chart.getLineBox().getPen().setLineWidth(lineWidth);
+        }
+		if (lineColor != null) {
+            chart.getLineBox().getPen().setLineColor(lineColor);
+        }
+
 		if (titleExpression != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "title_" + name, titleExpression);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "title_" + name, titleExpression);
 			chart.setTitleExpression(exp);
 		}
-		
+
 		if (subtitleExpression != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "subtitle_" + name, subtitleExpression);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "subtitle_" + name, subtitleExpression);
 			chart.setSubtitleExpression(exp);
 		}
-		
-		if (customizerClass != null)
-			chart.setCustomizerClass(customizerClass);
+
+		if (customizerClass != null) {
+            chart.setCustomizerClass(customizerClass);
+        }
 	}
 }

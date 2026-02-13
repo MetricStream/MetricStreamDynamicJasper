@@ -33,7 +33,7 @@ import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 import net.sf.jasperreports.engine.type.WhenResourceMissingTypeEnum;
 
 /**
- * See value of constants here: 
+ * See value of constants here:
  * http://jasperreports.sourceforge.net/api/constant-values.html
  * @author mamana
  *
@@ -81,15 +81,15 @@ public interface DJConstants {
 	String QUERY_LANGUAGE_XPATH = "xPath";
 	String QUERY_LANGUAGE_MONDRIAN = "mdx";
 
-	byte WHEN_NO_DATA_TYPE_NO_PAGES = WhenNoDataTypeEnum.NO_PAGES.getValue();
-	byte WHEN_NO_DATA_TYPE_BLANK_PAGE = WhenNoDataTypeEnum.BLANK_PAGE.getValue();
-	byte WHEN_NO_DATA_TYPE_ALL_SECTIONS_NO_DETAIL = WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL.getValue();
-	byte WHEN_NO_DATA_TYPE_NO_DATA_SECTION = WhenNoDataTypeEnum.NO_DATA_SECTION.getValue();
+	int WHEN_NO_DATA_TYPE_NO_PAGES = WhenNoDataTypeEnum.NO_PAGES.ordinal();
+	int WHEN_NO_DATA_TYPE_BLANK_PAGE = WhenNoDataTypeEnum.BLANK_PAGE.ordinal();
+	int WHEN_NO_DATA_TYPE_ALL_SECTIONS_NO_DETAIL = WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL.ordinal();
+	int WHEN_NO_DATA_TYPE_NO_DATA_SECTION = WhenNoDataTypeEnum.NO_DATA_SECTION.ordinal();
 
-	byte WHEN_RESOURCE_MISSING_TYPE_EMPTY = WhenResourceMissingTypeEnum.EMPTY.getValue();
-	byte WHEN_RESOURCE_MISSING_TYPE_ERROR = WhenResourceMissingTypeEnum.ERROR.getValue();
-	byte WHEN_RESOURCE_MISSING_TYPE_KEY = WhenResourceMissingTypeEnum.KEY.getValue();
-	byte WHEN_RESOURCE_MISSING_TYPE_NULL = WhenResourceMissingTypeEnum.NULL.getValue();
+	int WHEN_RESOURCE_MISSING_TYPE_EMPTY = WhenResourceMissingTypeEnum.EMPTY.ordinal();
+	int WHEN_RESOURCE_MISSING_TYPE_ERROR = WhenResourceMissingTypeEnum.ERROR.ordinal();
+	int WHEN_RESOURCE_MISSING_TYPE_KEY = WhenResourceMissingTypeEnum.KEY.ordinal();
+	int WHEN_RESOURCE_MISSING_TYPE_NULL = WhenResourceMissingTypeEnum.NULL.ordinal();
 
 	int SUBREPORT_PARAM_ORIGIN_FIELD = 1;
 	int SUBREPORT_PARAM_ORIGIN_PARAMETER = 2;
@@ -97,7 +97,7 @@ public interface DJConstants {
 	int SUBREPORT_PARAM_ORIGIN_CUSTOM = 4; //write your own expression
 
 	String CUSTOM_EXPRESSION__PARAMETERS_MAP = "REPORT_PARAMETERS_MAP";
-	
+
 	String FORMAT_CSV = "CSV";
 	String FORMAT_HTML = "HTML";
 	String FORMAT_PDF = "PDF";

@@ -29,29 +29,39 @@
 
 package ar.com.fdvs.dj.domain.builders;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.DJChart;
 import ar.com.fdvs.dj.domain.DJChartColors;
 import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 public class DJChartBuilder {
 	private Byte type;
 	private DJGroup columnsGroup;
-	private List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
-	private Byte operation;
+	private final List<AbstractColumn> columns = new ArrayList<>();
+	private Integer operation;
 	private DJChartOptions chartOptions;
 
 	public DJChart build() throws ChartBuilderException {
-		if (type == null) throw new ChartBuilderException("Chart type must be specified");
-		if (columnsGroup == null) throw new ChartBuilderException("The group to wich the chart is related must be specified");
-		if (columns.isEmpty()) throw new ChartBuilderException("At least one column to wich the chart is related must be specified");
-		if (operation == null) throw new ChartBuilderException("The operation for the chart must be specified");
-		if (chartOptions == null) chartOptions = createDefaultOptions();
+		if (type == null) {
+            throw new ChartBuilderException("Chart type must be specified");
+        }
+		if (columnsGroup == null) {
+            throw new ChartBuilderException("The group to wich the chart is related must be specified");
+        }
+		if (columns.isEmpty()) {
+            throw new ChartBuilderException("At least one column to wich the chart is related must be specified");
+        }
+		if (operation == null) {
+            throw new ChartBuilderException("The operation for the chart must be specified");
+        }
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
 
 		return new DJChart(type,columnsGroup,columns, operation,chartOptions);
 	}
@@ -61,11 +71,11 @@ public class DJChartBuilder {
 	}
 
 	public DJChartBuilder addColumn(AbstractColumn column) {
-		this.columns.add(column);
+		columns.add(column);
 		return this;
 	}
 
-	public byte getOperation() {
+	public int getOperation() {
 		return operation;
 	}
 
@@ -74,12 +84,13 @@ public class DJChartBuilder {
 	 * @param operation
 	 * @return
 	 */
-	public DJChartBuilder addOperation(byte operation) {
+	@Deprecated
+    public DJChartBuilder addOperation(int operation) {
 		this.operation = operation;
 		return this;
 	}
-	
-	public DJChartBuilder setOperation(byte operation) {
+
+	public DJChartBuilder setOperation(int operation) {
 		this.operation = operation;
 		return this;
 	}
@@ -93,11 +104,12 @@ public class DJChartBuilder {
 	 * @param type
 	 * @return
 	 */
-	public DJChartBuilder addType(byte type) {
+	@Deprecated
+    public DJChartBuilder addType(byte type) {
 		this.type = type;
 		return this;
 	}
-	
+
 	public DJChartBuilder setType(byte type) {
 		this.type = type;
 		return this;
@@ -112,7 +124,8 @@ public class DJChartBuilder {
 	 * @param columnsGroup
 	 * @return
 	 */
-	public DJChartBuilder addColumnsGroup(DJGroup columnsGroup) {
+	@Deprecated
+    public DJChartBuilder addColumnsGroup(DJGroup columnsGroup) {
 		this.columnsGroup = columnsGroup;
 		return this;
 	}
@@ -123,7 +136,7 @@ public class DJChartBuilder {
 	}
 
 	public DJChartBuilder addParams(byte type, DJGroup columnsGroup, AbstractColumn column, byte operation, DJChartOptions chartOptions){
-		return this.setType(type).setColumnsGroup(columnsGroup)
+		return setType(type).setColumnsGroup(columnsGroup)
 			.addColumn(column)
 			.setOperation(operation)
 			.setChartOptions(chartOptions);
@@ -138,7 +151,8 @@ public class DJChartBuilder {
 	 * @param chartOptions
 	 * @return
 	 */
-	public DJChartBuilder addChartOptions(DJChartOptions chartOptions) {
+	@Deprecated
+    public DJChartBuilder addChartOptions(DJChartOptions chartOptions) {
 		this.chartOptions = chartOptions;
 		return this;
 	}
@@ -149,73 +163,95 @@ public class DJChartBuilder {
 	}
 
 	public DJChartBuilder setShowLegend(boolean showLegend) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setShowLegend(showLegend);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setShowLegend(showLegend);
 		return this;
 	}
 
 	public DJChartBuilder setBackColor(Color backColor) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setBackColor(backColor);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setBackColor(backColor);
 		return this;
 	}
 
 	public DJChartBuilder setHeight(int height) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setHeight(height);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setHeight(height);
 		return this;
 	}
 
 	public DJChartBuilder setWidth(int width) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setWidth(width);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setWidth(width);
 		return this;
 	}
 
 	public DJChartBuilder setCentered(boolean centered) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setCentered(centered);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setCentered(centered);
 		return this;
 	}
 
 	public DJChartBuilder setPosition(byte position) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setPosition(position);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setPosition(position);
 		return this;
 	}
 
 	public DJChartBuilder setY(int y) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setY(y);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setY(y);
 		return this;
 	}
 
 	public DJChartBuilder setX(int x) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setX(x);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setX(x);
 		return this;
 	}
 
 	public DJChartBuilder setShowLabels(boolean showLabels) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setShowLabels(showLabels);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setShowLabels(showLabels);
 		return this;
 	}
 
 	public DJChartBuilder setBorder(byte border) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setBorder(border);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setBorder(border);
 		return this;
 	}
 
 	public DJChartBuilder setColors(List colors) {
-		if (chartOptions == null) chartOptions = createDefaultOptions();
-		this.chartOptions.setColors(colors);
+		if (chartOptions == null) {
+            chartOptions = createDefaultOptions();
+        }
+		chartOptions.setColors(colors);
 		return this;
 	}
 
 	public DJChartBuilder setUseColumnsAsCategories(boolean b) {
-		this.chartOptions.setUseColumnsAsCategorie(b);
+		chartOptions.setUseColumnsAsCategorie(b);
 		return this;
 	}
 }

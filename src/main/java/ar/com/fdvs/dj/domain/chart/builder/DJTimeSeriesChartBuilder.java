@@ -29,9 +29,11 @@
 
 package ar.com.fdvs.dj.domain.chart.builder;
 
+import java.awt.Color;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.StringExpression;
-import ar.com.fdvs.dj.domain.chart.DJChart;
 import ar.com.fdvs.dj.domain.chart.dataset.TimeSeriesDataset;
 import ar.com.fdvs.dj.domain.chart.plot.DJAxisFormat;
 import ar.com.fdvs.dj.domain.chart.plot.TimeSeriesPlot;
@@ -39,10 +41,9 @@ import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 import net.sf.jasperreports.charts.type.PlotOrientationEnum;
-
-import java.awt.*;
-import java.util.List;
+import net.sf.jasperreports.charts.type.TimePeriodEnum;
 
 public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesChartBuilder> {
 	//chart
@@ -51,29 +52,32 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param operation the chart data operation
 	 **/
-	public DJTimeSeriesChartBuilder setOperation(byte operation) {
-		this.chart.setOperation(operation);
+	@Override
+    public DJTimeSeriesChartBuilder setOperation(byte operation) {
+		chart.setOperation(operation);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the hyperlink.
 	 *
 	 * @param link the hyperlink
 	 **/
-	public DJTimeSeriesChartBuilder setLink(DJHyperLink link) {
-		this.chart.setLink(link);
+	@Override
+    public DJTimeSeriesChartBuilder setLink(DJHyperLink link) {
+		chart.setLink(link);
 		return this;
 	}
-	
+
 	//chart options
 	/**
 	 * Sets the background color.
 	 *
 	 * @param backColor the background color
 	 **/
-	public DJTimeSeriesChartBuilder setBackColor(Color backColor) {
-		this.chart.getOptions().setBackColor(backColor);
+	@Override
+    public DJTimeSeriesChartBuilder setBackColor(Color backColor) {
+		chart.getOptions().setBackColor(backColor);
 		return this;
 	}
 
@@ -82,8 +86,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param height the chart height
 	 **/
-	public DJTimeSeriesChartBuilder setHeight(int height) {
-		this.chart.getOptions().setHeight(height);
+	@Override
+    public DJTimeSeriesChartBuilder setHeight(int height) {
+		chart.getOptions().setHeight(height);
 		return this;
 	}
 
@@ -92,8 +97,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param width the chart width
 	 **/
-	public DJTimeSeriesChartBuilder setWidth(int width) {
-		this.chart.getOptions().setWidth(width);
+	@Override
+    public DJTimeSeriesChartBuilder setWidth(int width) {
+		chart.getOptions().setWidth(width);
 		return this;
 	}
 
@@ -102,8 +108,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param centered the centered
 	 **/
-	public DJTimeSeriesChartBuilder setCentered(boolean centered) {
-		this.chart.getOptions().setCentered(centered);
+	@Override
+    public DJTimeSeriesChartBuilder setCentered(boolean centered) {
+		chart.getOptions().setCentered(centered);
 		return this;
 	}
 
@@ -112,8 +119,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param position the position
 	 **/
-	public DJTimeSeriesChartBuilder setPosition(byte position) {
-		this.chart.getOptions().setPosition(position);
+	@Override
+    public DJTimeSeriesChartBuilder setPosition(byte position) {
+		chart.getOptions().setPosition(position);
 		return this;
 	}
 
@@ -122,8 +130,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param y the y position
 	 **/
-	public DJTimeSeriesChartBuilder setY(int y) {
-		this.chart.getOptions().setY(y);
+	@Override
+    public DJTimeSeriesChartBuilder setY(int y) {
+		chart.getOptions().setY(y);
 		return this;
 	}
 
@@ -131,8 +140,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 * Sets the x position.
 	 *
 	 **/
-	public DJTimeSeriesChartBuilder setX(int x) {
-		this.chart.getOptions().setX(x);
+	@Override
+    public DJTimeSeriesChartBuilder setX(int x) {
+		chart.getOptions().setX(x);
 		return this;
 	}
 
@@ -141,8 +151,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param showLegend the legend visibility
 	 **/
-	public DJTimeSeriesChartBuilder setShowLegend(boolean showLegend) {
-		this.chart.getOptions().setShowLegend(showLegend);
+	@Override
+    public DJTimeSeriesChartBuilder setShowLegend(boolean showLegend) {
+		chart.getOptions().setShowLegend(showLegend);
 		return this;
 	}
 
@@ -151,8 +162,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param titleColor the title color
 	 **/
-	public DJTimeSeriesChartBuilder setTitleColor(Color titleColor) {
-		this.chart.getOptions().setTitleColor(titleColor);
+	@Override
+    public DJTimeSeriesChartBuilder setTitleColor(Color titleColor) {
+		chart.getOptions().setTitleColor(titleColor);
 		return this;
 	}
 
@@ -161,8 +173,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param subtitleColor the subtitle color
 	 **/
-	public DJTimeSeriesChartBuilder setSubtitleColor(Color subtitleColor) {
-		this.chart.getOptions().setSubtitleColor(subtitleColor);
+	@Override
+    public DJTimeSeriesChartBuilder setSubtitleColor(Color subtitleColor) {
+		chart.getOptions().setSubtitleColor(subtitleColor);
 		return this;
 	}
 
@@ -171,8 +184,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param legendColor the legend color
 	 **/
-	public DJTimeSeriesChartBuilder setLegendColor(Color legendColor) {
-		this.chart.getOptions().setLegendColor(legendColor);
+	@Override
+    public DJTimeSeriesChartBuilder setLegendColor(Color legendColor) {
+		chart.getOptions().setLegendColor(legendColor);
 		return this;
 	}
 
@@ -181,8 +195,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param legendBackgroundColor the legend background color
 	 **/
-	public DJTimeSeriesChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
-		this.chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
+	@Override
+    public DJTimeSeriesChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
+		chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
 		return this;
 	}
 
@@ -192,8 +207,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param theme the theme
 	 **/
-	public DJTimeSeriesChartBuilder setTheme(String theme) {
-		this.chart.getOptions().setTheme(theme);
+	@Override
+    public DJTimeSeriesChartBuilder setTheme(String theme) {
+		chart.getOptions().setTheme(theme);
 		return this;
 	}
 
@@ -202,8 +218,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param titleFont the title font
 	 **/
-	public DJTimeSeriesChartBuilder setTitleFont(Font titleFont) {
-		this.chart.getOptions().setTitleFont(titleFont);
+	@Override
+    public DJTimeSeriesChartBuilder setTitleFont(Font titleFont) {
+		chart.getOptions().setTitleFont(titleFont);
 		return this;
 	}
 
@@ -212,8 +229,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param subtitleFont the subtitle font
 	 **/
-	public DJTimeSeriesChartBuilder setSubtitleFont(Font subtitleFont) {
-		this.chart.getOptions().setSubtitleFont(subtitleFont);
+	@Override
+    public DJTimeSeriesChartBuilder setSubtitleFont(Font subtitleFont) {
+		chart.getOptions().setSubtitleFont(subtitleFont);
 		return this;
 	}
 
@@ -222,8 +240,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param legendFont the legend font
 	 **/
-	public DJTimeSeriesChartBuilder setLegendFont(Font legendFont) {
-		this.chart.getOptions().setLegendFont(legendFont);
+	@Override
+    public DJTimeSeriesChartBuilder setLegendFont(Font legendFont) {
+		chart.getOptions().setLegendFont(legendFont);
 		return this;
 	}
 
@@ -232,8 +251,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param legendPosition the legend position
 	 **/
-	public DJTimeSeriesChartBuilder setLegendPosition(byte legendPosition) {
-		this.chart.getOptions().setLegendPosition(legendPosition);
+	@Override
+    public DJTimeSeriesChartBuilder setLegendPosition(int legendPosition) {
+		chart.getOptions().setLegendPosition(legendPosition);
 		return this;
 	}
 
@@ -242,8 +262,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param titlePosition the title position
 	 **/
-	public DJTimeSeriesChartBuilder setTitlePosition(byte titlePosition) {
-		this.chart.getOptions().setTitlePosition(titlePosition);
+	@Override
+    public DJTimeSeriesChartBuilder setTitlePosition(int titlePosition) {
+		chart.getOptions().setTitlePosition(titlePosition);
 		return this;
 	}
 
@@ -252,8 +273,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param title the title
 	 **/
-	public DJTimeSeriesChartBuilder setTitle(String title) {
-		this.chart.getOptions().setTitleExpression(new LiteralExpression(title));
+	@Override
+    public DJTimeSeriesChartBuilder setTitle(String title) {
+		chart.getOptions().setTitleExpression(new LiteralExpression(title));
 		return this;
 	}
 
@@ -262,8 +284,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param titleExpression the title expression
 	 **/
-	public DJTimeSeriesChartBuilder setTitle(StringExpression titleExpression) {
-		this.chart.getOptions().setTitleExpression(titleExpression);
+	@Override
+    public DJTimeSeriesChartBuilder setTitle(StringExpression titleExpression) {
+		chart.getOptions().setTitleExpression(titleExpression);
 		return this;
 	}
 
@@ -272,8 +295,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param subtitle the subtitle
 	 **/
-	public DJTimeSeriesChartBuilder setSubtitle(String subtitle) {
-		this.chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
+	@Override
+    public DJTimeSeriesChartBuilder setSubtitle(String subtitle) {
+		chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
 		return this;
 	}
 
@@ -282,18 +306,20 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param subtitleExpression the subtitle expression
 	 **/
-	public DJTimeSeriesChartBuilder setSubtitle(StringExpression subtitleExpression) {
-		this.chart.getOptions().setSubtitleExpression(subtitleExpression);
+	@Override
+    public DJTimeSeriesChartBuilder setSubtitle(StringExpression subtitleExpression) {
+		chart.getOptions().setSubtitleExpression(subtitleExpression);
 		return this;
 	}
 
 	/**
 	 * Sets the line style (DJChartOptions.LINE_STYLE_SOLID, DJChartOptions.LINE_STYLE_DASHED, DJChartOptions.LINE_STYLE_DOTTED, DJChartOptions.LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @param lineStyle one of the line style constants in DJChartOptions class
 	 */
-	public DJTimeSeriesChartBuilder setLineStyle(byte lineStyle) {
-		this.chart.getOptions().setLineStyle(lineStyle);
+	@Override
+    public DJTimeSeriesChartBuilder setLineStyle(int lineStyle) {
+		chart.getOptions().setLineStyle(lineStyle);
 		return this;
 	}
 
@@ -302,8 +328,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param lineWidth the line width
 	 **/
-	public DJTimeSeriesChartBuilder setLineWidth(float lineWidth) {
-		this.chart.getOptions().setLineWidth(lineWidth);
+	@Override
+    public DJTimeSeriesChartBuilder setLineWidth(float lineWidth) {
+		chart.getOptions().setLineWidth(lineWidth);
 		return this;
 	}
 
@@ -312,8 +339,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param lineColor the line color
 	 **/
-	public DJTimeSeriesChartBuilder setLineColor(Color lineColor) {
-		this.chart.getOptions().setLineColor(lineColor);
+	@Override
+    public DJTimeSeriesChartBuilder setLineColor(Color lineColor) {
+		chart.getOptions().setLineColor(lineColor);
 		return this;
 	}
 
@@ -322,8 +350,9 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 *
 	 * @param padding the padding
 	 **/
-	public DJTimeSeriesChartBuilder setPadding(int padding) {
-		this.chart.getOptions().setPadding(padding);
+	@Override
+    public DJTimeSeriesChartBuilder setPadding(int padding) {
+		chart.getOptions().setPadding(padding);
 		return this;
 	}
 
@@ -331,20 +360,22 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	 * Sets a user specified chart customizer class name.
 	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
-	public DJTimeSeriesChartBuilder setCustomizerClass(String customizerClass) {
-		this.chart.getOptions().setCustomizerClass(customizerClass);
+	@Override
+    public DJTimeSeriesChartBuilder setCustomizerClass(String customizerClass) {
+		chart.getOptions().setCustomizerClass(customizerClass);
 		return this;
 	}
-	
+
 	//dataset
-	/** 
+	/**
 	 * Allows AbstractChartBuilder to set the key column
 	 */
-	protected DJTimeSeriesChartBuilder setCategory(PropertyColumn timePeriod) {
+	@Override
+    protected DJTimeSeriesChartBuilder setCategory(PropertyColumn timePeriod) {
 		setTimePeriod(timePeriod);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the time period column.
 	 *
@@ -357,17 +388,18 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public DJTimeSeriesChartBuilder addSerie(AbstractColumn column) {
+	@Override
+    public DJTimeSeriesChartBuilder addSerie(AbstractColumn column) {
 		getDataset().addSerie(column);
 		return this;
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param label column the custom label
 	 **/
@@ -378,35 +410,35 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
 	public DJTimeSeriesChartBuilder addSerie(AbstractColumn column, StringExpression labelExpression) {
 		getDataset().addSerie(column, labelExpression);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the time period class (YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, MILLISECOND).
 	 * Default DAY
-	 * 
+	 *
 	 * @param timePeriodClass one of the time period class constants in TimeSeriesDataset class
 	 */
-	public DJTimeSeriesChartBuilder setTimePeriodClass(Class timePeriodClass) {
-		getDataset().setTimePeriodClass(timePeriodClass);
+	public DJTimeSeriesChartBuilder setTimePeriodValue(TimePeriodEnum timePeriodvalue) {
+		getDataset().setTimePeriodValue(timePeriodvalue);
 		return this;
 	}
-	
+
 	//plot
 	/**
 	 * Sets the angle in degrees to rotate the data axis labels.  The range is -360 to 360.  A positive value angles
 	 * the label so it reads downwards wile a negative value angles the label so it reads upwards.  Only charts that
 	 * use a category based axis (such as line or bar charts) support label rotation.
-	 * 
+	 *
 	 * @param labelRotation the label rotation
 	 **/
 	public DJTimeSeriesChartBuilder setLabelRotation(double labelRotation) {
-		this.getPlot().setLabelRotation(labelRotation);
+		getPlot().setLabelRotation(labelRotation);
 		return this;
 	}
 
@@ -419,48 +451,50 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 		getPlot().setOrientation(orientation);
 		return this;
 	}
-	
+
 	/**
 	 * Adds the specified series color to the plot.
-	 * 
+	 *
 	 * @param color the series color
 	 **/
-	public DJTimeSeriesChartBuilder addSeriesColor(Color color) {
+	@Override
+    public DJTimeSeriesChartBuilder addSeriesColor(Color color) {
 		getPlot().addSeriesColor(color);
 		return this;
 	}
 
 	/**
 	 * Set the specified series colors to the plot.
-	 * 
+	 *
 	 * @param seriesColors the series colors
 	 **/
-	public DJTimeSeriesChartBuilder setSeriesColors(List<Color> seriesColors) {
+	@Override
+    public DJTimeSeriesChartBuilder setSeriesColors(List<Color> seriesColors) {
 		getPlot().setSeriesColors(seriesColors);
 		return this;
 	}
-	
+
 	//time series plot
 	/**
 	 * Sets the time axis format.
-	 * 
+	 *
 	 * @param timeAxisFormat the time axis format
 	 **/
 	public DJTimeSeriesChartBuilder setTimeAxisFormat(DJAxisFormat timeAxisFormat) {
 		getPlot().setTimeAxisFormat(timeAxisFormat);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the value axis format.
-	 * 
+	 *
 	 * @param valueAxisFormat the value axis format
 	 **/
 	public DJTimeSeriesChartBuilder setValueAxisFormat(DJAxisFormat valueAxisFormat) {
 		getPlot().setValueAxisFormat(valueAxisFormat);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the shapes visibility.
 	 *
@@ -480,16 +514,19 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 		getPlot().setShowLines(showLines);
 		return this;
 	}
-	
-	protected TimeSeriesDataset getDataset() {
+
+	@Override
+    protected TimeSeriesDataset getDataset() {
 		return (TimeSeriesDataset) chart.getDataset();
 	}
-	
-	protected TimeSeriesPlot getPlot() {
+
+	@Override
+    protected TimeSeriesPlot getPlot() {
 		return (TimeSeriesPlot) chart.getPlot();
 	}
-	
-	protected byte getChartType() {
-		return DJChart.TIMESERIES_CHART;
+
+	@Override
+    protected ChartTypeEnum getChartType() {
+		return ChartTypeEnum.TIMESERIES;
 	}
 }

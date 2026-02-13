@@ -29,20 +29,20 @@
 
 package ar.com.fdvs.dj.domain.chart.dataset;
 
+import java.util.List;
+import java.util.Map;
+
 import ar.com.fdvs.dj.domain.DJBaseElement;
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
-import net.sf.jasperreports.engine.design.JRDesignChartDataset;
+import net.sf.jasperreports.charts.design.JRDesignChartDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.type.DatasetResetTypeEnum;
 import net.sf.jasperreports.engine.type.IncrementTypeEnum;
-
-import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractDataset extends DJBaseElement {
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
@@ -52,28 +52,28 @@ public abstract class AbstractDataset extends DJBaseElement {
 	 * @return A expression that represents the given variable
 	 */
 	protected static JRDesignExpression getExpressionFromVariable(JRDesignVariable var){
-		JRDesignExpression exp = new JRDesignExpression();
+		final JRDesignExpression exp = new JRDesignExpression();
 		exp.setText("$V{" + var.getName() + "}");
-		exp.setValueClass(var.getValueClass());
 		return exp;
 	}
-	
+
 	protected static void setResetStyle(JRDesignChartDataset dataset, JRDesignGroup group, JRDesignGroup parentGroup){
 		//When to start a new chart? When the group's parent changes
-		dataset.setResetGroup(parentGroup);
+		dataset.setResetGroup(parentGroup.getName());
 		dataset.setIncrementType( IncrementTypeEnum.GROUP );
-		dataset.setIncrementGroup(group);
-		if (dataset.getResetGroup().equals(group))
-			dataset.setResetType(DatasetResetTypeEnum.REPORT);
-		else
-			dataset.setResetType( DatasetResetTypeEnum.GROUP );
+		dataset.setIncrementGroup(group.getName());
+		if (dataset.getResetGroup().equals(group.getName())) {
+            dataset.setResetType(DatasetResetTypeEnum.REPORT);
+        } else {
+            dataset.setResetType( DatasetResetTypeEnum.GROUP );
+        }
 	}
-	
+
 	public abstract PropertyColumn getColumnsGroup();
-	
+
 	public abstract List getColumns();
-	
+
 	public abstract JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars);
-	
+
 	public abstract void addSerie(AbstractColumn column);
 }

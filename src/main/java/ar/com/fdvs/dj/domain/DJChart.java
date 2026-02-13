@@ -29,69 +29,71 @@
 
 package ar.com.fdvs.dj.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
-import net.sf.jasperreports.engine.design.JRDesignChart;
 import net.sf.jasperreports.engine.type.CalculationEnum;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Charts to be displayed by dynamicjasper
  * @author msimone
  * @deprecated
  */
+@Deprecated
 public class DJChart extends DJBaseElement{
 
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	//The possible chart types
-	public static final byte PIE_CHART = JRDesignChart.CHART_TYPE_PIE;
-	public static final byte BAR_CHART = JRDesignChart.CHART_TYPE_BAR;
+	public static final byte PIE_CHART = 9;
+	public static final byte BAR_CHART = 3;
 //	public static final byte LINE_CHART = JRDesignChart.CHART_TYPE_LINE; //not yet... to much to think left
 
 	//The possible calculation types
-	public static final byte CALCULATION_COUNT = CalculationEnum.COUNT.getValue();
-	public static final byte CALCULATION_SUM = CalculationEnum.SUM.getValue();
+	public static final int CALCULATION_COUNT = CalculationEnum.COUNT.ordinal();
+	public static final int CALCULATION_SUM = CalculationEnum.SUM.ordinal();
 
 	//How to build the chart?
 	private byte type;
 	private DJGroup columnsGroup;
 //	private AbstractColumn column;
-	
+
 	/**
 	 * List<AbstractColumn>
 	 */
-	private List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
-	
+	private List<AbstractColumn> columns = new ArrayList<>();
 
-	private byte operation;
+
+	private int operation;
 
 	//How to show the chart?
 	private DJChartOptions chartOptions;
 
 	public DJChart(){}
 
-	public DJChart(byte type, DJGroup columnsGroup, AbstractColumn column, byte operation, DJChartOptions chartOptions){
+	public DJChart(byte type, DJGroup columnsGroup, AbstractColumn column, int operation, DJChartOptions chartOptions){
 		this.type = type;
 		this.columnsGroup = columnsGroup;
-		
-		if (column != null)
-			this.columns.add(column);
-		
+
+		if (column != null) {
+            columns.add(column);
+        }
+
 		this.operation = operation;
 		this.chartOptions = chartOptions;
 	}
-	
-	public DJChart(byte type, DJGroup columnsGroup, List<AbstractColumn> columns, byte operation, DJChartOptions chartOptions){
+
+	public DJChart(byte type, DJGroup columnsGroup, List<AbstractColumn> columns, int operation, DJChartOptions chartOptions){
 		this.type = type;
 		this.columnsGroup = columnsGroup;
-		
-		if (columns != null)
-			this.columns.addAll(columns);
-		
+
+		if (columns != null) {
+            this.columns.addAll(columns);
+        }
+
 		this.operation = operation;
 		this.chartOptions = chartOptions;
 	}
@@ -104,11 +106,11 @@ public class DJChart extends DJBaseElement{
 //		this.column = column;
 //	}
 
-	public byte getOperation() {
+	public int getOperation() {
 		return operation;
 	}
 
-	public void setOperation(byte operation) {
+	public void setOperation(int operation) {
 		this.operation = operation;
 	}
 
@@ -133,9 +135,9 @@ public class DJChart extends DJBaseElement{
 	}
 
 	public void setOptions(DJChartOptions options) {
-		this.chartOptions = options;
+		chartOptions = options;
 	}
-	
+
 	public List<AbstractColumn> getColumns() {
 		return columns;
 	}
@@ -143,5 +145,5 @@ public class DJChart extends DJBaseElement{
 	public void setColumns(List<AbstractColumn> columns) {
 		this.columns = columns;
 	}
-	
+
 }

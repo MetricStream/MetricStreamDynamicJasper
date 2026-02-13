@@ -30,9 +30,9 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>ar.com.fdvs</groupId>
-    <artifactId>DynamicJasper</artifactId>
-    <version>5.3.9</version>
-    <name>DynamicJasper</name>
+    <artifactId>nostrum-dynamic-jasper</artifactId>
+    <version>1.0.0</version>
+    <name>Nostrum Dynamic Jasper</name>
     <packaging>jar</packaging>
     <description>
 
@@ -180,11 +180,11 @@
                     </instructions>
                 </configuration>
                 <executions>
-                  <execution>
-                  <phase>prepare-package</phase>
-                  <goals>
-                    <goal>manifest</goal>
-                  </goals>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
                   </execution>
                 </executions>
             </plugin>
@@ -328,7 +328,7 @@
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>[6.20.1, 6.20.4]</version>
+            <version>7.0.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-collections</groupId>
@@ -347,6 +347,54 @@
                     <artifactId>bcprov-jdk14</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-chart-customizers</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-charts</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-excel-poi</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-hibernate</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-javaflow</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-jdt</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-pdf</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-servlets</artifactId>
+            <version>7.0.1</version>
         </dependency>
 
         <dependency>

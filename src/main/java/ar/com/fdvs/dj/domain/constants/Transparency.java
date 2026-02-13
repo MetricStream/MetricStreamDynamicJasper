@@ -33,10 +33,10 @@ public class Transparency  extends BaseDomainConstant {
 
 	private static final long serialVersionUID = 1L;
 
-	public static Transparency TRANSPARENT = new Transparency((byte) 2);
-	public static Transparency OPAQUE = new Transparency((byte) 1);
+	public static Transparency TRANSPARENT = new Transparency((byte) 1);
+	public static Transparency OPAQUE = new Transparency((byte) 0);
 
-	private byte value;
+	private final byte value;
 
 	public byte getValue() {
 		return value;
@@ -46,8 +46,9 @@ public class Transparency  extends BaseDomainConstant {
 		this.value = value;
 	}
 
-	public boolean equals(Object obj) {
-		return obj != null && obj instanceof Transparency && this.value == ((Transparency) obj).value;
+	@Override
+    public boolean equals(Object obj) {
+		return (obj instanceof Transparency) && (value == ((Transparency) obj).value);
 
 	}
 

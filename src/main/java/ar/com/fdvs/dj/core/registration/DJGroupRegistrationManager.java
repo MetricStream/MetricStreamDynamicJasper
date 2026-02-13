@@ -29,6 +29,10 @@
 
 package ar.com.fdvs.dj.core.registration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.core.layout.LayoutManager;
 import ar.com.fdvs.dj.domain.CustomExpression;
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
@@ -40,10 +44,12 @@ import ar.com.fdvs.dj.domain.entities.columns.GlobalGroupColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.util.ExpressionUtils;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.design.*;
+import net.sf.jasperreports.engine.design.JRDesignBand;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.design.JRDesignGroup;
+import net.sf.jasperreports.engine.design.JRDesignSection;
+import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.type.CalculationEnum;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Manager invoked to register groups of columns. A ColumnsGroup is read and <br>
@@ -59,15 +65,16 @@ public class DJGroupRegistrationManager extends AbstractEntityRegistrationManage
 		super(jd,dr,layoutManager);
 	}
 
-	protected void registerEntity(Entity entity) {
-		DJGroup djgroup = (DJGroup) entity;
+	@Override
+    protected void registerEntity(Entity entity) {
+		final DJGroup djgroup = (DJGroup) entity;
 		try {
             //Set Group Name
             if (djgroup.getName() == null) {
-                PropertyColumn column = djgroup.getColumnToGroupBy();
-                String prefix = this.getDjd().getName() + "_";
-                int groupIndex = getDynamicReport().getColumnsGroups().indexOf(djgroup);
-                int columnIndex = getDynamicReport().getColumns().indexOf(djgroup.getColumnToGroupBy());
+                final PropertyColumn column = djgroup.getColumnToGroupBy();
+                final String prefix = getDjd().getName() + "_";
+                final int groupIndex = getDynamicReport().getColumnsGroups().indexOf(djgroup);
+                final int columnIndex = getDynamicReport().getColumns().indexOf(djgroup.getColumnToGroupBy());
                 if (column instanceof GlobalGroupColumn){
                     djgroup.setName(prefix + "global_column_" + groupIndex);
                 } else {
@@ -78,76 +85,74 @@ public class DJGroupRegistrationManager extends AbstractEntityRegistrationManage
 
             log.debug("registering group " + djgroup.getName());
 
-			JRDesignGroup group = (JRDesignGroup)transformEntity(djgroup);
+			final JRDesignGroup group = (JRDesignGroup)transformEntity(djgroup);
 			getDjd().addGroup(group);
 			//Variables are registered right after the group where they belong.
-			String property = djgroup.getColumnToGroupBy().getColumnProperty().getProperty();
-			
-			if (djgroup.getFooterLabel() != null && djgroup.getFooterLabel().getLabelExpression() != null) {
+			final String property = djgroup.getColumnToGroupBy().getColumnProperty().getProperty();
+
+			if ((djgroup.getFooterLabel() != null) && (djgroup.getFooterLabel().getLabelExpression() != null)) {
 				registerCustomExpressionParameter(group.getName() + "_labelExpression", djgroup.getFooterLabel().getLabelExpression());
 			}
 
 //			ColumnsGroupFieldVariablesRegistrationManager fieldVariablesRM = new ColumnsGroupFieldVariablesRegistrationManager(getDjd(),getDynamicReport(),getLayoutManager(), group);
 //			fieldVariablesRM.registerEntities(djgroup.getFieldVariables());
-			
-			DJGroupVariableDefRegistrationManager variablesRM = new DJGroupVariableDefRegistrationManager(getDjd(),getDynamicReport(),getLayoutManager(), group);
+
+			final DJGroupVariableDefRegistrationManager variablesRM = new DJGroupVariableDefRegistrationManager(getDjd(),getDynamicReport(),getLayoutManager(), group);
 			variablesRM.registerEntities(djgroup.getVariables());
-			
-			ColumnsGroupVariablesRegistrationManager headerVariablesRM = new ColumnsGroupVariablesRegistrationManager(ColumnsGroupVariablesRegistrationManager.HEADER, property, getDjd(),getDynamicReport(),getLayoutManager());
+
+			final ColumnsGroupVariablesRegistrationManager headerVariablesRM = new ColumnsGroupVariablesRegistrationManager(DJConstants.HEADER, property, getDjd(),getDynamicReport(),getLayoutManager());
 			headerVariablesRM.registerEntities(djgroup.getHeaderVariables());
-			
-			ColumnsGroupVariablesRegistrationManager footerVariablesRM = new ColumnsGroupVariablesRegistrationManager(ColumnsGroupVariablesRegistrationManager.FOOTER, property, getDjd(),getDynamicReport(),getLayoutManager());
+
+			final ColumnsGroupVariablesRegistrationManager footerVariablesRM = new ColumnsGroupVariablesRegistrationManager(DJConstants.FOOTER, property, getDjd(),getDynamicReport(),getLayoutManager());
 			footerVariablesRM.registerEntities(djgroup.getFooterVariables());
-			
-			DJCrosstabRegistrationManager headerCrosstabsRm = new DJCrosstabRegistrationManager(ColumnsGroupVariablesRegistrationManager.HEADER, getDjd(),getDynamicReport(),getLayoutManager());
+
+			final DJCrosstabRegistrationManager headerCrosstabsRm = new DJCrosstabRegistrationManager(DJConstants.HEADER, getDjd(),getDynamicReport(),getLayoutManager());
 			headerCrosstabsRm.registerEntities(djgroup.getHeaderCrosstabs());
-			
-			DJCrosstabRegistrationManager footerCrosstabsRm = new DJCrosstabRegistrationManager(ColumnsGroupVariablesRegistrationManager.FOOTER, getDjd(),getDynamicReport(),getLayoutManager());
+
+			final DJCrosstabRegistrationManager footerCrosstabsRm = new DJCrosstabRegistrationManager(DJConstants.FOOTER, getDjd(),getDynamicReport(),getLayoutManager());
 			footerCrosstabsRm.registerEntities(djgroup.getFooterCrosstabs());
-		} catch (JRException e) {
+		} catch (final JRException e) {
 			throw new EntitiesRegistrationException(e.getMessage(),e);
 		}
 	}
 
 	//PropertyColumn only can be used for grouping (not OperationColumn)
-	protected Object transformEntity(Entity entity) throws JRException {
+	@Override
+    protected Object transformEntity(Entity entity) throws JRException {
 		//log.debug("transforming group...");
-		DJGroup djgroup = (DJGroup) entity;
-		PropertyColumn column = djgroup.getColumnToGroupBy();
-		JRDesignGroup group = new JRDesignGroup();
+		final DJGroup djgroup = (DJGroup) entity;
+		final PropertyColumn column = djgroup.getColumnToGroupBy();
+		final JRDesignGroup group = new JRDesignGroup();
 
 
 		group.setName(djgroup.getName());
-		
+
 		getLayoutManager().getReferencesMap().put(group.getName(), djgroup);
 
 		group.setCountVariable(new JRDesignVariable());
 
-        JRDesignSection gfs = (JRDesignSection) group.getGroupFooterSection();
+        final JRDesignSection gfs = (JRDesignSection) group.getGroupFooterSection();
         gfs.getBandsList().add(new JRDesignBand());
 
 
-        JRDesignSection ghs = (JRDesignSection) group.getGroupHeaderSection();
+        final JRDesignSection ghs = (JRDesignSection) group.getGroupHeaderSection();
         ghs.getBandsList().add(new JRDesignBand());
 
-		JRDesignExpression jrExpression = new JRDesignExpression();
-		
-		CustomExpression expressionToGroupBy = column.getExpressionToGroupBy();
-		
+		final JRDesignExpression jrExpression = new JRDesignExpression();
+
+		final CustomExpression expressionToGroupBy = column.getExpressionToGroupBy();
+
 		if (expressionToGroupBy != null) { //new in 3.0.7-b5
 			useVariableForCustomExpression(group, jrExpression, expressionToGroupBy);
-			
-		} else {
-			if (column instanceof ExpressionColumn){
-				ExpressionColumn col = (ExpressionColumn)column;
-				CustomExpression customExpression = col.getExpression();
-				useVariableForCustomExpression(group, jrExpression, customExpression);
-			} else {
-				jrExpression.setText(column.getTextForExpression());
-				jrExpression.setValueClassName(column.getValueClassNameForExpression());
-			}
-		}
-		
+
+		} else if (column instanceof ExpressionColumn){
+        	final ExpressionColumn col = (ExpressionColumn)column;
+        	final CustomExpression customExpression = col.getExpression();
+        	useVariableForCustomExpression(group, jrExpression, customExpression);
+        } else {
+        	jrExpression.setText(column.getTextForExpression());
+        }
+
 
 		group.setExpression(jrExpression);
 
@@ -157,13 +162,13 @@ public class DJGroupRegistrationManager extends AbstractEntityRegistrationManage
 	/**
 	 * When a group expression gets its value from a CustomExpression, a variable must be used otherwise it will fail
 	 * to work as expected.<br><br>
-	 * 
+	 *
 	 * Instead of using: GROUP -> CUSTOM_EXPRESSION<br>
 	 * <br>
 	 * we use: GROUP -> VARIABLE -> CUSTOM_EXPRESSION<br>
 	 * <br><br>
 	 * See http://jasperforge.org/plugins/mantis/view.php?id=4226 for more detail
-	 * 
+	 *
 	 * @param group
 	 * @param jrExpression
 	 * @param customExpression
@@ -173,29 +178,24 @@ public class DJGroupRegistrationManager extends AbstractEntityRegistrationManage
 			JRDesignExpression jrExpression, CustomExpression customExpression)
 			throws JRException {
 		//1) Register CustomExpression object as a parameter
-		String expToGroupByName = group.getName() + "_custom_expression";
+		final String expToGroupByName = group.getName() + "_custom_expression";
 		registerCustomExpressionParameter(expToGroupByName, customExpression);
-		
+
 		//2) Create a variable which is calculated through the custom expression
-		JRDesignVariable gvar = new JRDesignVariable();
-		String varName = group.getName() + "_variable_for_group_expression";
+		final JRDesignVariable gvar = new JRDesignVariable();
+		final String varName = group.getName() + "_variable_for_group_expression";
 		gvar.setName(varName);
 		gvar.setCalculation( CalculationEnum.NOTHING );
 		gvar.setValueClassName(customExpression.getClassName());
-		
-		String expText = ExpressionUtils.createCustomExpressionInvocationText(customExpression, expToGroupByName, false);
-		JRDesignExpression gvarExp = new JRDesignExpression();
-		gvarExp.setValueClassName(customExpression.getClassName());
+
+		final String expText = ExpressionUtils.createCustomExpressionInvocationText(customExpression, expToGroupByName, false);
+		final JRDesignExpression gvarExp = new JRDesignExpression();
 		gvarExp.setText(expText);
 		gvar.setExpression(gvarExp);
 		getDjd().addVariable(gvar);
-		
+
 		//3) Make the group expression point to the variable
 		jrExpression.setText("$V{"+varName+"}");
-		jrExpression.setValueClassName(customExpression.getClassName());
 		log.debug("Expression for CustomExpression usgin variable = \"" + varName + "\" which point to: " + expText);
 	}
-
-
-
 }

@@ -32,12 +32,12 @@
  */
 package ar.com.fdvs.dj.core.layout;
 
-import ar.com.fdvs.dj.domain.AutoText;
-import net.sf.jasperreports.engine.design.JRDesignExpression;
-
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import ar.com.fdvs.dj.domain.AutoText;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 /**
  * @author msimone
@@ -50,9 +50,9 @@ public abstract class AutoTextExpressionUtils {
 	public static JRDesignExpression getPageNumberExpression(String before, String after, boolean useI18n) {
             return getPageNumberExpression(before, after, 0, useI18n);
         }
-        
+
 	public static JRDesignExpression getPageNumberExpression(String before, String after,int pageOffset, boolean useI18n) {
-		JRDesignExpression expression = new JRDesignExpression();
+		final JRDesignExpression expression = new JRDesignExpression();
 		String text;
 		if (useI18n) {
 			if (!emptyString(before)){
@@ -73,12 +73,11 @@ public abstract class AutoTextExpressionUtils {
 
 		}
 		expression.setText( text );
-		expression.setValueClass(String.class);
 		return expression;
 	}
 
     private static boolean emptyString(String str) {
-		return str == null || "".equals(str.trim());
+		return (str == null) || "".equals(str.trim());
 
 	}
 
@@ -90,17 +89,17 @@ public abstract class AutoTextExpressionUtils {
 			after = "$R{" + after + "}";
 		} else {after = "\"" + after + "\"";}
 		DateFormat dateFormatter;
-		if (AutoText.PATTERN_DATE_DATE_ONLY ==  pattern)
-		 dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT,locale);
-		else if (AutoText.PATTERN_DATE_TIME_ONLY ==  pattern)
-			 dateFormatter = DateFormat.getTimeInstance(DateFormat.DEFAULT,locale);
-		else
-			dateFormatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT,locale);
-		JRDesignExpression expression = new JRDesignExpression();
-		String text = before + "+\" \" + \"" + dateFormatter.format(new Date()) + "\" +\" \" + " + after;
+		if (AutoText.PATTERN_DATE_DATE_ONLY ==  pattern) {
+            dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT,locale);
+        } else if (AutoText.PATTERN_DATE_TIME_ONLY ==  pattern) {
+            dateFormatter = DateFormat.getTimeInstance(DateFormat.DEFAULT,locale);
+        } else {
+            dateFormatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT,locale);
+        }
+		final JRDesignExpression expression = new JRDesignExpression();
+		final String text = before + "+\" \" + \"" + dateFormatter.format(new Date()) + "\" +\" \" + " + after;
 //		expression.setText( "\"" + before + "\" + " + "\"" + new Date() + "\" + \"" + after + "\"");
 		expression.setText( text );
-		expression.setValueClass(String.class);
 		return expression;
 	}
 

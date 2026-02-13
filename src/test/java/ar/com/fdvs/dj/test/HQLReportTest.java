@@ -2,10 +2,6 @@ package ar.com.fdvs.dj.test;
 
 import java.util.List;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.query.JRHibernateQueryExecuterFactory;
-import net.sf.jasperreports.view.JasperViewer;
-
 import org.hibernate.Session;
 
 import ar.com.fdvs.dj.core.DJConstants;
@@ -18,16 +14,20 @@ import ar.com.fdvs.dj.domain.constants.GroupLayout;
 import ar.com.fdvs.dj.test.domain.db.Customer;
 import ar.com.fdvs.dj.test.hibernate.HibernateUtil;
 import ar.com.fdvs.dj.test.hibernate.TestSchema;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.query.HibernateConstants;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class HQLReportTest extends BaseDjReportTest {
 
-	public DynamicReport buildReport() throws Exception {
-		Style groupStyle = new StyleBuilder(false).setFont(new Font(18, Font._FONT_VERDANA, true)).build();
+	@Override
+    public DynamicReport buildReport() throws Exception {
+		final Style groupStyle = new StyleBuilder(false).setFont(new Font(18, Font._FONT_VERDANA, true)).build();
 		/*
 		  Creates the DynamicReportBuilder and sets the basic options for
 		  the report
 		 */
-		FastReportBuilder drb = new FastReportBuilder();
+		final FastReportBuilder drb = new FastReportBuilder();
 		drb
 			.addColumn("City", "city", String.class.getName(),50,groupStyle)
 			.addColumn("Last Name", "lastName", String.class.getName(),50)
@@ -41,36 +41,37 @@ public class HQLReportTest extends BaseDjReportTest {
 			.setTemplateFile("templates/TemplateReportTest.jrxml")
 			.setUseFullPageWidth(true);
 
-		DynamicReport dr = drb.build();
+		final DynamicReport dr = drb.build();
 
-		Session hsession = HibernateUtil.getSession();
-		params.put(JRHibernateQueryExecuterFactory.PARAMETER_HIBERNATE_SESSION, hsession);
+		final Session hsession = HibernateUtil.getSession();
+		params.put(HibernateConstants.PARAMETER_HIBERNATE_SESSION, hsession);
 
 
 		return dr;
 	}
-	
-	protected JRDataSource getDataSource() {
+
+	@Override
+    protected JRDataSource getDataSource() {
 		return null; //we use Hibernate Session
-	}	
-	
+	}
+
 	public static void main(String[] args) throws Exception {
 		TestSchema.buildConfiguration();
-		HQLReportTest test = new HQLReportTest();
+		final HQLReportTest test = new HQLReportTest();
 		test.testReport();
 		JasperViewer.viewReport(test.jp);
 		//JasperDesignViewer.viewReportDesign(DynamicJasperHelper.generateJasperReport(test.dr, new ClassicLayoutManager(),test.params));
 	}
-	
+
 	public void testHibernate() {
 		TestSchema.buildConfiguration();
-		Session s = HibernateUtil.getSession();
-		List l = s.createQuery("from Customer order by lastName").list();
-		for (Object aL : l) {
-			Customer cust = (Customer) aL;
+		final Session s = HibernateUtil.getSession();
+		final List l = s.createQuery("from Customer order by lastName").list();
+		for (final Object aL : l) {
+			final Customer cust = (Customer) aL;
 			log.debug(cust.getFirstName() + ", " + cust.getLastName());
 		}
 	}
-	
+
 
 }

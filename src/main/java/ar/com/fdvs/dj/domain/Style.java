@@ -29,19 +29,34 @@
 
 package ar.com.fdvs.dj.domain;
 
+import java.awt.Color;
+import java.io.Serializable;
+
+import ar.com.fdvs.dj.domain.constants.Border;
 import ar.com.fdvs.dj.domain.constants.Font;
+import ar.com.fdvs.dj.domain.constants.HorizontalAlign;
+import ar.com.fdvs.dj.domain.constants.HorizontalImageAlign;
+import ar.com.fdvs.dj.domain.constants.HorizontalTextAlign;
+import ar.com.fdvs.dj.domain.constants.Rotation;
+import ar.com.fdvs.dj.domain.constants.Stretching;
 import ar.com.fdvs.dj.domain.constants.Transparency;
-import ar.com.fdvs.dj.domain.constants.*;
+import ar.com.fdvs.dj.domain.constants.VerticalAlign;
+import ar.com.fdvs.dj.domain.constants.VerticalImageAlign;
+import ar.com.fdvs.dj.domain.constants.VerticalTextAlign;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.util.LayoutUtils;
 import net.sf.jasperreports.engine.base.JRBaseStyle;
 import net.sf.jasperreports.engine.base.JRBoxPen;
 import net.sf.jasperreports.engine.design.JRDesignConditionalStyle;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
-import net.sf.jasperreports.engine.type.*;
-
-import java.awt.*;
-import java.io.Serializable;
+import net.sf.jasperreports.engine.type.HorizontalImageAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
+import net.sf.jasperreports.engine.type.ModeEnum;
+import net.sf.jasperreports.engine.type.RotationEnum;
+import net.sf.jasperreports.engine.type.StretchTypeEnum;
+import net.sf.jasperreports.engine.type.TextAdjustEnum;
+import net.sf.jasperreports.engine.type.VerticalImageAlignEnum;
+import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 
 /**
  * Class that should be used to define the different styles in a friendly <br>
@@ -109,7 +124,7 @@ public class Style implements Serializable, Cloneable {
 
     public Style(String name, String parentName){
     	this.name = name;
-    	this.parentStyleName = parentName;
+    	parentStyleName = parentName;
     }
 
 	/**
@@ -121,7 +136,7 @@ public class Style implements Serializable, Cloneable {
 	 * @return  Style
 	 */
 	public static Style createBlankStyle(String name){
-		Style style = new Style(name);
+		final Style style = new Style(name);
 
 		style.setBackgroundColor(null);
 		style.setBorderColor(null);
@@ -136,13 +151,13 @@ public class Style implements Serializable, Cloneable {
 		style.setRotation(null);
 		style.setStretchType(null);
 		style.SetTextAdjust(null);
-		
+
 		return style;
 
 	}
 
 	public static Style createBlankStyle(String name, String parent){
-		Style s = createBlankStyle(name);
+		final Style s = createBlankStyle(name);
 		s.setParentStyleName(parent);
 		return s;
 	}
@@ -184,9 +199,11 @@ public class Style implements Serializable, Cloneable {
 	}
 
 	public void setFont(Font font) {
-		if (font != null)
-			this.font = (Font) font.clone();
-		else this.font = null;
+		if (font != null) {
+            this.font = (Font) font.clone();
+        } else {
+            this.font = null;
+        }
 	}
 
 	/**
@@ -238,10 +255,10 @@ public class Style implements Serializable, Cloneable {
 		if (StretchTypeEnum.NO_STRETCH.equals(stretchType)) {
 			return Stretching.NO_STRETCH;
 		}
-		else if (StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT.equals(stretchType)) {
+		else if (StretchTypeEnum.ELEMENT_GROUP_HEIGHT.equals(stretchType)) {
 			return Stretching.RELATIVE_TO_TALLEST_OBJECT;
 		}
-		else if (StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT.equals(stretchType)) {
+		else if (StretchTypeEnum.CONTAINER_HEIGHT.equals(stretchType)) {
 			return Stretching.RELATIVE_TO_BAND_HEIGHT;
 		}
 		return null;
@@ -257,10 +274,10 @@ public class Style implements Serializable, Cloneable {
 			stretchType = StretchTypeEnum.NO_STRETCH;
 		}
 		else if (Stretching.RELATIVE_TO_TALLEST_OBJECT.equals(streching)) {
-			stretchType = StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT;
+			stretchType = StretchTypeEnum.ELEMENT_GROUP_HEIGHT;
 		}
 		else if (Stretching.RELATIVE_TO_BAND_HEIGHT.equals(streching)) {
-			stretchType = StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT;
+			stretchType = StretchTypeEnum.CONTAINER_HEIGHT;
 		}
 	}
 
@@ -288,8 +305,8 @@ public class Style implements Serializable, Cloneable {
     @Deprecated
 	public void setStretchWithOverflow(boolean stretchWithOverflow) {
 		if (stretchWithOverflow) {
-			this.textAdjust = TextAdjustEnum.STRETCH_HEIGHT;
-		}		
+			textAdjust = TextAdjustEnum.STRETCH_HEIGHT;
+		}
 	}
 
 	public TextAdjustEnum getTextAdjust() {
@@ -317,14 +334,15 @@ public class Style implements Serializable, Cloneable {
 	}
 
 	public boolean isTransparent(){
-		return this.transparency.equals(Transparency.TRANSPARENT);
+		return transparency.equals(Transparency.TRANSPARENT);
 	}
 
 	public void setTransparent(boolean transparent) {
-		if (transparent)
-			this.setTransparency(Transparency.TRANSPARENT);
-		else
-			this.setTransparency(Transparency.OPAQUE);
+		if (transparent) {
+            setTransparency(Transparency.TRANSPARENT);
+        } else {
+            setTransparency(Transparency.OPAQUE);
+        }
 	}
 
 	/**
@@ -360,46 +378,54 @@ public class Style implements Serializable, Cloneable {
 	}
 
 	public JRDesignConditionalStyle transformAsConditinalStyle() {
-		JRDesignConditionalStyle ret = new JRDesignConditionalStyle();
+		final JRDesignConditionalStyle ret = new JRDesignConditionalStyle();
 		setJRBaseStyleProperties(ret);
 		return ret;
 
 	}
 
 	public JRDesignStyle transform() {
-		JRDesignStyle transformedStyle = new JRDesignStyle();
-		transformedStyle.setName(this.name);
-		transformedStyle.setParentStyleNameReference(this.parentStyleName);
+		final JRDesignStyle transformedStyle = new JRDesignStyle();
+		transformedStyle.setName(name);
+		transformedStyle.setParentStyleNameReference(parentStyleName);
 		setJRBaseStyleProperties(transformedStyle);
 		return transformedStyle;
 	}
 
 	protected void setJRBaseStyleProperties(JRBaseStyle transformedStyle) {
-        JRBoxPen pen = transformedStyle.getLineBox().getPen();
+        final JRBoxPen pen = transformedStyle.getLineBox().getPen();
         if (getBorder()!=null){
             LayoutUtils.convertBorderToPen(getBorder(),transformedStyle.getLineBox().getPen());
         }
 
-		if (getBorderBottom()!= null)
+		if (getBorderBottom()!= null) {
             LayoutUtils.convertBorderToPen(getBorderBottom(),transformedStyle.getLineBox().getBottomPen());
-		if (getBorderTop()!= null)
+        }
+		if (getBorderTop()!= null) {
             LayoutUtils.convertBorderToPen(getBorderTop(),transformedStyle.getLineBox().getTopPen());
-		if (getBorderLeft()!= null)
+        }
+		if (getBorderLeft()!= null) {
             LayoutUtils.convertBorderToPen(getBorderLeft(),transformedStyle.getLineBox().getLeftPen());
-		if (getBorderRight()!= null)
+        }
+		if (getBorderRight()!= null) {
             LayoutUtils.convertBorderToPen(getBorderRight(),transformedStyle.getLineBox().getRightPen());
+        }
 
 		//Padding
 		transformedStyle.getLineBox().setPadding(getPadding());
 
-		if (paddingBottom != null)
+		if (paddingBottom != null) {
             transformedStyle.getLineBox().setBottomPadding(paddingBottom);
-		if (paddingTop != null)
+        }
+		if (paddingTop != null) {
             transformedStyle.getLineBox().setTopPadding(paddingTop);
-		if (paddingLeft != null)
+        }
+		if (paddingLeft != null) {
             transformedStyle.getLineBox().setLeftPadding(paddingLeft);
-		if (paddingRight != null)
+        }
+		if (paddingRight != null) {
             transformedStyle.getLineBox().setRightPadding(paddingRight);
+        }
 
 
 		//horizontal TEXT Aligns
@@ -421,33 +447,36 @@ public class Style implements Serializable, Cloneable {
 			transformedStyle.setVerticalImageAlign(VerticalImageAlignEnum.getByName(verticalImageAlign.getName()));
 		}
 
-		transformedStyle.setBlankWhenNull(Boolean.valueOf(blankWhenNull));
+		transformedStyle.setBlankWhenNull(blankWhenNull);
 
 		//Font
 		if (font != null) {
 			transformedStyle.setFontName(font.getFontName());
 			transformedStyle.setFontSize(font.getFontSize());
-			transformedStyle.setBold(Boolean.valueOf(font.isBold()));
-			transformedStyle.setItalic(Boolean.valueOf(font.isItalic()));
-			transformedStyle.setUnderline(Boolean.valueOf(font.isUnderline()));
+			transformedStyle.setBold(font.isBold());
+			transformedStyle.setItalic(font.isItalic());
+			transformedStyle.setUnderline(font.isUnderline());
 			transformedStyle.setPdfFontName(font.getPdfFontName());
-			transformedStyle.setPdfEmbedded(Boolean.valueOf(font.isPdfFontEmbedded()));
+			transformedStyle.setPdfEmbedded(font.isPdfFontEmbedded());
 			transformedStyle.setPdfEncoding(font.getPdfFontEncoding());
 		}
 
 		transformedStyle.setBackcolor(getBackgroundColor());
 		transformedStyle.setForecolor(getTextColor());
 
-		if (getTransparency() != null)
-			transformedStyle.setMode(ModeEnum.getByValue( getTransparency().getValue() ));
+		if (getTransparency() != null) {
+            transformedStyle.setMode(ModeEnum.values()[getTransparency().getValue()]);
+        }
 
-		if (getRotation() != null)
-			transformedStyle.setRotation(RotationEnum.getByValue( getRotation().getValue() ));
+		if (getRotation() != null) {
+            transformedStyle.setRotation(RotationEnum.values()[getRotation().getValue()]);
+        }
 
-		if (getRadius() != null)
-			transformedStyle.setRadius(Integer.valueOf(getRadius().intValue()));
+		if (getRadius() != null) {
+            transformedStyle.setRadius(getRadius());
+        }
 
-		transformedStyle.setPattern(this.pattern);
+		transformedStyle.setPattern(pattern);
 
 		/*
 		  This values are needed when exporting to JRXML
@@ -497,8 +526,9 @@ public class Style implements Serializable, Cloneable {
      */
     @Deprecated
 	public Color getBorderColor() {
-        if (getBorder() == null)
+        if (getBorder() == null) {
             return null;
+        }
 		return getBorder().getColor();
 	}
 
@@ -508,10 +538,11 @@ public class Style implements Serializable, Cloneable {
      */
     @Deprecated
 	public void setBorderColor(Color borderColor) {
-        if (getBorder() == null)
+        if (getBorder() == null) {
             return;
+        }
 
-        this.getBorder().setColor(borderColor);
+        getBorder().setColor(borderColor);
 	}
 
 	public Rotation getRotation() {
@@ -586,9 +617,10 @@ public class Style implements Serializable, Cloneable {
 		this.pattern = pattern;
 	}
 
-	public Object clone() throws CloneNotSupportedException {
-		Style style = (Style) super.clone();
-		style.setFont(this.font);
+	@Override
+    public Object clone() throws CloneNotSupportedException {
+		final Style style = (Style) super.clone();
+		style.setFont(font);
 		return style;
 	}
 }

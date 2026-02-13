@@ -34,71 +34,83 @@ import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.util.ExpressionUtils;
+import net.sf.jasperreports.charts.JRChartPlot;
 import net.sf.jasperreports.charts.design.JRDesignAreaPlot;
-import net.sf.jasperreports.engine.JRChartPlot;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
 public class AreaPlot extends AbstractCategoryAxisPlot {
-	
+
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
+
 	public void transform(DynamicJasperDesign design, JRChartPlot plot, String name) {
 		super.transform(design, plot, name);
-		JRDesignAreaPlot areaPlot = (JRDesignAreaPlot) plot;
-		
-		StringExpression categoryAxisLabelExp = getCategoryAxisFormat().getLabelExpression();
+		final JRDesignAreaPlot areaPlot = (JRDesignAreaPlot) plot;
+
+		final StringExpression categoryAxisLabelExp = getCategoryAxisFormat().getLabelExpression();
 		if (categoryAxisLabelExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisLabel_" + name, categoryAxisLabelExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisLabel_" + name, categoryAxisLabelExp);
 			areaPlot.setCategoryAxisLabelExpression(exp);
 		}
-		if (getCategoryAxisFormat().getTickLabelMask() != null) 
-			areaPlot.setCategoryAxisTickLabelMask(getCategoryAxisFormat().getTickLabelMask());	
-		if (getCategoryAxisFormat().getLabelColor() != null)
-			areaPlot.setCategoryAxisLabelColor(getCategoryAxisFormat().getLabelColor());
-		if (getCategoryAxisFormat().getLabelFont() != null)
-			areaPlot.setCategoryAxisLabelFont(getCategoryAxisFormat().getLabelFont().transform());
-		if (getCategoryAxisFormat().getLineColor() != null)
-			areaPlot.setCategoryAxisLineColor(getCategoryAxisFormat().getLineColor());		
-		if (getCategoryAxisFormat().getTickLabelColor() != null)
-			areaPlot.setCategoryAxisTickLabelColor(getCategoryAxisFormat().getTickLabelColor());
-		if (getCategoryAxisFormat().getTickLabelFont() != null)
-			areaPlot.setCategoryAxisTickLabelFont(getCategoryAxisFormat().getTickLabelFont().transform());
-		CustomExpression categoryAxisRangeMinValueExp = getCategoryAxisFormat().getRangeMinValueExpression();
+		if (getCategoryAxisFormat().getTickLabelMask() != null) {
+            areaPlot.setCategoryAxisTickLabelMask(getCategoryAxisFormat().getTickLabelMask());
+        }
+		if (getCategoryAxisFormat().getLabelColor() != null) {
+            areaPlot.setCategoryAxisLabelColor(getCategoryAxisFormat().getLabelColor());
+        }
+		if (getCategoryAxisFormat().getLabelFont() != null) {
+            areaPlot.setCategoryAxisLabelFont(getCategoryAxisFormat().getLabelFont().transform());
+        }
+		if (getCategoryAxisFormat().getLineColor() != null) {
+            areaPlot.setCategoryAxisLineColor(getCategoryAxisFormat().getLineColor());
+        }
+		if (getCategoryAxisFormat().getTickLabelColor() != null) {
+            areaPlot.setCategoryAxisTickLabelColor(getCategoryAxisFormat().getTickLabelColor());
+        }
+		if (getCategoryAxisFormat().getTickLabelFont() != null) {
+            areaPlot.setCategoryAxisTickLabelFont(getCategoryAxisFormat().getTickLabelFont().transform());
+        }
+		final CustomExpression categoryAxisRangeMinValueExp = getCategoryAxisFormat().getRangeMinValueExpression();
 		if (categoryAxisRangeMinValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMinValue_" + name, categoryAxisRangeMinValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMinValue_" + name, categoryAxisRangeMinValueExp);
 			areaPlot.setDomainAxisMinValueExpression(exp);
 		}
-		CustomExpression categoryAxisRangeMaxValueExp = getCategoryAxisFormat().getRangeMaxValueExpression();
+		final CustomExpression categoryAxisRangeMaxValueExp = getCategoryAxisFormat().getRangeMaxValueExpression();
 		if (categoryAxisRangeMaxValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMaxValue_" + name, categoryAxisRangeMaxValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "categoryAxisRangeMaxValue_" + name, categoryAxisRangeMaxValueExp);
 			areaPlot.setDomainAxisMaxValueExpression(exp);
 		}
-		
-		StringExpression valueAxisLabelExp = getValueAxisFormat().getLabelExpression();
+
+		final StringExpression valueAxisLabelExp = getValueAxisFormat().getLabelExpression();
 		if (valueAxisLabelExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisLabel_" + name, valueAxisLabelExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisLabel_" + name, valueAxisLabelExp);
 			areaPlot.setValueAxisLabelExpression(exp);
 		}
-		if (getValueAxisFormat().getTickLabelMask() != null) 
-			areaPlot.setValueAxisTickLabelMask(getValueAxisFormat().getTickLabelMask());	
-		if (getValueAxisFormat().getLabelColor() != null)
-			areaPlot.setValueAxisLabelColor(getValueAxisFormat().getLabelColor());
-		if (getValueAxisFormat().getLabelFont() != null)
-			areaPlot.setValueAxisLabelFont(getValueAxisFormat().getLabelFont().transform());
-		if (getValueAxisFormat().getLineColor() != null)
-			areaPlot.setValueAxisLineColor(getValueAxisFormat().getLineColor());		
-		if (getValueAxisFormat().getTickLabelColor() != null)
-			areaPlot.setValueAxisTickLabelColor(getValueAxisFormat().getTickLabelColor());
-		if (getValueAxisFormat().getTickLabelFont() != null)
-			areaPlot.setValueAxisTickLabelFont(getValueAxisFormat().getTickLabelFont().transform());
-		CustomExpression valueAxisRangeMinValueExp = getValueAxisFormat().getRangeMinValueExpression();
+		if (getValueAxisFormat().getTickLabelMask() != null) {
+            areaPlot.setValueAxisTickLabelMask(getValueAxisFormat().getTickLabelMask());
+        }
+		if (getValueAxisFormat().getLabelColor() != null) {
+            areaPlot.setValueAxisLabelColor(getValueAxisFormat().getLabelColor());
+        }
+		if (getValueAxisFormat().getLabelFont() != null) {
+            areaPlot.setValueAxisLabelFont(getValueAxisFormat().getLabelFont().transform());
+        }
+		if (getValueAxisFormat().getLineColor() != null) {
+            areaPlot.setValueAxisLineColor(getValueAxisFormat().getLineColor());
+        }
+		if (getValueAxisFormat().getTickLabelColor() != null) {
+            areaPlot.setValueAxisTickLabelColor(getValueAxisFormat().getTickLabelColor());
+        }
+		if (getValueAxisFormat().getTickLabelFont() != null) {
+            areaPlot.setValueAxisTickLabelFont(getValueAxisFormat().getTickLabelFont().transform());
+        }
+		final CustomExpression valueAxisRangeMinValueExp = getValueAxisFormat().getRangeMinValueExpression();
 		if (valueAxisRangeMinValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMinValue_" + name, valueAxisRangeMinValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMinValue_" + name, valueAxisRangeMinValueExp);
 			areaPlot.setRangeAxisMinValueExpression(exp);
 		}
-		CustomExpression valueAxisRangeMaxValueExp = getValueAxisFormat().getRangeMaxValueExpression();
+		final CustomExpression valueAxisRangeMaxValueExp = getValueAxisFormat().getRangeMaxValueExpression();
 		if (valueAxisRangeMaxValueExp != null) {
-			JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMaxValue_" + name, valueAxisRangeMaxValueExp);
+			final JRDesignExpression exp = ExpressionUtils.createAndRegisterExpression(design, "valueAxisRangeMaxValue_" + name, valueAxisRangeMaxValueExp);
 			areaPlot.setRangeAxisMaxValueExpression(exp);
 		}
 	}

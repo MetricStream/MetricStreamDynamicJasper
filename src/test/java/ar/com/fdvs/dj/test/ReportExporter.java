@@ -29,19 +29,26 @@
 
 package ar.com.fdvs.dj.test;
 
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.HtmlExporter;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
-import net.sf.jasperreports.export.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.export.OutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleDocxReportConfiguration;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterConfiguration;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.pdf.JRPdfExporter;
+import net.sf.jasperreports.poi.export.JRXlsExporter;
 
 public class ReportExporter {
     /**
@@ -59,16 +66,17 @@ public class ReportExporter {
      */
     public static void exportReport(JasperPrint jp, String path) throws JRException, FileNotFoundException {
         logger.debug("Exporing report to: " + path);
-        JRPdfExporter exporter = new JRPdfExporter();
+        final JRPdfExporter exporter = new JRPdfExporter();
 
-        File outputFile = new File(path);
-        File parentFile = outputFile.getParentFile();
-        if (parentFile != null)
+        final File outputFile = new File(path);
+        final File parentFile = outputFile.getParentFile();
+        if (parentFile != null) {
             parentFile.mkdirs();
-        FileOutputStream fos = new FileOutputStream(outputFile);
+        }
+        final FileOutputStream fos = new FileOutputStream(outputFile);
 
-        SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
-        OutputStreamExporterOutput simpleOutputStreamExporterOutput = new SimpleOutputStreamExporterOutput(fos);
+        final SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
+        final OutputStreamExporterOutput simpleOutputStreamExporterOutput = new SimpleOutputStreamExporterOutput(fos);
 
         exporter.setExporterInput(simpleExporterInput);
         exporter.setExporterOutput(simpleOutputStreamExporterOutput);
@@ -79,18 +87,19 @@ public class ReportExporter {
     }
 
     public static void exportReportXls(JasperPrint jp, String path, SimpleXlsReportConfiguration configuration) throws JRException, FileNotFoundException {
-        JRXlsExporter exporter = new JRXlsExporter();
+        final JRXlsExporter exporter = new JRXlsExporter();
 
-        File outputFile = new File(path);
-        File parentFile = outputFile.getParentFile();
-        if (parentFile != null)
+        final File outputFile = new File(path);
+        final File parentFile = outputFile.getParentFile();
+        if (parentFile != null) {
             parentFile.mkdirs();
-        FileOutputStream fos = new FileOutputStream(outputFile);
+        }
+        final FileOutputStream fos = new FileOutputStream(outputFile);
 
         exporter.setConfiguration(configuration);
 
-        SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
-        OutputStreamExporterOutput simpleOutputStreamExporterOutput = new SimpleOutputStreamExporterOutput(fos);
+        final SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
+        final OutputStreamExporterOutput simpleOutputStreamExporterOutput = new SimpleOutputStreamExporterOutput(fos);
 
         exporter.setExporterInput(simpleExporterInput);
         exporter.setExporterOutput(simpleOutputStreamExporterOutput);
@@ -101,7 +110,7 @@ public class ReportExporter {
     }
 
     public static void exportReportXls(JasperPrint jp, String path) throws JRException, FileNotFoundException {
-        SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+        final SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
         configuration.setDetectCellType(true);
         configuration.setWhitePageBackground(false);
         configuration.setIgnoreGraphics(false);
@@ -111,17 +120,18 @@ public class ReportExporter {
     }
 
     public static void exportToDocx(JasperPrint jp, String path, SimpleDocxReportConfiguration configuration) throws FileNotFoundException, JRException {
-        JRDocxExporter exporter = new JRDocxExporter();
-        File outputFile = new File(path);
-        File parentFile = outputFile.getParentFile();
-        if (parentFile != null)
+        final JRDocxExporter exporter = new JRDocxExporter();
+        final File outputFile = new File(path);
+        final File parentFile = outputFile.getParentFile();
+        if (parentFile != null) {
             parentFile.mkdirs();
-        FileOutputStream fos = new FileOutputStream(outputFile);
+        }
+        final FileOutputStream fos = new FileOutputStream(outputFile);
 
         exporter.setConfiguration(configuration);
 
-        SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
-        OutputStreamExporterOutput simpleOutputStreamExporterOutput = new SimpleOutputStreamExporterOutput(fos);
+        final SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
+        final OutputStreamExporterOutput simpleOutputStreamExporterOutput = new SimpleOutputStreamExporterOutput(fos);
 
         exporter.setExporterInput(simpleExporterInput);
         exporter.setExporterOutput(simpleOutputStreamExporterOutput);
@@ -132,7 +142,7 @@ public class ReportExporter {
     }
 
     public static void exportToDocx(JasperPrint jp, String path) throws JRException, FileNotFoundException {
-        SimpleDocxReportConfiguration configuration = new SimpleDocxReportConfiguration();
+        final SimpleDocxReportConfiguration configuration = new SimpleDocxReportConfiguration();
 
         configuration.setFlexibleRowHeight(true);
 
@@ -141,20 +151,21 @@ public class ReportExporter {
     }
 
     public static void exportReportHtml(JasperPrint jp, String path) throws JRException, FileNotFoundException {
-        HtmlExporter exporter = new HtmlExporter();
+        final HtmlExporter exporter = new HtmlExporter();
 
-        File outputFile = new File(path);
-        File parentFile = outputFile.getParentFile();
-        if (parentFile != null)
+        final File outputFile = new File(path);
+        final File parentFile = outputFile.getParentFile();
+        if (parentFile != null) {
             parentFile.mkdirs();
-        FileOutputStream fos = new FileOutputStream(outputFile);
+        }
+        final FileOutputStream fos = new FileOutputStream(outputFile);
 
-        SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
-        SimpleHtmlExporterOutput simpleOutputStreamExporterOutput = new SimpleHtmlExporterOutput(fos);
+        final SimpleExporterInput simpleExporterInput = new SimpleExporterInput(jp);
+        final SimpleHtmlExporterOutput simpleOutputStreamExporterOutput = new SimpleHtmlExporterOutput(fos);
 
         exporter.setExporterInput(simpleExporterInput);
         exporter.setExporterOutput(simpleOutputStreamExporterOutput);
-        SimpleHtmlExporterConfiguration configuration = new SimpleHtmlExporterConfiguration();
+        final SimpleHtmlExporterConfiguration configuration = new SimpleHtmlExporterConfiguration();
 
         exporter.setConfiguration(configuration);
 

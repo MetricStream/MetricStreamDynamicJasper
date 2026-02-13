@@ -29,9 +29,11 @@
 
 package ar.com.fdvs.dj.domain.chart.builder;
 
+import java.awt.Color;
+import java.util.List;
+
 import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.StringExpression;
-import ar.com.fdvs.dj.domain.chart.DJChart;
 import ar.com.fdvs.dj.domain.chart.dataset.XYDataset;
 import ar.com.fdvs.dj.domain.chart.plot.DJAxisFormat;
 import ar.com.fdvs.dj.domain.chart.plot.LinePlot;
@@ -39,10 +41,8 @@ import ar.com.fdvs.dj.domain.constants.Font;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 import net.sf.jasperreports.charts.type.PlotOrientationEnum;
-
-import java.awt.*;
-import java.util.List;
 
 public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuilder> {
 	//chart
@@ -51,29 +51,32 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param operation the chart data operation
 	 **/
-	public DJXYLineChartBuilder setOperation(byte operation) {
-		this.chart.setOperation(operation);
+	@Override
+    public DJXYLineChartBuilder setOperation(byte operation) {
+		chart.setOperation(operation);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the hyperlink.
 	 *
 	 * @param link the hyperlink
 	 **/
-	public DJXYLineChartBuilder setLink(DJHyperLink link) {
-		this.chart.setLink(link);
+	@Override
+    public DJXYLineChartBuilder setLink(DJHyperLink link) {
+		chart.setLink(link);
 		return this;
 	}
-	
+
 	//chart options
 	/**
 	 * Sets the background color.
 	 *
 	 * @param backColor the background color
 	 **/
-	public DJXYLineChartBuilder setBackColor(Color backColor) {
-		this.chart.getOptions().setBackColor(backColor);
+	@Override
+    public DJXYLineChartBuilder setBackColor(Color backColor) {
+		chart.getOptions().setBackColor(backColor);
 		return this;
 	}
 
@@ -82,8 +85,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param height the chart height
 	 **/
-	public DJXYLineChartBuilder setHeight(int height) {
-		this.chart.getOptions().setHeight(height);
+	@Override
+    public DJXYLineChartBuilder setHeight(int height) {
+		chart.getOptions().setHeight(height);
 		return this;
 	}
 
@@ -92,8 +96,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param width the chart width
 	 **/
-	public DJXYLineChartBuilder setWidth(int width) {
-		this.chart.getOptions().setWidth(width);
+	@Override
+    public DJXYLineChartBuilder setWidth(int width) {
+		chart.getOptions().setWidth(width);
 		return this;
 	}
 
@@ -102,8 +107,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param centered the centered
 	 **/
-	public DJXYLineChartBuilder setCentered(boolean centered) {
-		this.chart.getOptions().setCentered(centered);
+	@Override
+    public DJXYLineChartBuilder setCentered(boolean centered) {
+		chart.getOptions().setCentered(centered);
 		return this;
 	}
 
@@ -112,8 +118,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param position the position
 	 **/
-	public DJXYLineChartBuilder setPosition(byte position) {
-		this.chart.getOptions().setPosition(position);
+	@Override
+    public DJXYLineChartBuilder setPosition(byte position) {
+		chart.getOptions().setPosition(position);
 		return this;
 	}
 
@@ -122,8 +129,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param y the y position
 	 **/
-	public DJXYLineChartBuilder setY(int y) {
-		this.chart.getOptions().setY(y);
+	@Override
+    public DJXYLineChartBuilder setY(int y) {
+		chart.getOptions().setY(y);
 		return this;
 	}
 
@@ -131,8 +139,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 * Sets the x position.
 	 *
 	 **/
-	public DJXYLineChartBuilder setX(int x) {
-		this.chart.getOptions().setX(x);
+	@Override
+    public DJXYLineChartBuilder setX(int x) {
+		chart.getOptions().setX(x);
 		return this;
 	}
 
@@ -141,8 +150,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param showLegend the legend visibility
 	 **/
-	public DJXYLineChartBuilder setShowLegend(boolean showLegend) {
-		this.chart.getOptions().setShowLegend(showLegend);
+	@Override
+    public DJXYLineChartBuilder setShowLegend(boolean showLegend) {
+		chart.getOptions().setShowLegend(showLegend);
 		return this;
 	}
 
@@ -151,8 +161,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param titleColor the title color
 	 **/
-	public DJXYLineChartBuilder setTitleColor(Color titleColor) {
-		this.chart.getOptions().setTitleColor(titleColor);
+	@Override
+    public DJXYLineChartBuilder setTitleColor(Color titleColor) {
+		chart.getOptions().setTitleColor(titleColor);
 		return this;
 	}
 
@@ -161,8 +172,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param subtitleColor the subtitle color
 	 **/
-	public DJXYLineChartBuilder setSubtitleColor(Color subtitleColor) {
-		this.chart.getOptions().setSubtitleColor(subtitleColor);
+	@Override
+    public DJXYLineChartBuilder setSubtitleColor(Color subtitleColor) {
+		chart.getOptions().setSubtitleColor(subtitleColor);
 		return this;
 	}
 
@@ -171,8 +183,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param legendColor the legend color
 	 **/
-	public DJXYLineChartBuilder setLegendColor(Color legendColor) {
-		this.chart.getOptions().setLegendColor(legendColor);
+	@Override
+    public DJXYLineChartBuilder setLegendColor(Color legendColor) {
+		chart.getOptions().setLegendColor(legendColor);
 		return this;
 	}
 
@@ -181,8 +194,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param legendBackgroundColor the legend background color
 	 **/
-	public DJXYLineChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
-		this.chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
+	@Override
+    public DJXYLineChartBuilder setLegendBackgroundColor(Color legendBackgroundColor) {
+		chart.getOptions().setLegendBackgroundColor(legendBackgroundColor);
 		return this;
 	}
 
@@ -192,8 +206,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param theme the theme
 	 **/
-	public DJXYLineChartBuilder setTheme(String theme) {
-		this.chart.getOptions().setTheme(theme);
+	@Override
+    public DJXYLineChartBuilder setTheme(String theme) {
+		chart.getOptions().setTheme(theme);
 		return this;
 	}
 
@@ -202,8 +217,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param titleFont the title font
 	 **/
-	public DJXYLineChartBuilder setTitleFont(Font titleFont) {
-		this.chart.getOptions().setTitleFont(titleFont);
+	@Override
+    public DJXYLineChartBuilder setTitleFont(Font titleFont) {
+		chart.getOptions().setTitleFont(titleFont);
 		return this;
 	}
 
@@ -212,8 +228,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param subtitleFont the subtitle font
 	 **/
-	public DJXYLineChartBuilder setSubtitleFont(Font subtitleFont) {
-		this.chart.getOptions().setSubtitleFont(subtitleFont);
+	@Override
+    public DJXYLineChartBuilder setSubtitleFont(Font subtitleFont) {
+		chart.getOptions().setSubtitleFont(subtitleFont);
 		return this;
 	}
 
@@ -222,8 +239,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param legendFont the legend font
 	 **/
-	public DJXYLineChartBuilder setLegendFont(Font legendFont) {
-		this.chart.getOptions().setLegendFont(legendFont);
+	@Override
+    public DJXYLineChartBuilder setLegendFont(Font legendFont) {
+		chart.getOptions().setLegendFont(legendFont);
 		return this;
 	}
 
@@ -232,8 +250,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param legendPosition the legend position
 	 **/
-	public DJXYLineChartBuilder setLegendPosition(byte legendPosition) {
-		this.chart.getOptions().setLegendPosition(legendPosition);
+	@Override
+    public DJXYLineChartBuilder setLegendPosition(int legendPosition) {
+		chart.getOptions().setLegendPosition(legendPosition);
 		return this;
 	}
 
@@ -242,8 +261,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param titlePosition the title position
 	 **/
-	public DJXYLineChartBuilder setTitlePosition(byte titlePosition) {
-		this.chart.getOptions().setTitlePosition(titlePosition);
+	@Override
+    public DJXYLineChartBuilder setTitlePosition(int titlePosition) {
+		chart.getOptions().setTitlePosition(titlePosition);
 		return this;
 	}
 
@@ -252,8 +272,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param title the title
 	 **/
-	public DJXYLineChartBuilder setTitle(String title) {
-		this.chart.getOptions().setTitleExpression(new LiteralExpression(title));
+	@Override
+    public DJXYLineChartBuilder setTitle(String title) {
+		chart.getOptions().setTitleExpression(new LiteralExpression(title));
 		return this;
 	}
 
@@ -262,8 +283,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param titleExpression the title expression
 	 **/
-	public DJXYLineChartBuilder setTitle(StringExpression titleExpression) {
-		this.chart.getOptions().setTitleExpression(titleExpression);
+	@Override
+    public DJXYLineChartBuilder setTitle(StringExpression titleExpression) {
+		chart.getOptions().setTitleExpression(titleExpression);
 		return this;
 	}
 
@@ -272,8 +294,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param subtitle the subtitle
 	 **/
-	public DJXYLineChartBuilder setSubtitle(String subtitle) {
-		this.chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
+	@Override
+    public DJXYLineChartBuilder setSubtitle(String subtitle) {
+		chart.getOptions().setSubtitleExpression(new LiteralExpression(subtitle));
 		return this;
 	}
 
@@ -282,18 +305,20 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param subtitleExpression the subtitle expression
 	 **/
-	public DJXYLineChartBuilder setSubtitle(StringExpression subtitleExpression) {
-		this.chart.getOptions().setSubtitleExpression(subtitleExpression);
+	@Override
+    public DJXYLineChartBuilder setSubtitle(StringExpression subtitleExpression) {
+		chart.getOptions().setSubtitleExpression(subtitleExpression);
 		return this;
 	}
 
 	/**
 	 * Sets the line style (DJChartOptions.LINE_STYLE_SOLID, DJChartOptions.LINE_STYLE_DASHED, DJChartOptions.LINE_STYLE_DOTTED, DJChartOptions.LINE_STYLE_DOUBLE).
-	 * 
+	 *
 	 * @param lineStyle one of the line style constants in DJChartOptions class
 	 */
-	public DJXYLineChartBuilder setLineStyle(byte lineStyle) {
-		this.chart.getOptions().setLineStyle(lineStyle);
+	@Override
+    public DJXYLineChartBuilder setLineStyle(int lineStyle) {
+		chart.getOptions().setLineStyle(lineStyle);
 		return this;
 	}
 
@@ -302,8 +327,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param lineWidth the line width
 	 **/
-	public DJXYLineChartBuilder setLineWidth(float lineWidth) {
-		this.chart.getOptions().setLineWidth(lineWidth);
+	@Override
+    public DJXYLineChartBuilder setLineWidth(float lineWidth) {
+		chart.getOptions().setLineWidth(lineWidth);
 		return this;
 	}
 
@@ -312,8 +338,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param lineColor the line color
 	 **/
-	public DJXYLineChartBuilder setLineColor(Color lineColor) {
-		this.chart.getOptions().setLineColor(lineColor);
+	@Override
+    public DJXYLineChartBuilder setLineColor(Color lineColor) {
+		chart.getOptions().setLineColor(lineColor);
 		return this;
 	}
 
@@ -322,8 +349,9 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 *
 	 * @param padding the padding
 	 **/
-	public DJXYLineChartBuilder setPadding(int padding) {
-		this.chart.getOptions().setPadding(padding);
+	@Override
+    public DJXYLineChartBuilder setPadding(int padding) {
+		chart.getOptions().setPadding(padding);
 		return this;
 	}
 
@@ -331,20 +359,22 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 	 * Sets a user specified chart customizer class name.
 	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
-	public DJXYLineChartBuilder setCustomizerClass(String customizerClass) {
-		this.chart.getOptions().setCustomizerClass(customizerClass);
+	@Override
+    public DJXYLineChartBuilder setCustomizerClass(String customizerClass) {
+		chart.getOptions().setCustomizerClass(customizerClass);
 		return this;
 	}
-	
+
 	//dataset
-	/** 
+	/**
 	 * Allows AbstractChartBuilder to set the key column
 	 */
-	protected DJXYLineChartBuilder setCategory(PropertyColumn xValue) {
+	@Override
+    protected DJXYLineChartBuilder setCategory(PropertyColumn xValue) {
 		setXValue(xValue);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the x value column.
 	 *
@@ -357,17 +387,18 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public DJXYLineChartBuilder addSerie(AbstractColumn column) {
+	@Override
+    public DJXYLineChartBuilder addSerie(AbstractColumn column) {
 		getDataset().addSerie(column);
 		return this;
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param label column the custom label
 	 **/
@@ -378,24 +409,24 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
 	public DJXYLineChartBuilder addSerie(AbstractColumn column, StringExpression labelExpression) {
 		getDataset().addSerie(column, labelExpression);
 		return this;
 	}
-	
+
 	//plot
 	/**
 	 * Sets the angle in degrees to rotate the data axis labels.  The range is -360 to 360.  A positive value angles
 	 * the label so it reads downwards wile a negative value angles the label so it reads upwards.  Only charts that
 	 * use a category based axis (such as line or bar charts) support label rotation.
-	 * 
+	 *
 	 * @param labelRotation the label rotation
 	 **/
 	public DJXYLineChartBuilder setLabelRotation(double labelRotation) {
-		this.getPlot().setLabelRotation(labelRotation);
+		getPlot().setLabelRotation(labelRotation);
 		return this;
 	}
 
@@ -408,48 +439,50 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 		getPlot().setOrientation(orientation);
 		return this;
 	}
-	
+
 	/**
 	 * Adds the specified series color to the plot.
-	 * 
+	 *
 	 * @param color the series color
 	 **/
-	public DJXYLineChartBuilder addSeriesColor(Color color) {
+	@Override
+    public DJXYLineChartBuilder addSeriesColor(Color color) {
 		getPlot().addSeriesColor(color);
 		return this;
 	}
 
 	/**
 	 * Set the specified series colors to the plot.
-	 * 
+	 *
 	 * @param seriesColors the series colors
 	 **/
-	public DJXYLineChartBuilder setSeriesColors(List<Color> seriesColors) {
+	@Override
+    public DJXYLineChartBuilder setSeriesColors(List<Color> seriesColors) {
 		getPlot().setSeriesColors(seriesColors);
 		return this;
 	}
-	
+
 	//category plot
 	/**
 	 * Sets the category axis format.
-	 * 
+	 *
 	 * @param categoryAxisFormat the category axis format
 	 **/
 	public DJXYLineChartBuilder setCategoryAxisFormat(DJAxisFormat categoryAxisFormat) {
 		getPlot().setCategoryAxisFormat(categoryAxisFormat);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the value axis format.
-	 * 
+	 *
 	 * @param valueAxisFormat the value axis format
 	 **/
 	public DJXYLineChartBuilder setValueAxisFormat(DJAxisFormat valueAxisFormat) {
 		getPlot().setValueAxisFormat(valueAxisFormat);
 		return this;
 	}
-	
+
 	//line plot
 	/**
 	 * Sets the shapes visibility.
@@ -470,16 +503,19 @@ public class DJXYLineChartBuilder extends AbstractChartBuilder<DJXYLineChartBuil
 		getPlot().setShowLines(showLines);
 		return this;
 	}
-	
-	protected XYDataset getDataset() {
+
+	@Override
+    protected XYDataset getDataset() {
 		return (XYDataset) chart.getDataset();
 	}
-	
-	protected LinePlot getPlot() {
+
+	@Override
+    protected LinePlot getPlot() {
 		return (LinePlot) chart.getPlot();
 	}
-	
-	protected byte getChartType() {
-		return DJChart.XYLINE_CHART;
+
+	@Override
+    protected ChartTypeEnum getChartType() {
+		return ChartTypeEnum.XYLINE;
 	}
 }

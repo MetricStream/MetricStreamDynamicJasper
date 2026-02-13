@@ -33,14 +33,6 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.jasperreports.charts.design.JRDesignBarPlot;
-import net.sf.jasperreports.charts.design.JRDesignCategoryDataset;
-import net.sf.jasperreports.engine.JRFont;
-import net.sf.jasperreports.engine.design.JRDesignChart;
-import net.sf.jasperreports.engine.design.JRDesignGroup;
-import net.sf.jasperreports.engine.design.JRDesignVariable;
-import net.sf.jasperreports.engine.type.LineStyleEnum;
-import net.sf.jasperreports.view.JasperViewer;
 import ar.com.fdvs.dj.domain.DJCalculation;
 import ar.com.fdvs.dj.domain.DJHyperLink;
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
@@ -66,15 +58,25 @@ import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 import ar.com.fdvs.dj.test.BaseDjReportTest;
+import net.sf.jasperreports.charts.design.JRDesignBarPlot;
+import net.sf.jasperreports.charts.design.JRDesignCategoryDataset;
+import net.sf.jasperreports.charts.design.JRDesignChart;
+import net.sf.jasperreports.charts.type.EdgeEnum;
+import net.sf.jasperreports.engine.JRFont;
+import net.sf.jasperreports.engine.design.JRDesignGroup;
+import net.sf.jasperreports.engine.design.JRDesignVariable;
+import net.sf.jasperreports.engine.type.LineStyleEnum;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class BarChartNoDetailTest extends BaseDjReportTest {
 	private DynamicReportBuilder drb;
 	private JRDesignChart chart;
 
-	protected void setUp() throws Exception {
+	@Override
+    protected void setUp() throws Exception {
         super.setUp();
         drb = new DynamicReportBuilder();
-		Style headerStyle = new Style();
+		final Style headerStyle = new Style();
 		headerStyle.setFont(Font.VERDANA_MEDIUM_BOLD);
 		headerStyle.setBorderBottom(Border.PEN_2_POINT());
 		headerStyle.setHorizontalAlign(HorizontalAlign.CENTER);
@@ -85,18 +87,18 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		drb.setDefaultStyles(null, null, headerStyle, null);
 
 
-		AbstractColumn columnState = ColumnBuilder.getNew()
+		final AbstractColumn columnState = ColumnBuilder.getNew()
 		.setColumnProperty("state", String.class.getName()).setTitle(
-				"State").setWidth(new Integer(85)).build();
-		AbstractColumn columnBranch = ColumnBuilder.getNew()
+				"State").setWidth(85).build();
+		final AbstractColumn columnBranch = ColumnBuilder.getNew()
 		.setColumnProperty("branch", String.class.getName()).setTitle(
-				"Branch").setWidth(new Integer(85)).build();
-		AbstractColumn columnaQuantity = ColumnBuilder.getNew()
+				"Branch").setWidth(85).build();
+		final AbstractColumn columnaQuantity = ColumnBuilder.getNew()
 		.setColumnProperty("quantity", Long.class.getName()).setTitle(
-				"Quantity").setWidth(new Integer(80)).build();
-		AbstractColumn columnAmount = ColumnBuilder.getNew()
+				"Quantity").setWidth(80).build();
+		final AbstractColumn columnAmount = ColumnBuilder.getNew()
 		.setColumnProperty("amount", Float.class.getName()).setTitle(
-				"Amount").setWidth(new Integer(90)).build();
+				"Amount").setWidth(90).build();
 
 		drb.addColumn(columnState);
 		drb.addColumn(columnBranch);
@@ -106,8 +108,8 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		drb.setShowDetailBand(false);
 		drb.setPrintColumnNames(false);
 
-		GroupBuilder gb1 = new GroupBuilder();
-		DJGroup g1 = gb1.setCriteriaColumn((PropertyColumn) columnState)
+		final GroupBuilder gb1 = new GroupBuilder();
+		final DJGroup g1 = gb1.setCriteriaColumn((PropertyColumn) columnState)
 				.addFooterVariable(columnAmount,DJCalculation.SUM)
 			.addFooterVariable(columnaQuantity,DJCalculation.SUM)
 			.addVariable("group_state_name", columnState, DJCalculation.FIRST)
@@ -123,7 +125,7 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 
 		drb.setUseFullPageWidth(true);
 
-		DJAxisFormat categoryAxisFormat = new DJAxisFormat("category");
+		final DJAxisFormat categoryAxisFormat = new DJAxisFormat("category");
 		categoryAxisFormat.setLabelFont(Font.ARIAL_SMALL);
 		categoryAxisFormat.setLabelColor(Color.DARK_GRAY);
 		categoryAxisFormat.setTickLabelFont(Font.ARIAL_SMALL);
@@ -131,7 +133,7 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		categoryAxisFormat.setTickLabelMask("");
 		categoryAxisFormat.setLineColor(Color.DARK_GRAY);
 
-		DJAxisFormat valueAxisFormat = new DJAxisFormat("value");
+		final DJAxisFormat valueAxisFormat = new DJAxisFormat("value");
 		valueAxisFormat.setLabelFont(Font.ARIAL_SMALL);
 		valueAxisFormat.setLabelColor(Color.DARK_GRAY);
 		valueAxisFormat.setTickLabelFont(Font.ARIAL_SMALL);
@@ -140,7 +142,7 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		valueAxisFormat.setLineColor(Color.DARK_GRAY);
 		valueAxisFormat.setRangeMaxValueExpression(new NumberExpression(100000));
 
-		DJChart djChart = new DJBarChartBuilder()
+		final DJChart djChart = new DJBarChartBuilder()
 		//chart
 		.setX(20)
 		.setY(10)
@@ -151,7 +153,8 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		.setShowLegend(true)
 		.setPosition(DJChartOptions.POSITION_FOOTER)
 		.setTitle(new StringExpression() {
-			public Object evaluate(Map fields, Map variables, Map parameters) {
+			@Override
+            public Object evaluate(Map fields, Map variables, Map parameters) {
 				return variables.get("group_state_name");
 			}
 		})
@@ -182,19 +185,20 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		.build();
 		drb.addChart(djChart);
 
-		DJHyperLink djlink = new DJHyperLink();
+		final DJHyperLink djlink = new DJHyperLink();
 		djlink.setExpression(new StringExpression() {
-			public Object evaluate(Map fields, Map variables, Map parameters) {
+			@Override
+            public Object evaluate(Map fields, Map variables, Map parameters) {
 				return "http://thisIsAURL?count=" + variables.get("REPORT_COUNT");
 			}
 		});
 		djlink.setTooltip(new LiteralExpression("I'm a literal tootltip"));
 		djChart.setLink(djlink);
 
-		Map<AbstractColumn, JRDesignVariable> vars = new HashMap<AbstractColumn, JRDesignVariable>();
+		final Map<AbstractColumn, JRDesignVariable> vars = new HashMap<>();
 		vars.put(columnaQuantity, new JRDesignVariable());
 		vars.put(columnAmount, new JRDesignVariable());
-		JRDesignGroup group = new JRDesignGroup();
+		final JRDesignGroup group = new JRDesignGroup();
 		chart = djChart.transform(new DynamicJasperDesign(), "", group, group, vars, 0);
 	}
 
@@ -214,23 +218,23 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		assertEquals(Color.DARK_GRAY, chart.getLegendColor());
 		testFont(Font.COURIER_NEW_MEDIUM_BOLD, chart.getLegendFont());
 		assertEquals(Color.WHITE, chart.getLegendBackgroundColor());
-		assertEquals(new Byte(DJChartOptions.EDGE_BOTTOM), chart.getLegendPositionValue().getValueByte() );
-		assertEquals(new Byte(DJChartOptions.EDGE_TOP), chart.getTitlePositionValue().getValueByte());
-        assertEquals(LineStyleEnum.getByValue(new Byte(DJChartOptions.LINE_STYLE_DOTTED)), chart.getLineBox().getPen().getLineStyleValue());
+		assertEquals(EdgeEnum.values()[DJChartOptions.EDGE_BOTTOM], chart.getLegendPosition() );
+		assertEquals(EdgeEnum.values()[DJChartOptions.EDGE_TOP], chart.getTitlePosition());
+        assertEquals(LineStyleEnum.values()[DJChartOptions.LINE_STYLE_DOTTED], chart.getLineBox().getPen().getLineStyle());
 		assertEquals(1f, chart.getLineBox().getPen().getLineWidth());
 		assertEquals(Color.DARK_GRAY, chart.getLineBox().getPen().getLineColor());
-		assertEquals(new Integer(5), chart.getLineBox().getPadding());
+		assertEquals(Integer.valueOf(5), chart.getLineBox().getPadding());
 	}
 
 	public void testDataset() {
-		JRDesignCategoryDataset dataset = (JRDesignCategoryDataset) chart.getDataset();
+		final JRDesignCategoryDataset dataset = (JRDesignCategoryDataset) chart.getDataset();
 		assertEquals(2, dataset.getSeriesList().size());
 		assertNotNull(dataset.getSeries()[0].getLabelExpression().getText());
 		assertNotNull(dataset.getSeries()[0].getSeriesExpression().getText());
 	}
 
 	public void testPlot() {
-		JRDesignBarPlot plot = (JRDesignBarPlot) chart.getPlot();
+		final JRDesignBarPlot plot = (JRDesignBarPlot) chart.getPlot();
 		assertEquals(Boolean.TRUE, plot.getShowTickMarks());
 		assertEquals(Boolean.TRUE, plot.getShowTickLabels());
 		assertEquals(Boolean.FALSE, plot.getShowLabels());
@@ -253,20 +257,20 @@ public class BarChartNoDetailTest extends BaseDjReportTest {
 		assertNotNull(plot.getRangeAxisMaxValueExpression().getText());
 	}
 
-	public DynamicReport buildReport() throws Exception {
-		DynamicReport dreport = drb.build();
-		return dreport;
+	@Override
+    public DynamicReport buildReport() throws Exception {
+		return drb.build();
 	}
 
 	private void testFont(Font djFont, JRFont jrFont) {
 		assertEquals(djFont.getFontName(), jrFont.getFontName());
-		assertEquals(djFont.getFontSize(), jrFont.getFontsize());
+		assertEquals(djFont.getFontSize(), jrFont.getFontSize());
 		assertEquals(djFont.isBold(), jrFont.isBold());
 		assertEquals(djFont.isItalic(), jrFont.isItalic());
 	}
 
 	public static void main(String[] args) throws Exception {
-		BarChartNoDetailTest test = new BarChartNoDetailTest();
+		final BarChartNoDetailTest test = new BarChartNoDetailTest();
 		test.setUp();
 		test.testReport();
 		JasperViewer.viewReport(test.jp);

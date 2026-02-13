@@ -29,6 +29,11 @@
 
 package ar.com.fdvs.dj.domain.chart.dataset;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.StringExpression;
 import ar.com.fdvs.dj.domain.entities.Entity;
@@ -36,35 +41,23 @@ import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import ar.com.fdvs.dj.domain.hyperlink.LiteralExpression;
 import ar.com.fdvs.dj.util.ExpressionUtils;
+import net.sf.jasperreports.charts.design.JRDesignChartDataset;
 import net.sf.jasperreports.charts.design.JRDesignTimeSeries;
 import net.sf.jasperreports.charts.design.JRDesignTimeSeriesDataset;
+import net.sf.jasperreports.charts.type.TimePeriodEnum;
 import net.sf.jasperreports.engine.JRExpression;
-import net.sf.jasperreports.engine.design.JRDesignChartDataset;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
-import org.jfree.data.time.*;
-
-import java.util.*;
 
 public class TimeSeriesDataset extends AbstractDataset {
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
-	
-	public static final Class YEAR = Year.class;
-	public static final Class QUARTER = Quarter.class;
-	public static final Class MONTH = Month.class;
-	public static final Class WEEK = Week.class;
-	public static final Class DAY = Day.class;
-	public static final Class HOUR = Hour.class;
-	public static final Class MINUTE = Minute.class;
-	public static final Class SECOND = Second.class;
-	public static final Class MILLISECOND = Millisecond.class;
-	
+
 	private PropertyColumn timePeriod = null;
-	private final List<AbstractColumn> series = new ArrayList<AbstractColumn>();
-	private final Map<AbstractColumn, StringExpression> seriesLabels = new HashMap<AbstractColumn, StringExpression>();
-	private Class timePeriodClass = DAY;	
-		
+	private final List<AbstractColumn> series = new ArrayList<>();
+	private final Map<AbstractColumn, StringExpression> seriesLabels = new HashMap<>();
+	private TimePeriodEnum timePeriodValue = TimePeriodEnum.DAY;
+
 	/**
 	 * Sets the time period column.
 	 *
@@ -73,7 +66,7 @@ public class TimeSeriesDataset extends AbstractDataset {
 	public void setTimePeriod(PropertyColumn timePeriod) {
 		this.timePeriod = timePeriod;
 	}
-	
+
 	/**
 	 * Returns the time period column.
 	 *
@@ -82,19 +75,20 @@ public class TimeSeriesDataset extends AbstractDataset {
 	public PropertyColumn getTimePeriod() {
 		return timePeriod;
 	}
-	
+
 	/**
 	 * Adds the specified serie column to the dataset.
-	 * 
+	 *
 	 * @param column the serie column
 	 **/
-	public void addSerie(AbstractColumn column) {
+	@Override
+    public void addSerie(AbstractColumn column) {
 		series.add(column);
 	}
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param label column the custom label
 	 **/
@@ -104,7 +98,7 @@ public class TimeSeriesDataset extends AbstractDataset {
 
 	/**
 	 * Adds the specified serie column to the dataset with custom label expression.
-	 * 
+	 *
 	 * @param column the serie column
 	 * @param labelExpression column the custom label expression
 	 **/
@@ -112,11 +106,11 @@ public class TimeSeriesDataset extends AbstractDataset {
 		series.add(column);
 		seriesLabels.put(column, labelExpression);
 	}
-	
+
 	/**
 	 * Removes the specified serie column from the dataset.
-	 * 
-	 * @param column the serie column	 
+	 *
+	 * @param column the serie column
 	 **/
 	public void removeSerie(AbstractColumn column) {
 		series.remove(column);
@@ -130,50 +124,52 @@ public class TimeSeriesDataset extends AbstractDataset {
 		series.clear();
 		seriesLabels.clear();
 	}
-	
+
 	/**
 	 * Returns a list of all the defined series.  Every entry in the list is of type AbstractColumn.
-	 * If there are no defined series this method will return an empty list, not null. 
+	 * If there are no defined series this method will return an empty list, not null.
 	 *
 	 * @return	the list of series
 	 **/
 	public List getSeries()	{
 		return series;
 	}
-	
+
 	/**
 	 * Sets the time period class (YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, MILLISECOND).
 	 * Default DAY
-	 * 
+	 *
 	 * @param timePeriodClass one of the time period class constants in this class
 	 */
-	public void setTimePeriodClass(Class timePeriodClass) {
-		this.timePeriodClass = timePeriodClass;
+	public void setTimePeriodValue(TimePeriodEnum timePeriodValue) {
+		this.timePeriodValue = timePeriodValue;
 	}
 
 	/**
 	 * Gets the time period class (YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, MILLISECOND).
-	 * 
+	 *
 	 * @return one of the time period class constants in this class
 	 */
-	public Class getTimePeriodClass() {
-		return timePeriodClass;
+	public TimePeriodEnum getTimePeriodValue() {
+		return timePeriodValue;
 	}
-	
-	public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
-		JRDesignTimeSeriesDataset data = new JRDesignTimeSeriesDataset(null);
-		if (timePeriodClass != null)
-			data.setTimePeriod(timePeriodClass);
 
-		for (AbstractColumn sery : series) {
-			JRDesignTimeSeries serie = new JRDesignTimeSeries();
+	@Override
+    public JRDesignChartDataset transform(DynamicJasperDesign design, String name, JRDesignGroup group, JRDesignGroup parentGroup, Map vars) {
+		final JRDesignTimeSeriesDataset data = new JRDesignTimeSeriesDataset(null);
+		if (timePeriodValue != null) {
+            data.setTimePeriod(timePeriodValue);
+        }
+
+		for (final AbstractColumn sery : series) {
+			final JRDesignTimeSeries serie = new JRDesignTimeSeries();
 
 			//And use it as value for each bar
-			JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
+			final JRDesignExpression varExp = getExpressionFromVariable((JRDesignVariable) vars.get(sery));
 			serie.setValueExpression(varExp);
 
 			//The key for each bar
-			JRExpression exp2 = group.getExpression();
+			final JRExpression exp2 = group.getExpression();
 
 			JRDesignExpression exp3;
 			if (seriesLabels.containsKey(sery)) {
@@ -182,7 +178,6 @@ public class TimeSeriesDataset extends AbstractDataset {
 				exp3 = new JRDesignExpression();
 				exp3.setText("\"" + sery.getTitle() + "\"");
 			}
-			exp3.setValueClass(String.class);
 
 			serie.setTimePeriodExpression(exp2);
 
@@ -197,11 +192,13 @@ public class TimeSeriesDataset extends AbstractDataset {
 		return data;
 	}
 
-	public List getColumns() {
+	@Override
+    public List getColumns() {
 		return series;
 	}
 
-	public PropertyColumn getColumnsGroup() {
+	@Override
+    public PropertyColumn getColumnsGroup() {
 		return timePeriod;
 	}
 }

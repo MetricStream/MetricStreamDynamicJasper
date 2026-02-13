@@ -23,14 +23,14 @@ public class VariableRegistrationManager extends
 
 	public VariableRegistrationManager(DynamicJasperDesign jd, DynamicReport dr, LayoutManager layoutManager) {
 		super(jd,dr,layoutManager);
-	}	
-	
+	}
+
 	@Override
 	protected void registerEntity(Entity entity) {
 		try {
-			JRDesignVariable jrvar = (JRDesignVariable) transformEntity(entity);
+			final JRDesignVariable jrvar = (JRDesignVariable) transformEntity(entity);
 			getDjd().addVariable(jrvar);
-		} catch (JRException e) {
+		} catch (final JRException e) {
 			throw new DJException("Problem registering a DJVariable: " + e.getMessage(), e);
 		}
 
@@ -38,43 +38,43 @@ public class VariableRegistrationManager extends
 
 	@Override
 	protected Object transformEntity(Entity entity) throws JRException {
-		DJVariable var = (DJVariable)entity;
-		JRDesignVariable jrvar = new JRDesignVariable();
+		final DJVariable var = (DJVariable)entity;
+		final JRDesignVariable jrvar = new JRDesignVariable();
 		jrvar.setName(var.getName());
 		jrvar.setValueClassName(var.getClassName());
-		
+
 		if (var.getCalculation() != null){
-			jrvar.setCalculation(CalculationEnum.getByValue(var.getCalculation().getValue()));
+			jrvar.setCalculation(CalculationEnum.values()[var.getCalculation().getValue()]);
 		}
-		
-		String expressionParamName = var.getName() + "_expression";
-		JRDesignExpression expression = ExpressionUtils.createAndRegisterExpression(getDjd(), expressionParamName, var.getExpression());		
+
+		final String expressionParamName = var.getName() + "_expression";
+		final JRDesignExpression expression = ExpressionUtils.createAndRegisterExpression(getDjd(), expressionParamName, var.getExpression());
 		jrvar.setExpression(expression);
 
 		if (var.getInitialValueExpression() != null){
-			String initialValueExpressionParamName = var.getName() + "_initalValueExpression";
-			JRDesignExpression initialValueExpression = ExpressionUtils.createAndRegisterExpression(getDjd(), initialValueExpressionParamName, var.getInitialValueExpression());
+			final String initialValueExpressionParamName = var.getName() + "_initalValueExpression";
+			final JRDesignExpression initialValueExpression = ExpressionUtils.createAndRegisterExpression(getDjd(), initialValueExpressionParamName, var.getInitialValueExpression());
 			jrvar.setExpression(initialValueExpression);
 		}
-		
+
 		if (var.getResetType() != null){
-			jrvar.setResetType(ResetTypeEnum.getByValue( var.getResetType().getValue() ));
-		}		
-		
-		if (var.getResetGroup() != null && DJVariableResetType.GROUP.equals(var.getResetType())){
-			JRDesignGroup jrgroup = LayoutUtils.getJRDesignGroup(getDjd(),getLayoutManager(), var.getResetGroup());
-			jrvar.setResetGroup(jrgroup);
+			jrvar.setResetType(ResetTypeEnum.values()[var.getResetType().getValue()]);
 		}
-		
+
+		if ((var.getResetGroup() != null) && DJVariableResetType.GROUP.equals(var.getResetType())){
+			final JRDesignGroup jrgroup = LayoutUtils.getJRDesignGroup(getDjd(),getLayoutManager(), var.getResetGroup());
+			jrvar.setResetGroup(jrgroup.getName());
+		}
+
 		if (var.getIncrementType() != null){
-			jrvar.setIncrementType(IncrementTypeEnum.getByValue( var.getIncrementType().getValue()) );
+			jrvar.setIncrementType(IncrementTypeEnum.values()[var.getIncrementType().getValue()]);
 		}
-		
-		if (var.getIncrementGroup() != null && DJVariableIncrementType.GROUP.equals(var.getIncrementType())){
-			JRDesignGroup jrgroup = LayoutUtils.getJRDesignGroup(getDjd(),getLayoutManager(), var.getResetGroup());
-			jrvar.setIncrementGroup(jrgroup);
-		}		
-		
+
+		if ((var.getIncrementGroup() != null) && DJVariableIncrementType.GROUP.equals(var.getIncrementType())){
+			final JRDesignGroup jrgroup = LayoutUtils.getJRDesignGroup(getDjd(),getLayoutManager(), var.getResetGroup());
+			jrvar.setIncrementGroup(jrgroup.getName());
+		}
+
 		return jrvar;
 	}
 

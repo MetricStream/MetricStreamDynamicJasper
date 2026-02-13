@@ -29,24 +29,38 @@
 
 package ar.com.fdvs.dj.core;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import ar.com.fdvs.dj.domain.DJQuery;
 import ar.com.fdvs.dj.domain.DynamicJasperDesign;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.DynamicReportOptions;
 import ar.com.fdvs.dj.domain.constants.Page;
 import ar.com.fdvs.dj.util.LayoutUtils;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.design.*;
+import net.sf.jasperreports.engine.JRBand;
+import net.sf.jasperreports.engine.JRDataset;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRQuery;
+import net.sf.jasperreports.engine.JRReportTemplate;
+import net.sf.jasperreports.engine.JRStyle;
+import net.sf.jasperreports.engine.JRVariable;
+import net.sf.jasperreports.engine.design.JRDesignBand;
+import net.sf.jasperreports.engine.design.JRDesignDataset;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JRDesignSection;
+import net.sf.jasperreports.engine.design.JRDesignVariable;
+import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.type.OrientationEnum;
 import net.sf.jasperreports.engine.type.PrintOrderEnum;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 import net.sf.jasperreports.engine.type.WhenResourceMissingTypeEnum;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class DJJRDesignHelper {
 
@@ -54,15 +68,16 @@ public class DJJRDesignHelper {
 
     public static DynamicJasperDesign getNewDesign(DynamicReport dr) {
         log.info("Creating DynamicJasperDesign");
-        DynamicJasperDesign des = new DynamicJasperDesign();
-        DynamicReportOptions options = dr.getOptions();
-        Page page = options.getPage();
+        final DynamicJasperDesign des = new DynamicJasperDesign();
+        final DynamicReportOptions options = dr.getOptions();
+        final Page page = options.getPage();
 
         des.setPrintOrder(PrintOrderEnum.VERTICAL);
 
         OrientationEnum orientation = OrientationEnum.PORTRAIT;
-        if (!page.isOrientationPortrait())
+        if (!page.isOrientationPortrait()) {
             orientation = OrientationEnum.LANDSCAPE;
+        }
         des.setOrientation(orientation);
 
         des.setPageWidth(page.getWidth());
@@ -75,10 +90,11 @@ public class DJJRDesignHelper {
         des.setTopMargin(options.getTopMargin());
         des.setBottomMargin(options.getBottomMargin());
 
-        if (dr.getLanguage() != null)
+        if (dr.getLanguage() != null) {
             des.setLanguage(dr.getLanguage().toLowerCase());
+        }
 
-        JRDesignSection detailSection = (JRDesignSection) des.getDetailSection();
+        final JRDesignSection detailSection = (JRDesignSection) des.getDetailSection();
         detailSection.getBandsList().add(new JRDesignBand());
 
         des.setPageHeader(new JRDesignBand());
@@ -89,11 +105,11 @@ public class DJJRDesignHelper {
         populateBehavioralOptions(dr, des);
 
         if (dr.getQuery() != null) {
-            JRDesignQuery query = getJRDesignQuery(dr);
+            final JRDesignQuery query = getJRDesignQuery(dr);
             des.setQuery(query);
         }
 
-        for (String name : dr.getProperties().keySet()) {
+        for (final String name : dr.getProperties().keySet()) {
             des.setProperty(name, dr.getProperties().get(name));
         }
 
@@ -102,19 +118,19 @@ public class DJJRDesignHelper {
     }
 
     protected static void populateBehavioralOptions(DynamicReport dr, DynamicJasperDesign des) {
-        DynamicReportOptions options = dr.getOptions();
+        final DynamicReportOptions options = dr.getOptions();
         des.setColumnCount(options.getColumnsPerPage());
-        des.setWhenNoDataType(WhenNoDataTypeEnum.getByValue(dr.getWhenNoDataType()));
-        des.setWhenResourceMissingType(WhenResourceMissingTypeEnum.getByValue(dr.getWhenResourceMissing()));
+        des.setWhenNoDataType(WhenNoDataTypeEnum.values()[dr.getWhenNoDataType()]);
+        des.setWhenResourceMissingType(WhenResourceMissingTypeEnum.values()[dr.getWhenResourceMissing()]);
         des.setTitleNewPage(options.isTitleNewPage());
         des.setIgnorePagination(options.isIgnorePagination());
 
-        JRDesignSection detailSection = (JRDesignSection) des.getDetailSection();
-        List<JRBand> bands = detailSection.getBandsList();
+        final JRDesignSection detailSection = (JRDesignSection) des.getDetailSection();
+        final List<JRBand> bands = detailSection.getBandsList();
 
         //FIXME we can do better in split! there may be more bands
         if (!bands.isEmpty()) {
-            JRDesignBand detailBand = (JRDesignBand) bands.iterator().next();
+            final JRDesignBand detailBand = (JRDesignBand) bands.iterator().next();
             detailBand.setSplitType(LayoutUtils.getSplitTypeFromBoolean(dr.isAllowDetailSplit()));
         }
 
@@ -123,7 +139,7 @@ public class DJJRDesignHelper {
     }
 
     protected static JRDesignQuery getJRDesignQuery(DynamicReport dr) {
-        JRDesignQuery query = new JRDesignQuery();
+        final JRDesignQuery query = new JRDesignQuery();
         query.setText(dr.getQuery().getText());
         query.setLanguage(dr.getQuery().getLanguage());
         return query;
@@ -131,7 +147,7 @@ public class DJJRDesignHelper {
 
 
     public static DynamicJasperDesign downCast(JasperDesign jd, DynamicReport dr) throws CoreException {
-        DynamicJasperDesign djd = new DynamicJasperDesign();
+        final DynamicJasperDesign djd = new DynamicJasperDesign();
         log.info("downcasting JasperDesign");
         try {
             BeanUtils.copyProperties(djd, jd);
@@ -139,12 +155,12 @@ public class DJJRDesignHelper {
             //BeanUtils.copyProperties does not perform deep copy,
             //adding original parameter definitions manually
             if (dr.isTemplateImportParameters()) {
-                for (JRParameter element : jd.getParametersList()) {
+                for (final JRParameter element : jd.getParametersList()) {
                     try {
                         djd.addParameter(element);
-                    } catch (JRException e) {
+                    } catch (final JRException e) {
                         if (log.isDebugEnabled()) {
-                            String message = e.getMessage();
+                            final String message = e.getMessage();
                             if (!message.startsWith("Duplicate declaration of parameter")) {
                                 log.warn(message);
                             }
@@ -156,10 +172,10 @@ public class DJJRDesignHelper {
             //BeanUtils.copyProperties does not perform deep copy,
             //adding original fields definitions manually
             if (dr.isTemplateImportFields()) {
-                for (JRField element : jd.getFieldsList()) {
+                for (final JRField element : jd.getFieldsList()) {
                     try {
                         djd.addField(element);
-                    } catch (JRException e) {
+                    } catch (final JRException e) {
                         if (log.isDebugEnabled()) {
                             log.warn(e.getMessage());
                         }
@@ -170,12 +186,12 @@ public class DJJRDesignHelper {
             //BeanUtils.copyProperties does not perform deep copy,
             //adding original variables definitions manually
             if (dr.isTemplateImportVariables()) {
-                for (JRVariable element : jd.getVariablesList()) {
+                for (final JRVariable element : jd.getVariablesList()) {
                     try {
                         if (element instanceof JRDesignVariable) {
                             djd.addVariable((JRDesignVariable) element);
                         }
-                    } catch (JRException e) {
+                    } catch (final JRException e) {
                         if (log.isDebugEnabled()) {
                             log.warn(e.getMessage());
                         }
@@ -187,18 +203,18 @@ public class DJJRDesignHelper {
             //adding original dataset definitions manually
             if (dr.isTemplateImportDatasets()) {
                 // also copy query
-                JRQuery query = jd.getQuery();
+                final JRQuery query = jd.getQuery();
                 if (query instanceof JRDesignQuery) {
                     djd.setQuery((JRDesignQuery) query);
                     dr.setQuery(new DJQuery(query.getText(), query
                             .getLanguage()));
                 }
 
-                for (JRDataset jrDataset : jd.getDatasetsList()) {
-                    JRDesignDataset dataset = (JRDesignDataset) jrDataset;
+                for (final JRDataset jrDataset : jd.getDatasetsList()) {
+                    final JRDesignDataset dataset = (JRDesignDataset) jrDataset;
                     try {
                         djd.addDataset(dataset);
-                    } catch (JRException e) {
+                    } catch (final JRException e) {
                         if (log.isDebugEnabled()) {
                             log.warn(e.getMessage());
                         }
@@ -208,18 +224,18 @@ public class DJJRDesignHelper {
 
             //BeanUtils.copyProperties does not perform deep copy,
             //adding original properties definitions manually
-            String[] properties = jd.getPropertyNames();
-            for (String propName : properties) {
-                String propValue = jd.getProperty(propName);
+            final String[] properties = jd.getPropertyNames();
+            for (final String propName : properties) {
+                final String propValue = jd.getProperty(propName);
                 djd.setProperty(propName, propValue);
             }
 
 
             //Add all existing styles in the design to the new one
-            for (JRStyle style : jd.getStylesList()) {
+            for (final JRStyle style : jd.getStylesList()) {
                 try {
                     djd.addStyle(style);
-                } catch (JRException e) {
+                } catch (final JRException e) {
                     if (log.isDebugEnabled()) {
                         log.warn("Duplicated style (style name \"" + style.getName() + "\") when loading design: " + e.getMessage(), e);
                     }
@@ -227,9 +243,9 @@ public class DJJRDesignHelper {
             }
 
             //Adding style templates templates
-            JRReportTemplate[] templates = jd.getTemplates();
+            final JRReportTemplate[] templates = jd.getTemplates();
             if (templates != null) {
-                for (JRReportTemplate template : templates) {
+                for (final JRReportTemplate template : templates) {
                     djd.addTemplate(template); //TODO Make a test for this!
                 }
             }
@@ -238,9 +254,7 @@ public class DJJRDesignHelper {
             //in the DynamicReport should prevail
             populateBehavioralOptions(dr, djd);
 
-        } catch (IllegalAccessException e) {
-            throw new CoreException(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
+        } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new CoreException(e.getMessage(), e);
         }
 
@@ -255,7 +269,7 @@ public class DJJRDesignHelper {
      * @param dr
      */
     protected static void populateReportOptionsFromDesign(DynamicJasperDesign jd, DynamicReport dr) {
-        DynamicReportOptions options = dr.getOptions();
+        final DynamicReportOptions options = dr.getOptions();
 
         options.setBottomMargin(jd.getBottomMargin());
         options.setTopMargin(jd.getTopMargin());
@@ -266,13 +280,13 @@ public class DJJRDesignHelper {
         options.setColumnsPerPage(jd.getColumnCount());
 
         boolean isPortrait = true;
-        if (jd.getOrientationValue() == OrientationEnum.LANDSCAPE) {
+        if (jd.getOrientation() == OrientationEnum.LANDSCAPE) {
             isPortrait = false;
         }
         options.setPage(new Page(jd.getPageHeight(), jd.getPageWidth(), isPortrait));
 
         if (dr.getQuery() != null) {
-            JRDesignQuery query = DJJRDesignHelper.getJRDesignQuery(dr);
+            final JRDesignQuery query = DJJRDesignHelper.getJRDesignQuery(dr);
             jd.setQuery(query);
         }
 
