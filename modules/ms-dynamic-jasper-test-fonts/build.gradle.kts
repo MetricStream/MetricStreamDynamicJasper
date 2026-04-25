@@ -4,7 +4,7 @@ plugins {
     signing
 }
 
-description = "Core fonts for MetricStream DynamicJasper (Arial, Verdana, Georgia, Courier New, Times New Roman, Comic Sans MS, Monospaced)"
+description = "Test fonts for MetricStream DynamicJasper (Colonna MT)"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -22,11 +22,11 @@ dependencies {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "metricstream-DynamicJasper-core-fonts"
+            artifactId = "ms-dynamic-jasper-test-fonts"
             from(components["java"])
 
             pom {
-                name.set("metricstream DynamicJasper Core Fonts")
+                name.set("ms-dynamic-jasper-test-fonts")
                 description.set(project.description)
                 url.set("https://github.com/MetricStream/MetricStreamDynamicJasper")
 

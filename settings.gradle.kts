@@ -1,7 +1,7 @@
 rootProject.name = "metricstream-dynamic-jasper"
 
 include(
-    "modules:metricstream-dynamic-jasper",
-    "modules:metricstream-DynamicJasper-core-fonts",
-    "modules:metricstream-DynamicJasper-test-fonts"
+    "modules:ms-dynamic-jasper",
+    "modules:ms-dynamic-jasper-core-fonts",
+    "modules:ms-dynamic-jasper-test-fonts"
 )

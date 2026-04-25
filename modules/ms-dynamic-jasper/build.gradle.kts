@@ -52,7 +52,7 @@ dependencies {
 
     // Provided dependencies
     implementation(libs.servlet.api)
-    compileOnly(project(":modules:metricstream-DynamicJasper-core-fonts"))
+    compileOnly(project(":modules:ms-dynamic-jasper-core-fonts"))
 
     // Test dependencies
     testImplementation(libs.junit.jupiter)
@@ -72,7 +72,7 @@ dependencies {
     testImplementation(libs.hibernate.core)
     testImplementation(libs.jakarta.transaction.api)
     testImplementation(libs.httpunit) { isTransitive = false }
-    testImplementation(project(":modules:metricstream-DynamicJasper-test-fonts"))
+    testImplementation(project(":modules:ms-dynamic-jasper-test-fonts"))
     testImplementation(libs.spring.core)
     testImplementation(libs.spring.test)
 }
@@ -84,11 +84,11 @@ tasks.test {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "metricstream-dynamic-jasper"
+            artifactId = "ms-dynamic-jasper"
             from(components["java"])
 
             pom {
-                name.set("metricstream Dynamic Jasper")
+                name.set("ms-dynamic-jasper")
                 description.set(project.description)
                 url.set("https://github.com/MetricsStream/MetricsStreamDynamicJasper")
 
