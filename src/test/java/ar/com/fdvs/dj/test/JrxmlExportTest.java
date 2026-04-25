@@ -35,6 +35,7 @@ import java.util.Date;
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
+import org.junit.jupiter.api.Test;
 
 public class JrxmlExportTest extends BaseDjReportTest {
 
@@ -63,6 +64,7 @@ public class JrxmlExportTest extends BaseDjReportTest {
 		return dr;
 	}
 
+	@Test
 	public void testReport() throws Exception {
 		dr = buildReport();
         exportReport();

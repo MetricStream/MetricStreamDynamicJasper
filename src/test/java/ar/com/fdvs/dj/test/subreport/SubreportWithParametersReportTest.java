@@ -50,6 +50,7 @@ import ar.com.fdvs.dj.domain.entities.SubreportParameter;
 import ar.com.fdvs.dj.test.BaseDjReportTest;
 import ar.com.fdvs.dj.test.ReportExporter;
 import ar.com.fdvs.dj.test.util.StyleFactory;
+import org.junit.jupiter.api.Test;
 
 public class SubreportWithParametersReportTest extends BaseDjReportTest {
 
@@ -134,6 +135,7 @@ public class SubreportWithParametersReportTest extends BaseDjReportTest {
 		System.out.println(jrxml);
 	}
 
+	@Test
 	public void testReport() throws Exception {
 		try {
 			con = createSQLConnection();

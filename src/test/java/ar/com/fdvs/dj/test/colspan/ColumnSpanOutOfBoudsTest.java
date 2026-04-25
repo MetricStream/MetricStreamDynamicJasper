@@ -31,13 +31,15 @@ package ar.com.fdvs.dj.test.colspan;
 
 import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
-import junit.framework.TestCase;
 
 import java.util.Calendar;
 import java.util.Date;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class ColumnSpanOutOfBoudsTest extends TestCase {
+public class ColumnSpanOutOfBoudsTest {
 
+    @Test
     public void testOutOfBoundsColspan() throws Exception {
 
         FastReportBuilder frb = new FastReportBuilder();
@@ -63,6 +65,7 @@ public class ColumnSpanOutOfBoudsTest extends TestCase {
         fail();
     }
 
+    @Test
     public void testColumnSpanStartsAfterTheLastColumn() {
         try {
             FastReportBuilder frb = new FastReportBuilder();

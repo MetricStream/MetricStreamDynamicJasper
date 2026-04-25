@@ -58,18 +58,21 @@ import net.sf.jasperreports.charts.design.JRDesignCategoryDataset;
 import net.sf.jasperreports.charts.design.JRDesignChart;
 import net.sf.jasperreports.charts.type.EdgeEnum;
 import net.sf.jasperreports.engine.JRFont;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
 import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.type.LineStyleEnum;
 import net.sf.jasperreports.view.JasperViewer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractChartBuilderTest extends BaseDjReportTest {
 	private DynamicReportBuilder drb;
 	private JRDesignChart chart;
 
-	@Override
+	@BeforeEach
     protected void setUp() throws Exception {
-		super.setUp();
 		drb = new DynamicReportBuilder();
 
 		final AbstractColumn columnState = ColumnBuilder.getNew()
@@ -188,6 +191,7 @@ public class AbstractChartBuilderTest extends BaseDjReportTest {
 		chart = djChart.transform(new DynamicJasperDesign(), "", group, group, vars, 0);
 	}
 
+	@Test
 	public void testChart() {
 		assertEquals(20, chart.getX());
 		assertEquals(10, chart.getY());
@@ -212,6 +216,7 @@ public class AbstractChartBuilderTest extends BaseDjReportTest {
 		assertEquals(Integer.valueOf(5), chart.getLineBox().getPadding());
 	}
 
+	@Test
 	public void testDataset() {
 		final JRDesignCategoryDataset dataset = (JRDesignCategoryDataset) chart.getDataset();
 		assertEquals(2, dataset.getSeriesList().size());
@@ -219,6 +224,7 @@ public class AbstractChartBuilderTest extends BaseDjReportTest {
 		assertNotNull(dataset.getSeries()[0].getSeriesExpression().getText());
 	}
 
+	@Test
 	public void testPlot() {
 		final JRDesignAreaPlot plot = (JRDesignAreaPlot) chart.getPlot();
 
@@ -237,6 +243,15 @@ public class AbstractChartBuilderTest extends BaseDjReportTest {
 		assertEquals(Color.DARK_GRAY, plot.getValueAxisTickLabelColor());
 		assertEquals("#,##0.0", plot.getValueAxisTickLabelMask());
 		assertEquals(Color.DARK_GRAY, plot.getValueAxisLineColor());
+	}
+
+	protected static JRDesignGroup createTestGroup() {
+		final JRDesignGroup group = new JRDesignGroup();
+		group.setName("testGroup");
+		final JRDesignExpression expr = new JRDesignExpression();
+		expr.setText("1");
+		group.setExpression(expr);
+		return group;
 	}
 
 	@Override

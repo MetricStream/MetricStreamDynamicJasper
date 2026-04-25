@@ -28,14 +28,15 @@
  */
 package ar.com.fdvs.dj.domain;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DJCrosstabTest extends TestCase {
+public class DJCrosstabTest {
 
+    @Test
     public void testGetVisibleMeasures() throws Exception {
         DJCrosstabMeasure visibleMeasure1 = new DJCrosstabMeasure();
         visibleMeasure1.setVisible(Boolean.TRUE);
@@ -57,9 +58,9 @@ public class DJCrosstabTest extends TestCase {
         DJCrosstab crosstab = new DJCrosstab();
         crosstab.setMeasures(visibleAndInvisible);
 
-        Assert.assertNotNull(crosstab.getVisibleMeasures());
-        Assert.assertFalse(crosstab.getVisibleMeasures().isEmpty());
-        Assert.assertEquals(2, crosstab.getVisibleMeasures().size());
+        assertNotNull(crosstab.getVisibleMeasures());
+        assertFalse(crosstab.getVisibleMeasures().isEmpty());
+        assertEquals(2, crosstab.getVisibleMeasures().size());
 
         //second case: two visibles
         List<DJCrosstabMeasure> visibleOnly = new ArrayList<DJCrosstabMeasure>();
@@ -70,9 +71,9 @@ public class DJCrosstabTest extends TestCase {
 
         crosstab.setMeasures(visibleOnly);
 
-        Assert.assertNotNull(crosstab.getVisibleMeasures());
-        Assert.assertFalse(crosstab.getVisibleMeasures().isEmpty());
-        Assert.assertEquals(2, crosstab.getVisibleMeasures().size());
+        assertNotNull(crosstab.getVisibleMeasures());
+        assertFalse(crosstab.getVisibleMeasures().isEmpty());
+        assertEquals(2, crosstab.getVisibleMeasures().size());
 
         //third case: only one invisible
         List<DJCrosstabMeasure> invisibleOnly = new ArrayList<DJCrosstabMeasure>();
@@ -80,8 +81,8 @@ public class DJCrosstabTest extends TestCase {
 
         crosstab.setMeasures(invisibleOnly);
 
-        Assert.assertNotNull(crosstab.getVisibleMeasures());
-        Assert.assertTrue(crosstab.getVisibleMeasures().isEmpty());
+        assertNotNull(crosstab.getVisibleMeasures());
+        assertTrue(crosstab.getVisibleMeasures().isEmpty());
 
 
     }

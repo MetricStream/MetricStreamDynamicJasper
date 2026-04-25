@@ -173,7 +173,8 @@ public class TimeSeriesDataset extends AbstractDataset {
 
 			JRDesignExpression exp3;
 			if (seriesLabels.containsKey(sery)) {
-				exp3 = ExpressionUtils.createAndRegisterExpression(design, "dataset_" + sery.getName() + "_" + name, seriesLabels.get(sery));
+				String safeName = sery.getName() != null ? sery.getName() : sery.getTitle();
+				exp3 = ExpressionUtils.createAndRegisterExpression(design, "dataset_" + safeName + "_" + name, seriesLabels.get(sery));
 			} else {
 				exp3 = new JRDesignExpression();
 				exp3.setText("\"" + sery.getTitle() + "\"");

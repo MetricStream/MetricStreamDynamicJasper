@@ -37,7 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils2.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

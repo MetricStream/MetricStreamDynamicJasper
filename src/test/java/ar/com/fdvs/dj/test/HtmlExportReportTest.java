@@ -42,10 +42,13 @@ import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.output.ReportWriter;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperFillManager;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HtmlExportReportTest extends FastReportTest {
 
     @Override
+    @Test
     public void testReport() throws Exception {
         dr = buildReport();
 
@@ -90,13 +93,14 @@ public class HtmlExportReportTest extends FastReportTest {
 
         //Comparing both generated html. They should be the same
         assertNotNull(response.getContentAsString());
-        assertTrue("not empty", !"".equals(response.getContentAsString()));
-        assertTrue("not empty", !"".equals(new String(out.toByteArray())));
+        assertFalse(response.getContentAsString().isEmpty());
+        assertFalse(out.toString().isEmpty());
 
         log.debug("test finished");
 
     }
 
+    @Test
     public void testReport2() throws Exception {
         dr = buildReport();
 
@@ -124,8 +128,8 @@ public class HtmlExportReportTest extends FastReportTest {
         //Comparing both generated html. They should be the same
         //assertEquals(response.getContentAsString(),new String(out.toByteArray()));
 
-        assertTrue("not empty", !"".equals(response.getContentAsString()));
-        assertTrue("not empty", !"".equals(new String(out.toByteArray())));
+        assertFalse(response.getContentAsString().isEmpty());
+        assertFalse(out.toString().isEmpty());
 
         log.debug("test finished");
 

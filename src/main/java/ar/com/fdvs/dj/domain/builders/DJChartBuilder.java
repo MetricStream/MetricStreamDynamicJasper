@@ -38,9 +38,10 @@ import ar.com.fdvs.dj.domain.DJChartColors;
 import ar.com.fdvs.dj.domain.DJChartOptions;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 
 public class DJChartBuilder {
-	private Byte type;
+	private ChartTypeEnum type;
 	private DJGroup columnsGroup;
 	private final List<AbstractColumn> columns = new ArrayList<>();
 	private Integer operation;
@@ -48,8 +49,8 @@ public class DJChartBuilder {
 
 	public DJChart build() throws ChartBuilderException {
 		if (type == null) {
-            throw new ChartBuilderException("Chart type must be specified");
-        }
+			throw new ChartBuilderException("Chart type must be specified");
+		}
 		if (columnsGroup == null) {
             throw new ChartBuilderException("The group to wich the chart is related must be specified");
         }
@@ -95,7 +96,7 @@ public class DJChartBuilder {
 		return this;
 	}
 
-	public byte getType() {
+	public ChartTypeEnum getType() {
 		return type;
 	}
 
@@ -105,12 +106,12 @@ public class DJChartBuilder {
 	 * @return
 	 */
 	@Deprecated
-    public DJChartBuilder addType(byte type) {
+    public DJChartBuilder addType(ChartTypeEnum type) {
 		this.type = type;
 		return this;
 	}
 
-	public DJChartBuilder setType(byte type) {
+	public DJChartBuilder setType(ChartTypeEnum type) {
 		this.type = type;
 		return this;
 	}
@@ -135,7 +136,7 @@ public class DJChartBuilder {
 		return this;
 	}
 
-	public DJChartBuilder addParams(byte type, DJGroup columnsGroup, AbstractColumn column, byte operation, DJChartOptions chartOptions){
+	public DJChartBuilder addParams(ChartTypeEnum type, DJGroup columnsGroup, AbstractColumn column, byte operation, DJChartOptions chartOptions){
 		return setType(type).setColumnsGroup(columnsGroup)
 			.addColumn(column)
 			.setOperation(operation)

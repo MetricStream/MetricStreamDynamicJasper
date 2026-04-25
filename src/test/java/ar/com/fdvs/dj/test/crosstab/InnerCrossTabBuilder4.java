@@ -14,18 +14,18 @@ import ar.com.fdvs.dj.domain.builders.*;
 import ar.com.fdvs.dj.domain.constants.*;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.test.ReportExporter;
-import junit.framework.TestCase;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author rve
  */
-public class InnerCrossTabBuilder4 extends TestCase {
+public class InnerCrossTabBuilder4 {
 
     public DynamicReport buildDynamicReport() {
         FastReportBuilder drb = null;
@@ -248,6 +248,7 @@ public class InnerCrossTabBuilder4 extends TestCase {
     JasperReport jr;
     JasperPrint jp;
 
+    @Test
     public void testReport() throws JRException, FileNotFoundException, ClassNotFoundException, BuilderException {
         List list = getList();
         JRDataSource ds = new JRBeanCollectionDataSource(list);

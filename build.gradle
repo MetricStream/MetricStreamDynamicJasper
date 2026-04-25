@@ -1,0 +1,196 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+    id 'biz.aQute.bnd.builder' version '6.4.0'
+}
+
+group = 'tech.nostrum.jasper'
+version = '1.0.0'
+
+description = 'Maintained fork of DynamicJasper originally created by FDV Solutions. Library for generating JasperReports dynamically at runtime.'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.debug = true
+    options.fork = true
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/'
+    }
+    maven {
+        name = 'JasperReports CE Snapshots'
+        url = 'https://jaspersoft.jfrog.io/jaspersoft/jr-ce-snapshots'
+    }
+    maven {
+        name = 'JasperReports CE Releases'
+        url = 'https://jaspersoft.jfrog.io/jaspersoft/jr-ce-releases'
+    }
+}
+
+dependencies {
+    // JasperReports core dependencies
+    implementation 'net.sf.jasperreports:jasperreports:7.0.1', {
+        exclude group: 'commons-collections', module: 'commons-collections'
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'bouncycastle', module: 'bcmail-jdk14'
+        exclude group: 'bouncycastle', module: 'bcprov-jdk14'
+    }
+    implementation 'net.sf.jasperreports:jasperreports-chart-customizers:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-charts:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-excel-poi:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-hibernate:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-javaflow:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-jdt:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-pdf:7.0.1'
+    implementation 'net.sf.jasperreports:jasperreports-servlets:7.0.1'
+
+    // Core dependencies
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
+
+    // Provided dependencies
+    compileOnly 'javax.servlet:servlet-api:2.3'
+    compileOnly 'ar.com.fdvs:DynamicJasper-core-fonts:2.0'
+
+    // Optional dependencies
+    implementation 'net.sourceforge.barbecue:barbecue:1.5-beta1'
+    implementation 'org.apache.xmlgraphics:batik-bridge:1.8'
+
+    // Test dependencies
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.apache.poi:poi-ooxml:4.1.2'
+    testImplementation 'jaxen:jaxen:2.0.0'
+    testImplementation 'net.sourceforge.jexcelapi:jxl:2.6'
+    testImplementation 'xalan:xalan:2.7.3'
+    testImplementation 'com.mysql:mysql-connector-j:8.1.0'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+    testImplementation 'hsqldb:hsqldb:1.8.0.10'
+    testImplementation 'org.hibernate:hibernate-core:5.4.24.Final', {
+        exclude group: 'javax.transaction', module: 'jta'
+    }
+    testImplementation 'javax.transaction:jta:1.1'
+    testImplementation 'httpunit:httpunit:1.6.2'
+    testImplementation 'ar.com.fdvs:DynamicJasper-test-fonts:2.0.0'
+    testImplementation 'org.springframework:spring-core:5.3.20'
+    testImplementation 'org.springframework:spring-test:3.2.12.RELEASE'
+}
+
+// Configure jar with manifest
+jar {
+    manifest {
+        from("${buildDir}/osgi/MANIFEST.MF")
+    }
+}
+
+// Test jar configuration
+task testJar(type: Jar) {
+    archiveClassifier = 'tests'
+    from sourceSets.test.output
+}
+
+artifacts {
+    archives testJar
+}
+
+// Javadoc configuration
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    source = sourceSets.main.allJava
+}
+
+// OSGi bundle configuration
+jar {
+    bundle {
+        instruction 'Bundle-SymbolicName', project.name
+        instruction 'Bundle-Version', project.version
+        instruction 'Export-Package', '*;-split-package:=merge-last'
+    }
+}
+
+// Publishing configuration
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'nostrum-dynamic-jasper'
+            from components.java
+            
+            pom {
+                name = 'Nostrum Dynamic Jasper (Maintained Fork)'
+                description = project.description
+                url = 'https://github.com/nostrum-tech/NostrumDynamicJasper'
+                
+                licenses {
+                    license {
+                        name = 'GNU Library or Lesser General Public License (LGPL)'
+                        url = 'https://www.gnu.org/licenses/lgpl.txt'
+                        distribution = 'repo'
+                    }
+                }
+                
+                developers {
+                    developer {
+                        id = 'leonelfmfilho'
+                        name = 'Leonel Francisco Martins Filho'
+                        email = 'leonel.martins@nostrum.tech'
+                        organization = 'Nostrum Tech'
+                        organizationUrl = 'http://www.nostrum.tech/'
+                        roles = ['Project lead', 'Java Developer']
+                        timezone = '-3'
+                    }
+                }
+                
+                scm {
+                    connection = 'scm:git:git://github.com/nostrum-tech/NostrumDynamicJasper.git'
+                    developerConnection = 'scm:git:ssh://github.com:nostrum-tech/NostrumDynamicJasper.git'
+                    url = 'https://github.com/nostrum-tech/NostrumDynamicJasper'
+                }
+                
+                issueManagement {
+                    system = 'GitHub Tracker'
+                    url = 'https://github.com/nostrum-tech/NostrumDynamicJasper/issues'
+                }
+                
+                inceptionYear = '2006'
+                
+                organization {
+                    name = 'Nostrum Tech'
+                    url = 'http://www.nostrum.tech/'
+                }
+            }
+        }
+    }
+    
+    repositories {
+        maven {
+            name = 'Central'
+            url = 'https://central.sonatype.com/repository/maven-snapshots/'
+            credentials {
+                username = project.findProperty('centralUsername') ?: System.getenv('CENTRAL_USERNAME')
+                password = project.findProperty('centralPassword') ?: System.getenv('CENTRAL_PASSWORD')
+            }
+        }
+    }
+}
+
+// Signing configuration
+signing {
+    sign publishing.publications.mavenJava
+}
+
+// Only sign if we have the signing key available
+signing.required = { project.hasProperty('signing.keyId') || project.hasProperty('signingKey') }
+
+tasks.withType(Sign).configureEach {
+    onlyIf { project.hasProperty('signing.keyId') || project.hasProperty('signingKey') }
+}

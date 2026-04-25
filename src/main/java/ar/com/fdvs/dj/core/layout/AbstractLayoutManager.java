@@ -1112,7 +1112,7 @@ public abstract class AbstractLayoutManager implements LayoutManager {
     protected JRDesignChart createChart(DJChart djChart) {
         final JRDesignGroup jrGroupChart = getJRGroupFromDJGroup(djChart.getColumnsGroup());
 
-        final JRDesignChart chart = new JRDesignChart(new JRDesignStyle().getDefaultStyleProvider(), ChartTypeEnum.values()[djChart.getType()]);
+        final JRDesignChart chart = new JRDesignChart(new JRDesignStyle().getDefaultStyleProvider(), djChart.getType());
         final JRDesignGroup parentGroup = getParent(jrGroupChart);
         final List<JRDesignVariable> chartVariables = registerChartVariable(djChart);
         final JRDesignChartDataset chartDataset = DataSetFactory.getDataset(djChart, jrGroupChart, parentGroup, chartVariables);
@@ -1158,7 +1158,7 @@ public abstract class AbstractLayoutManager implements LayoutManager {
             }
         }
         //Chart-dependent options
-        if (djChart.getType() == DJChart.BAR_CHART) {
+        if (chart.getPlot() instanceof JRDesignBarPlot) {
             ((JRDesignBarPlot) chart.getPlot()).setShowTickLabels(options.isShowLabels());
         }
     }

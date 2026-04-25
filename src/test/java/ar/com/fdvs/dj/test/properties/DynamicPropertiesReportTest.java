@@ -37,6 +37,8 @@ import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import ar.com.fdvs.dj.test.BaseDjReportTest;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class DynamicPropertiesReportTest extends BaseDjReportTest {
 
 	public DynamicReport buildReport() throws Exception {

@@ -3,9 +3,9 @@ package ar.com.fdvs.dj.util;
 import ar.com.fdvs.dj.core.DJException;
 import ar.com.fdvs.dj.domain.Style;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils2.BeanUtils;
+import org.apache.commons.beanutils2.BeanUtilsBean;
+import org.apache.commons.beanutils2.PropertyUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -47,8 +47,7 @@ public class Utils {
 			if (orig != null && dest != null){
 				BeanUtils.copyProperties(dest, orig);
 
-				PropertyUtils putils = new PropertyUtils();
-	            PropertyDescriptor origDescriptors[] = putils.getPropertyDescriptors(orig);
+				PropertyDescriptor[] origDescriptors = PropertyUtils.getPropertyDescriptors(orig);
 
 				for (PropertyDescriptor origDescriptor : origDescriptors) {
 					String name = origDescriptor.getName();
@@ -57,14 +56,14 @@ public class Utils {
 					}
 
 					Class propertyType = origDescriptor.getPropertyType();
-					if (!Boolean.class.equals(propertyType) && !(Boolean.class.equals(propertyType)))
+					if (!Boolean.class.equals(propertyType))
 						continue;
 
-					if (!putils.isReadable(orig, name)) { //because of bad convention
+					if (!PropertyUtils.isReadable(orig, name)) { //because of bad convention
 						Method m = orig.getClass().getMethod("is" + name.substring(0, 1).toUpperCase() + name.substring(1), (Class<?>[]) null);
 						Object value = m.invoke(orig, (Object[]) null);
 
-						if (putils.isWriteable(dest, name)) {
+						if (PropertyUtils.isWriteable(dest, name)) {
 							BeanUtilsBean.getInstance().copyProperty(dest, name, value);
 						}
 					}

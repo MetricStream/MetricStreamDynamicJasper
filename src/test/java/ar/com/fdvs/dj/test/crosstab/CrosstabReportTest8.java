@@ -38,7 +38,7 @@ import java.util.Date;
 import net.sf.jasperreports.view.JasperDesignViewer;
 import net.sf.jasperreports.view.JasperViewer;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils2.BeanUtils;
 
 import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.domain.DJCalculation;

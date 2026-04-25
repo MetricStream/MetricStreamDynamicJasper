@@ -35,7 +35,6 @@ import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.core.layout.LayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.util.SortUtils;
-import junit.framework.TestCase;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -43,6 +42,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseDjReportTest extends TestCase {
+public abstract class BaseDjReportTest {
 
     public Map getParams() {
         return params;
@@ -67,6 +67,7 @@ public abstract class BaseDjReportTest extends TestCase {
 
     public abstract DynamicReport buildReport() throws Exception;
 
+    @Test
     public void testReport() throws Exception {
         dr = buildReport();
 

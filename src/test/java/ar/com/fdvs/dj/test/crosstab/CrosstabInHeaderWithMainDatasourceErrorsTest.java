@@ -61,7 +61,8 @@ import ar.com.fdvs.dj.test.BaseDjReportTest;
 import ar.com.fdvs.dj.test.TestRepositoryProducts;
 import ar.com.fdvs.dj.test.domain.Product;
 import ar.com.fdvs.dj.util.SortUtils;
-import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This uses the main datasource instead of one passed as parameter
@@ -209,17 +210,18 @@ public class CrosstabInHeaderWithMainDatasourceErrorsTest extends BaseDjReportTe
 	 * @see <a href='https://community.jaspersoft.com/wiki/what-does-exception-crosstab-data-has-already-been-processed-mean'>What does the exception "Crosstab data has already been processed" mean?</a>
 	 */
 	@Override
+	@Test
 	public void testReport() throws Exception {
 		try {
 			super.testReport();
-			Assert.fail("An exception should have been thrown");
+			fail("An exception should have been thrown");
 		} catch (JRRuntimeException ex) {
 			// expected
 			if (ex.getCause() instanceof JRException) {
-				Assert.assertEquals("Error incrementing crosstab dataset.", ex.getMessage());
-				Assert.assertEquals("Crosstab data has already been processed.", ex.getCause().getMessage());
+				assertEquals("Error incrementing crosstab dataset.", ex.getMessage());
+				assertEquals("Crosstab data has already been processed.", ex.getCause().getMessage());
 			} else {
-				Assert.fail("Unexpected Exception");
+				fail("Unexpected Exception");
 			}
 		}
 	}

@@ -50,6 +50,7 @@ import ar.com.fdvs.dj.test.ChartReportTest;
 import ar.com.fdvs.dj.test.ReportExporter;
 import ar.com.fdvs.dj.test.TestRepositoryProducts;
 import ar.com.fdvs.dj.test.domain.Product;
+import org.junit.jupiter.api.Test;
 
 public class ConcatenatedReportTest extends BaseDjReportTest {
 
@@ -107,6 +108,7 @@ public class ConcatenatedReportTest extends BaseDjReportTest {
 		return dr;
 	}
 
+	@Test
 	public void testReport() throws Exception {
 			dr = buildReport();
 

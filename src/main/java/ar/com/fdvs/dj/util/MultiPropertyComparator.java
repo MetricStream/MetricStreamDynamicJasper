@@ -29,7 +29,7 @@
 
 package ar.com.fdvs.dj.util;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils2.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

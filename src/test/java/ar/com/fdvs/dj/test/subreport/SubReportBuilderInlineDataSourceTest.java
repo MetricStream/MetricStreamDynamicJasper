@@ -39,7 +39,6 @@ import ar.com.fdvs.dj.domain.builders.SubReportBuilder;
 import ar.com.fdvs.dj.domain.entities.Subreport;
 import ar.com.fdvs.dj.test.BaseDjReportTest;
 import ar.com.fdvs.dj.test.domain.Product;
-import junit.framework.Assert;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
@@ -47,6 +46,8 @@ import net.sf.jasperreports.engine.JRPrintElement;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.fill.JRTemplatePrintText;
 import net.sf.jasperreports.view.JasperViewer;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SubReportBuilderInlineDataSourceTest extends BaseDjReportTest {
 	
@@ -134,32 +135,32 @@ public class SubReportBuilderInlineDataSourceTest extends BaseDjReportTest {
         return dr;
     }
     
-    @Override
-	public void testReport() throws Exception {
-		super.testReport();
+    @Test
+    public void testReport() throws Exception {
+        super.testReport();
 
-		int[][] groupStarts = {{0,44}, {0,98}, {1,100}, {1,164}};
-		for (int[] groupStart : groupStarts) {
-			int pIdx = groupStart[0];
-			int eleIdx = groupStart[1];
-			
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Area", getCellText(jp, pIdx, eleIdx++));
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Average", getCellText(jp, pIdx, eleIdx++));
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "%", getCellText(jp, pIdx, eleIdx++));
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Amount", getCellText(jp, pIdx, eleIdx++));
-	
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "name", getCellText(jp, pIdx, eleIdx++));
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "average", getCellText(jp, pIdx, eleIdx++));
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "percentage", getCellText(jp, pIdx, eleIdx++));
-			Assert.assertEquals("Error Page " + pIdx + ", element " + eleIdx, "amount", getCellText(jp, pIdx, eleIdx++));
-		}
-	}
+        int[][] groupStarts = {{0,44}, {0,98}, {1,100}, {1,164}};
+        for (int[] groupStart : groupStarts) {
+            int pIdx = groupStart[0];
+            int eleIdx = groupStart[1];
+            
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Area", getCellText(jp, pIdx, eleIdx++));
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Average", getCellText(jp, pIdx, eleIdx++));
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "%", getCellText(jp, pIdx, eleIdx++));
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Amount", getCellText(jp, pIdx, eleIdx++));
+
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "name", getCellText(jp, pIdx, eleIdx++));
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "average", getCellText(jp, pIdx, eleIdx++));
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "percentage", getCellText(jp, pIdx, eleIdx++));
+            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "amount", getCellText(jp, pIdx, eleIdx++));
+        }
+    }
 
     public String getCellText(JasperPrint jp, int pageIdx, int eleIdx) {
-    	JRPrintElement jrpe = jp.getPages().get(pageIdx).getElements().get(eleIdx);
-    	if (jrpe instanceof JRTemplatePrintText) {
-    		return ((JRTemplatePrintText)jrpe).getFullText();
-    	}
-    	return null;
-	}
+        JRPrintElement jrpe = jp.getPages().get(pageIdx).getElements().get(eleIdx);
+        if (jrpe instanceof JRTemplatePrintText) {
+            return ((JRTemplatePrintText)jrpe).getFullText();
+        }
+        return null;
+    }
 }

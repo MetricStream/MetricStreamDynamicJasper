@@ -33,7 +33,7 @@ import java.awt.Color;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils2.BeanUtils;
 
 import ar.com.fdvs.dj.domain.DJCalculation;
 import ar.com.fdvs.dj.domain.DynamicReport;

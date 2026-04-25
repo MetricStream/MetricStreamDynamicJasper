@@ -39,6 +39,7 @@ import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
+import org.junit.jupiter.api.Test;
 
 public class QueryReportTest extends BaseDjReportTest {
 
@@ -79,6 +80,7 @@ public class QueryReportTest extends BaseDjReportTest {
 //		System.out.println(jrxml);
 	}
 
+	@Test
 	public void testReport() throws Exception {
 		Connection con = null;
 		try {

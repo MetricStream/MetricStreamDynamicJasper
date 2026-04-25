@@ -32,7 +32,7 @@ package ar.com.fdvs.dj.core;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils2.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

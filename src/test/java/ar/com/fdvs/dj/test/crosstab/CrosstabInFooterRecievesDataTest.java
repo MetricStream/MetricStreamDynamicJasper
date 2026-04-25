@@ -65,7 +65,8 @@ import ar.com.fdvs.dj.test.BaseDjReportTest;
 import ar.com.fdvs.dj.test.TestRepositoryProducts;
 import ar.com.fdvs.dj.test.domain.Product;
 import ar.com.fdvs.dj.util.SortUtils;
-import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This uses the main datasource instead of one passed as parameter
@@ -212,6 +213,7 @@ public class CrosstabInFooterRecievesDataTest extends BaseDjReportTest {
 	 * @see ar.com.fdvs.dj.test.BaseDjReportTest#testReport()
 	 */
 	@Override
+	@Test
 	public void testReport() throws Exception {
 		super.testReport();
 		
@@ -219,7 +221,7 @@ public class CrosstabInFooterRecievesDataTest extends BaseDjReportTest {
 		JRTemplatePrintFrame cell8 = (JRTemplatePrintFrame) crosstab.getElements().get(8);
 		String cell8Text = ((JRTemplatePrintText)cell8.getElements().get(0)).getFullText();
 		
-		Assert.assertEquals("10,000", cell8Text);
+		assertEquals("10,000", cell8Text);
 	}
 	
 	public static void main(String[] args) throws Exception {

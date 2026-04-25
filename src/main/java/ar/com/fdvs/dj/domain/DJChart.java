@@ -35,6 +35,7 @@ import java.util.List;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
 import net.sf.jasperreports.engine.type.CalculationEnum;
 
 /**
@@ -48,16 +49,15 @@ public class DJChart extends DJBaseElement{
 	private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
 
 	//The possible chart types
-	public static final byte PIE_CHART = 9;
-	public static final byte BAR_CHART = 3;
-//	public static final byte LINE_CHART = JRDesignChart.CHART_TYPE_LINE; //not yet... to much to think left
+	public static final ChartTypeEnum PIE_CHART = ChartTypeEnum.PIE;
+	public static final ChartTypeEnum BAR_CHART = ChartTypeEnum.BAR;
 
 	//The possible calculation types
 	public static final int CALCULATION_COUNT = CalculationEnum.COUNT.ordinal();
 	public static final int CALCULATION_SUM = CalculationEnum.SUM.ordinal();
 
 	//How to build the chart?
-	private byte type;
+	private ChartTypeEnum type;
 	private DJGroup columnsGroup;
 //	private AbstractColumn column;
 
@@ -74,7 +74,7 @@ public class DJChart extends DJBaseElement{
 
 	public DJChart(){}
 
-	public DJChart(byte type, DJGroup columnsGroup, AbstractColumn column, int operation, DJChartOptions chartOptions){
+	public DJChart(ChartTypeEnum type, DJGroup columnsGroup, AbstractColumn column, int operation, DJChartOptions chartOptions){
 		this.type = type;
 		this.columnsGroup = columnsGroup;
 
@@ -86,7 +86,7 @@ public class DJChart extends DJBaseElement{
 		this.chartOptions = chartOptions;
 	}
 
-	public DJChart(byte type, DJGroup columnsGroup, List<AbstractColumn> columns, int operation, DJChartOptions chartOptions){
+	public DJChart(ChartTypeEnum type, DJGroup columnsGroup, List<AbstractColumn> columns, int operation, DJChartOptions chartOptions){
 		this.type = type;
 		this.columnsGroup = columnsGroup;
 
@@ -114,11 +114,11 @@ public class DJChart extends DJBaseElement{
 		this.operation = operation;
 	}
 
-	public byte getType() {
+	public ChartTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(byte type) {
+	public void setType(ChartTypeEnum type) {
 		this.type = type;
 	}
 

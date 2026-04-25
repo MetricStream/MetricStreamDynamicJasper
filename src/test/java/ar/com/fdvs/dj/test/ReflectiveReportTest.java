@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
@@ -42,16 +41,18 @@ import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.builders.ReflectiveReportBuilder;
 import ar.com.fdvs.dj.util.SortUtils;
+import org.junit.jupiter.api.Test;
 
-public class ReflectiveReportTest extends TestCase {
+public class ReflectiveReportTest {
 
 //	private DynamicReport buildOrderedReport(final Collection _data, final String[] _properties) {
 //		return new ReflectiveReportBuilder(_data, _properties).addGroups(3).build();
 //	}
 
 	/**
-	 * Test N� 1. With only the collection, the ReflectiveReportBuilder make some guesses
+	 * Test N 1. With only the collection, the ReflectiveReportBuilder make some guesses
 	 */
+	@Test
 	public void testReport() {
         final Collection data = TestRepositoryProducts.getDummyCollection();
         DynamicReport dynamicReport = new ReflectiveReportBuilder(data).build();
@@ -59,8 +60,9 @@ public class ReflectiveReportTest extends TestCase {
     }
 
 	/**
-	 * Test N�2, the same but we tell the builder the order of the columns, we also add 3 groups
+	 * Test N2, the same but we tell the builder the order of the columns, we also add 3 groups
 	 */
+	@Test
 	public void testOrderedReport() {
         final Collection data = TestRepositoryProducts.getDummyCollection();
         final List items = SortUtils.sortCollection(data, Arrays.asList(new String[]{"productLine", "item", "state"}));

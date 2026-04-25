@@ -29,16 +29,16 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.conditionalStyle.ConditionStyleExpression;
 import ar.com.fdvs.dj.domain.entities.conditionalStyle.ConditionalStyle;
-import junit.framework.TestCase;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author rve
  */
-public class ConditionalStyleReportTest2 extends TestCase {
+public class ConditionalStyleReportTest2 {
     private DynamicReportBuilder drb;
 
     public DynamicReport buildDynamicReport() {
@@ -231,6 +231,7 @@ public class ConditionalStyleReportTest2 extends TestCase {
         return new ClassicLayoutManager();
     }
 
+    @Test
     public void test() throws JRException, FileNotFoundException {
         final ConditionalStyleReportTest2 db = new ConditionalStyleReportTest2();
         final List list = getList();

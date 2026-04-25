@@ -50,12 +50,10 @@ public class DataSetFactory {
 
 		JRDesignChartDataset dataSet = null;
 
-		final byte chartType = djchart.getType();
-
-		if (chartType == DJChart.PIE_CHART){
+		if (DJChart.PIE_CHART == djchart.getType()){
 			dataSet = createPieDataset(group,parentGroup, vars, djchart);
 		}
-		else if (chartType == DJChart.BAR_CHART) {
+		else if (DJChart.BAR_CHART == djchart.getType()) {
 			dataSet = createBarDataset(group,parentGroup, vars, djchart);
 		}
 

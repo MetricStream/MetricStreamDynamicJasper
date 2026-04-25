@@ -53,7 +53,6 @@ import ar.com.fdvs.dj.domain.constants.Transparency;
 import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.test.BaseDjReportTest;
 import ar.com.fdvs.dj.test.domain.Product;
-import junit.framework.Assert;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -67,6 +66,8 @@ import net.sf.jasperreports.engine.fill.JRTemplatePrintText;
 import net.sf.jasperreports.engine.type.CalculationEnum;
 import net.sf.jasperreports.view.JasperDesignViewer;
 import net.sf.jasperreports.view.JasperViewer;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This uses the main datasource instead of one passed as parameter
@@ -224,6 +225,7 @@ public class CrosstabCustomIncrementerTest extends BaseDjReportTest {
 	 * @see ar.com.fdvs.dj.test.BaseDjReportTest#testReport()
 	 */
 	@Override
+	@Test
 	public void testReport() throws Exception {
 		super.testReport();
 
@@ -239,33 +241,33 @@ public class CrosstabCustomIncrementerTest extends BaseDjReportTest {
 		// main street is empty, not "0"
 
 		int i = 0;
-		Assert.assertEquals("Product Line, Item\nvs.\nState, Branch", getCellText(crosstab, i++));
-		Assert.assertEquals("book", getCellText(crosstab, i++));
-		Assert.assertEquals("Total Product Line", getCellText(crosstab, i++));
+		assertEquals("Product Line, Item\nvs.\nState, Branch", getCellText(crosstab, i++));
+		assertEquals("book", getCellText(crosstab, i++));
+		assertEquals("Total Product Line", getCellText(crosstab, i++));
 
-		Assert.assertEquals("Harry Potter 7", getCellText(crosstab, i++));
-		Assert.assertEquals("Total Item", getCellText(crosstab, i++));
+		assertEquals("Harry Potter 7", getCellText(crosstab, i++));
+		assertEquals("Total Item", getCellText(crosstab, i++));
 
-		Assert.assertEquals("Florida", getCellText(crosstab, i++));
-		Assert.assertEquals("Main Street", getCellText(crosstab, i++));
-		Assert.assertEquals("", getCellText(crosstab, i++));
-		Assert.assertEquals("", getCellText(crosstab, i++));
-		Assert.assertEquals("", getCellText(crosstab, i++));
+		assertEquals("Florida", getCellText(crosstab, i++));
+		assertEquals("Main Street", getCellText(crosstab, i++));
+		assertEquals("", getCellText(crosstab, i++));
+		assertEquals("", getCellText(crosstab, i++));
+		assertEquals("", getCellText(crosstab, i++));
 
-		Assert.assertEquals("Railway Station", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("Railway Station", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
 
-		Assert.assertEquals("Total Branch", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("Total Branch", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
 
-		Assert.assertEquals("Total State", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
-		Assert.assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("Total State", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
+		assertEquals("2,831.32", getCellText(crosstab, i++));
 
 	}
 

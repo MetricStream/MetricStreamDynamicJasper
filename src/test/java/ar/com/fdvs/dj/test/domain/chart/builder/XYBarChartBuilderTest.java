@@ -62,14 +62,18 @@ import net.sf.jasperreports.engine.design.JRDesignGroup;
 import net.sf.jasperreports.engine.design.JRDesignVariable;
 import net.sf.jasperreports.engine.type.LineStyleEnum;
 import net.sf.jasperreports.view.JasperViewer;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static ar.com.fdvs.dj.test.domain.chart.builder.AbstractChartBuilderTest.createTestGroup;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class XYBarChartBuilderTest extends BaseDjReportTest {
 	private DynamicReportBuilder drb;
 	private JRDesignChart chart;
 
-	@Override
+	@BeforeEach
     protected void setUp() throws Exception {
-		super.setUp();
 		drb = new DynamicReportBuilder();
 
 		final Style headerStyle = new Style();
@@ -165,10 +169,11 @@ public class XYBarChartBuilderTest extends BaseDjReportTest {
 		final Map<AbstractColumn, JRDesignVariable> vars = new HashMap<>();
 		vars.put(columnaQuantity, new JRDesignVariable());
 		vars.put(columnAmount, new JRDesignVariable());
-		final JRDesignGroup group = new JRDesignGroup();
+		final JRDesignGroup group = createTestGroup();
 		chart = djChart.transform(new DynamicJasperDesign(), "", group, group, vars, 0);
 	}
 
+	@Test
 	public void testChart() {
 		assertEquals(20, chart.getX());
 		assertEquals(10, chart.getY());
@@ -193,6 +198,7 @@ public class XYBarChartBuilderTest extends BaseDjReportTest {
 		assertEquals(Integer.valueOf(5), chart.getLineBox().getPadding());
 	}
 
+	@Test
 	public void testDataset() {
 		final JRDesignXyDataset dataset = (JRDesignXyDataset) chart.getDataset();
 		assertEquals(2, dataset.getSeriesList().size());
@@ -200,6 +206,7 @@ public class XYBarChartBuilderTest extends BaseDjReportTest {
 		assertNotNull(dataset.getSeries()[0].getSeriesExpression().getText());
 	}
 
+	@Test
 	public void testPlot() {
 		final JRDesignBarPlot plot = (JRDesignBarPlot) chart.getPlot();
 		assertEquals(Boolean.TRUE, plot.getShowTickMarks());

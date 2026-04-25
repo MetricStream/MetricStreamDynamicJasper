@@ -50,6 +50,7 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.DJGroup;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
+import org.junit.jupiter.api.Test;
 
 public class GroupsAndExpressionReportTest extends BaseDjReportTest {
 
@@ -184,6 +185,7 @@ public class GroupsAndExpressionReportTest extends BaseDjReportTest {
 		JasperViewer.viewReport(test.jp);
 	}
 	
+	@Test
 	public void testReport(){
 		log.warn("Skipping this test");
 	}

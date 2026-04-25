@@ -17,6 +17,7 @@ import ar.com.fdvs.dj.test.hibernate.TestSchema;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.query.HibernateConstants;
 import net.sf.jasperreports.view.JasperViewer;
+import org.junit.jupiter.api.Test;
 
 public class HQLReportTest extends BaseDjReportTest {
 
@@ -63,6 +64,7 @@ public class HQLReportTest extends BaseDjReportTest {
 		//JasperDesignViewer.viewReportDesign(DynamicJasperHelper.generateJasperReport(test.dr, new ClassicLayoutManager(),test.params));
 	}
 
+	@Test
 	public void testHibernate() {
 		TestSchema.buildConfiguration();
 		final Session s = HibernateUtil.getSession();
