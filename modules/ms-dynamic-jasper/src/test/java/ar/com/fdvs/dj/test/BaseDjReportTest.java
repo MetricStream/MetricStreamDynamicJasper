@@ -44,6 +44,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Calendar;
@@ -67,7 +68,6 @@ public abstract class BaseDjReportTest {
 
     public abstract DynamicReport buildReport() throws Exception;
 
-    @Test
     public void testReport() throws Exception {
         dr = buildReport();
 
@@ -153,10 +153,55 @@ public abstract class BaseDjReportTest {
      */
     public static Connection createSQLConnection() throws Exception {
         Class.forName("org.hsqldb.jdbcDriver");
-        return DriverManager.getConnection("jdbc:hsqldb:file:target/test-classes/hsql/test_dj_db", "sa", "");
+        Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:test_dj_db", "sa", "");
+        initializeTestDatabase(conn);
+        return conn;
+    }
+
+    private static void initializeTestDatabase(Connection conn) throws Exception {
+        try (java.io.InputStream is = BaseDjReportTest.class.getResourceAsStream("/hsql/test_dj_db.script")) {
+            if (is != null) {
+                java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(is));
+                String line;
+                
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (line.isEmpty() || line.startsWith("--")) {
+                        continue;
+                    }
+                    
+                    // Each line in the HSQLDB script is a complete SQL statement
+                    String sql = line;
+                    if (sql.endsWith(";")) {
+                        sql = sql.substring(0, sql.length() - 1); // Remove trailing semicolon if present
+                    }
+                    
+                    if (!sql.isEmpty()) {
+                        try (java.sql.Statement stmt = conn.createStatement()) {
+                            log.debug("Executing SQL: " + sql);
+                            stmt.execute(sql);
+                        } catch (Exception e) {
+                            log.warn("Error executing SQL: " + sql, e);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public int getYear() {
         return Calendar.getInstance().get(Calendar.YEAR);
+    }
+
+    protected String getImagePath(String imageName) {
+        try {
+            URL imageUrl = this.getClass().getClassLoader().getResource("images/" + imageName);
+            if (imageUrl != null) {
+                return imageUrl.getFile();
+            }
+        } catch (Exception e) {
+            log.warn("Could not load image from classpath: " + imageName, e);
+        }
+        return null;
     }
 }

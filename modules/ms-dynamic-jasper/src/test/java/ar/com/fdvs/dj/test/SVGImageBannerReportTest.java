@@ -80,9 +80,9 @@ public class SVGImageBannerReportTest extends BaseDjReportTest {
 			.setBottomMargin(margin)
 			.setPrintBackgroundOnOddRows(true)
 			.setOddRowBackgroundStyle(oddRowStyle)
-			.addFirstPageImageBanner(System.getProperty("user.dir") +"/target/test-classes/images/Android_sample.svg", 197, 200, ImageBanner.Alignment.Left)
-			.addImageBanner(System.getProperty("user.dir") +"/target/test-classes/images/logo_fdv_solutions_60.png", 100, 25, ImageBanner.Alignment.Left, ImageScaleMode.FILL)
-			.addImageBanner(System.getProperty("user.dir") +"/target/test-classes/images/dynamicJasper_60.jpg", 150, 25, ImageBanner.Alignment.Right, ImageScaleMode.FILL);
+			.addFirstPageImageBanner(getImagePath("Android_sample.svg"), 197, 200, ImageBanner.Alignment.Left)
+			.addImageBanner(getImagePath("logo_fdv_solutions_60.png"), 100, 25, ImageBanner.Alignment.Left, ImageScaleMode.FILL)
+			.addImageBanner(getImagePath("dynamicJasper_60.jpg"), 150, 25, ImageBanner.Alignment.Right, ImageScaleMode.FILL);
 
 		AbstractColumn columnState = ColumnBuilder.getNew().setColumnProperty("state", String.class.getName())
 			.setTitle("State").setWidth(new Integer(85))

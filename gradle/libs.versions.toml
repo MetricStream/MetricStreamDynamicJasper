@@ -30,7 +30,6 @@ hsqldb = "2.7.4"
 hibernate-core = "7.3.2.Final"
 jakarta-transaction-api = "2.0.1"
 httpunit = "1.7.3"
-dynamicjasper-test-fonts = "2.0.0"
 spring-core = "7.0.6"
 
 [libraries]
@@ -55,7 +54,6 @@ barbecue = { group = "net.sourceforge.barbecue", name = "barbecue", version.ref 
 
 # Provided dependencies
 servlet-api = { group = "jakarta.servlet", name = "jakarta.servlet-api", version.ref = "jakarta-servlet-api" }
-dynamicjasper-core-fonts = { group = "ar.com.fdvs", name = "DynamicJasper-core-fonts", version.ref = "dynamicjasper-core-fonts" }
 
 # Test dependencies
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "org-junit-jupiter" }
@@ -76,6 +74,6 @@ hsqldb = { group = "org.hsqldb", name = "hsqldb", version.ref = "hsqldb" }
 hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate-core" }
 jakarta-transaction-api = { group = "jakarta.transaction", name = "jakarta.transaction-api", version.ref = "jakarta-transaction-api" }
 httpunit = { group = "org.httpunit", name = "httpunit", version.ref = "httpunit" }
-dynamicjasper-test-fonts = { group = "ar.com.fdvs", name = "DynamicJasper-test-fonts", version.ref = "dynamicjasper-test-fonts" }
 spring-core = { group = "org.springframework", name = "spring-core", version.ref = "spring-core" }
+spring-web = { group = "org.springframework", name = "spring-web", version.ref = "spring-core" }
 spring-test = { group = "org.springframework", name = "spring-test", version.ref = "spring-core" }

@@ -209,7 +209,7 @@ public class AbstractChartBuilderTest extends BaseDjReportTest {
 		testFont(Font.COURIER_NEW_MEDIUM_BOLD, chart.getLegendFont());
 		assertEquals(Color.WHITE, chart.getLegendBackgroundColor());
 		assertEquals(EdgeEnum.values()[DJChartOptions.EDGE_BOTTOM], chart.getLegendPosition());
-		assertEquals(EdgeEnum.values()[DJChartOptions.EDGE_TOP], Integer.valueOf(chart.getTitlePosition().ordinal()));
+		assertEquals(EdgeEnum.TOP, chart.getTitlePosition());
 		assertEquals(LineStyleEnum.values()[DJChartOptions.LINE_STYLE_DOTTED], chart.getLineBox().getPen().getLineStyle());
 		assertEquals(1f, chart.getLineBox().getPen().getLineWidth());
 		assertEquals(Color.DARK_GRAY, chart.getLineBox().getPen().getLineColor());

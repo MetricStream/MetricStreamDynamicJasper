@@ -27,12 +27,7 @@ configurations.all {
 
 dependencies {
     // JasperReports core dependencies
-    implementation(libs.jasperreports) {
-        exclude(group = "commons-collections", module = "commons-collections")
-        exclude(group = "commons-logging", module = "commons-logging")
-        exclude(group = "bouncycastle", module = "bcmail-jdk14")
-        exclude(group = "bouncycastle", module = "bcprov-jdk14")
-    }
+    implementation(libs.jasperreports)
     implementation(libs.jasperreports.chart.customizers)
     implementation(libs.jasperreports.charts)
     implementation(libs.jasperreports.excel.poi)
@@ -47,12 +42,12 @@ dependencies {
     runtimeOnly(libs.jackson.core)
 
     // Core dependencies
-    compileOnly(libs.commons.beanutils2)
+    implementation(libs.commons.beanutils2)
     implementation(libs.xmlgraphics.commons)
 
     // Provided dependencies
     implementation(libs.servlet.api)
-    compileOnly(project(":modules:ms-dynamic-jasper-core-fonts"))
+    implementation(project(":modules:ms-dynamic-jasper-core-fonts"))
 
     // Test dependencies
     testImplementation(libs.junit.jupiter)
@@ -74,6 +69,7 @@ dependencies {
     testImplementation(libs.httpunit) { isTransitive = false }
     testImplementation(project(":modules:ms-dynamic-jasper-test-fonts"))
     testImplementation(libs.spring.core)
+    testImplementation(libs.spring.web)
     testImplementation(libs.spring.test)
 }
 

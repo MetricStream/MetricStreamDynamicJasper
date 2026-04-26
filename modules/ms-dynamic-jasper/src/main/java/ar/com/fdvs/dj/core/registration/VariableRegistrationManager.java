@@ -58,7 +58,7 @@ public class VariableRegistrationManager extends
 		}
 
 		if (var.getResetType() != null){
-			jrvar.setResetType(ResetTypeEnum.values()[var.getResetType().getValue()]);
+			jrvar.setResetType(mapToResetTypeEnum(var.getResetType()));
 		}
 
 		if ((var.getResetGroup() != null) && DJVariableResetType.GROUP.equals(var.getResetType())){
@@ -67,15 +67,35 @@ public class VariableRegistrationManager extends
 		}
 
 		if (var.getIncrementType() != null){
-			jrvar.setIncrementType(IncrementTypeEnum.values()[var.getIncrementType().getValue()]);
+			jrvar.setIncrementType(mapToIncrementTypeEnum(var.getIncrementType()));
 		}
 
 		if ((var.getIncrementGroup() != null) && DJVariableIncrementType.GROUP.equals(var.getIncrementType())){
-			final JRDesignGroup jrgroup = LayoutUtils.getJRDesignGroup(getDjd(),getLayoutManager(), var.getResetGroup());
+			final JRDesignGroup jrgroup = LayoutUtils.getJRDesignGroup(getDjd(),getLayoutManager(), var.getIncrementGroup());
 			jrvar.setIncrementGroup(jrgroup.getName());
 		}
 
 		return jrvar;
+	}
+
+	private ResetTypeEnum mapToResetTypeEnum(DJVariableResetType djResetType) {
+		return switch (djResetType.getValue()) {
+            case 2 -> ResetTypeEnum.PAGE;
+			case 3 -> ResetTypeEnum.COLUMN;
+			case 4 -> ResetTypeEnum.GROUP;
+			case 5 -> ResetTypeEnum.NONE;
+			default -> ResetTypeEnum.REPORT;
+		};
+	}
+
+	private IncrementTypeEnum mapToIncrementTypeEnum(DJVariableIncrementType djIncrementType) {
+		return switch (djIncrementType.getValue()) {
+			case 1 -> IncrementTypeEnum.REPORT;
+			case 2 -> IncrementTypeEnum.PAGE;
+			case 3 -> IncrementTypeEnum.COLUMN;
+			case 4 -> IncrementTypeEnum.GROUP;
+            default -> IncrementTypeEnum.NONE;
+		};
 	}
 
 }

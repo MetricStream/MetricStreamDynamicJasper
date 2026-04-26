@@ -62,11 +62,11 @@ public abstract class AbstractDataset extends DJBaseElement {
 		dataset.setResetGroup(parentGroup.getName());
 		dataset.setIncrementType( IncrementTypeEnum.GROUP );
 		dataset.setIncrementGroup(group.getName());
-		if (dataset.getResetGroup().equals(group.getName())) {
-            dataset.setResetType(DatasetResetTypeEnum.REPORT);
-        } else {
-            dataset.setResetType( DatasetResetTypeEnum.GROUP );
-        }
+		if (dataset.getResetGroup() != null && dataset.getResetGroup().equals(group.getName())) {
+			dataset.setResetType(DatasetResetTypeEnum.REPORT);
+		} else {
+			dataset.setResetType(DatasetResetTypeEnum.GROUP);
+		}
 	}
 
 	public abstract PropertyColumn getColumnsGroup();

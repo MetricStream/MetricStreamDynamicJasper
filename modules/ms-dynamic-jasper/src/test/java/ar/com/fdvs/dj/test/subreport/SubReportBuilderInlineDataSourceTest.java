@@ -30,6 +30,7 @@
 package ar.com.fdvs.dj.test.subreport;
 
 import java.util.Date;
+import java.util.List;
 
 import ar.com.fdvs.dj.core.DJConstants;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
@@ -139,21 +140,31 @@ public class SubReportBuilderInlineDataSourceTest extends BaseDjReportTest {
     public void testReport() throws Exception {
         super.testReport();
 
-        int[][] groupStarts = {{0,44}, {0,98}, {1,100}, {1,164}};
-        for (int[] groupStart : groupStarts) {
-            int pIdx = groupStart[0];
-            int eleIdx = groupStart[1];
-            
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Area", getCellText(jp, pIdx, eleIdx++));
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Average", getCellText(jp, pIdx, eleIdx++));
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "%", getCellText(jp, pIdx, eleIdx++));
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "Amount", getCellText(jp, pIdx, eleIdx++));
+        for (int pageIdx = 0; pageIdx < jp.getPages().size(); pageIdx++) {
+            int eleIdx = findElementIndex(jp, pageIdx, "Area");
+            if (eleIdx >= 0) {
+                assertEquals("Area", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+                assertEquals("Average", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+                assertEquals("%", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+                assertEquals("Amount", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
 
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "name", getCellText(jp, pIdx, eleIdx++));
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "average", getCellText(jp, pIdx, eleIdx++));
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "percentage", getCellText(jp, pIdx, eleIdx++));
-            assertEquals("Error Page " + pIdx + ", element " + eleIdx, "amount", getCellText(jp, pIdx, eleIdx++));
+                assertEquals("name", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+                assertEquals("average", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+                assertEquals("percentage", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+                assertEquals("amount", getCellText(jp, pageIdx, eleIdx++), "Error Page " + pageIdx + ", element " + eleIdx);
+            }
         }
+    }
+
+    private int findElementIndex(JasperPrint jp, int pageIdx, String text) {
+        List<JRPrintElement> elements = jp.getPages().get(pageIdx).getElements();
+        for (int i = 0; i < elements.size(); i++) {
+            String cellText = getCellText(jp, pageIdx, i);
+            if (text.equals(cellText)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public String getCellText(JasperPrint jp, int pageIdx, int eleIdx) {

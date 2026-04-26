@@ -1,4 +1,6 @@
-# DynamicJasper
+# DynamicJasper - MetricStream Fork
+
+This is a **forked and upgraded** version of DynamicJasper, modernized with contemporary build tools and dependencies.
 
 DynamicJasper (DJ) is an API that hides the complexity of __JasperReports__, it helps developers to save time when designing 
 simple/medium complexity reports generating the layout of the report elements automatically. It creates reports dynamically,
@@ -11,19 +13,46 @@ a easy way (it only interferes with the creation of the report design doing the 
 You can use the classic .jrxml files as templates while the content and layout of the report elements are handled by the DJ
 API.
 
-http://dynamicjasper.com/
+## Build System
 
-### Maven dependency
+This project uses **Gradle** (with Kotlin DSL) for dependency management and build automation, replacing the legacy Maven setup.
+
+### Key Upgrades
+
+- **JasperReports**: 7.0.6
+- **Java**: Modern Java with Jakarta EE (Jakarta Servlet API 6.1.0)
+- **Testing**: JUnit 6.0.3 with JUnit Platform
+- **Database Support**: Hibernate 7.3.2.Final, MySQL Connector 9.7.0, HSQLDB 2.7.4
+- **Build Tool**: Gradle with centralized version management via `gradle/libs.versions.toml`
+
+### Gradle Dependency (for consuming projects)
+
+```gradle
+dependencies {
+    implementation("com.metricstream.jasper:ms-dynamic-jasper:1.0.0")
+}
+```
+
+### Maven Dependency (legacy)
 
     <dependency>
-      <groupId>ar.com.fdvs</groupId>
-      <artifactId>DynamicJasper</artifactId>
-      <version>5.0.11</version>
+      <groupId>com.metricstream.jasper</groupId>
+      <artifactId>ms-dynamic-jasper</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
-### Documentation and Examples
+### Building the Project
 
-Find documentation and examples at http://dynamicjasper.com/documentation-examples/
+```bash
+# Build the project
+./gradlew build
+
+# Run tests
+./gradlew test
+
+# Clean build
+./gradlew clean build
+```
 
 ## Report Concept
 
