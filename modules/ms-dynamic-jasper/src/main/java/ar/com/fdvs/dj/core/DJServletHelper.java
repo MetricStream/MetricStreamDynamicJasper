@@ -47,6 +47,10 @@ public class DJServletHelper {
         }
     }
 
+    public static void cleanupPageThreshold() {
+        pageTreshold.remove();
+    }
+
     /**
      * Generates the report as HTML and setups everything for a clean response (serving images as well).
      * You have to declare JasperReport servlet in web.xml (net.sf.jasperreports.j2ee.servlets.ImageServlet)
@@ -110,7 +114,7 @@ public class DJServletHelper {
         exporter.exportReport();
         if (context.outputFile != null) {
             try (FileInputStream fis = new FileInputStream(context.outputFile)) {
-                ReportWriter.copyStreams(fis, response.getOutputStream());
+                fis.transferTo(response.getOutputStream());
             }
         }
 

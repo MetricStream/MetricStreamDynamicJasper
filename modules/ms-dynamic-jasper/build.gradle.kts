@@ -20,7 +20,8 @@ configurations.all {
         force(
             libs.jackson.core,
             libs.poi.ooxml,
-            libs.jasperreports
+            libs.jasperreports,
+            libs.mysql.connector.j
         )
     }
 }

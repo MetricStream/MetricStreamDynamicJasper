@@ -65,7 +65,9 @@ public class FileReportWriter extends ReportWriter {
             exporter.setExporterOutput(new SimpleWriterExporterOutput(file));
             exporter.exportReport();
             _response.setContentLength((int)file.length());
-            copyStreams(new FileInputStream(file), _response.getOutputStream());
+            try (InputStream in = new FileInputStream(file)) {
+                in.transferTo(_response.getOutputStream());
+            }
         } finally {
             LOGGER.info("deleting " + file.getAbsolutePath());
             file.delete();
