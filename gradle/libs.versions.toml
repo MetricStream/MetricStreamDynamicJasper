@@ -1,0 +1,79 @@
+[versions]
+# Gradle Plugins
+# No external plugins used beyond core plugins
+
+# JasperReports
+jasperreports = "7.0.6"
+
+# Core Dependencies
+commons-beanutils2 = "2.0.0-M2"
+xmlgraphics-commons = "2.11"
+slf4j-api = "2.0.16"
+jackson-core = "2.21.2"
+
+# Provided Dependencies
+jakarta-servlet-api = "6.1.0"
+dynamicjasper-core-fonts = "2.0"
+barbecue = "1.5-beta1"
+
+# Test Dependencies
+org-junit-jupiter = "6.0.3"
+junit-platform-launcher = "6.0.3"
+junit-platform-engine = "6.0.3"
+junit-platform-commons = "1.14.1"
+poi-ooxml = "5.5.1"
+jaxen = "2.0.1"
+jxl = "2.6.12"
+xalan = "2.7.3"
+mysql-connector-j = "9.7.0"
+hsqldb = "2.7.4"
+hibernate-core = "7.3.2.Final"
+jakarta-transaction-api = "2.0.1"
+httpunit = "1.7.3"
+spring-core = "7.0.7"
+
+[libraries]
+# JasperReports modules
+jasperreports = { group = "net.sf.jasperreports", name = "jasperreports", version.ref = "jasperreports" }
+jasperreports-chart-customizers = { group = "net.sf.jasperreports", name = "jasperreports-chart-customizers", version.ref = "jasperreports" }
+jasperreports-charts = { group = "net.sf.jasperreports", name = "jasperreports-charts", version.ref = "jasperreports" }
+jasperreports-excel-poi = { group = "net.sf.jasperreports", name = "jasperreports-excel-poi", version.ref = "jasperreports" }
+jasperreports-hibernate = { group = "net.sf.jasperreports", name = "jasperreports-hibernate", version.ref = "jasperreports" }
+jasperreports-javaflow = { group = "net.sf.jasperreports", name = "jasperreports-javaflow", version.ref = "jasperreports" }
+jasperreports-jaxen = { group = "net.sf.jasperreports", name = "jasperreports-jaxen", version.ref = "jasperreports" }
+jasperreports-jdt = { group = "net.sf.jasperreports", name = "jasperreports-jdt", version.ref = "jasperreports" }
+jasperreports-pdf = { group = "net.sf.jasperreports", name = "jasperreports-pdf", version.ref = "jasperreports" }
+jasperreports-servlets = { group = "net.sf.jasperreports", name = "jasperreports-servlets", version.ref = "jasperreports" }
+
+# Core dependencies
+commons-beanutils2 = { group = "org.apache.commons", name = "commons-beanutils2", version.ref = "commons-beanutils2" }
+xmlgraphics-commons = { group = "org.apache.xmlgraphics", name = "xmlgraphics-commons", version.ref = "xmlgraphics-commons" }
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
+jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson-core" }
+barbecue = { group = "net.sourceforge.barbecue", name = "barbecue", version.ref = "barbecue"}
+
+# Provided dependencies
+servlet-api = { group = "jakarta.servlet", name = "jakarta.servlet-api", version.ref = "jakarta-servlet-api" }
+
+# Test dependencies
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "org-junit-jupiter" }
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "org-junit-jupiter" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "org-junit-jupiter" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "org-junit-jupiter" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "org-junit-jupiter" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform-launcher" }
+junit-platform-engine = { group = "org.junit.platform", name = "junit-platform-engine", version.ref = "junit-platform-engine" }
+junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-commons", version.ref = "junit-platform-commons" }
+
+poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi-ooxml" }
+jaxen = { group = "jaxen", name = "jaxen", version.ref = "jaxen" }
+jxl = { group = "net.sourceforge.jexcelapi", name = "jxl", version.ref = "jxl" }
+xalan = { group = "xalan", name = "xalan", version.ref = "xalan" }
+mysql-connector-j = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql-connector-j" }
+hsqldb = { group = "org.hsqldb", name = "hsqldb", version.ref = "hsqldb" }
+hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate-core" }
+jakarta-transaction-api = { group = "jakarta.transaction", name = "jakarta.transaction-api", version.ref = "jakarta-transaction-api" }
+httpunit = { group = "org.httpunit", name = "httpunit", version.ref = "httpunit" }
+spring-core = { group = "org.springframework", name = "spring-core", version.ref = "spring-core" }
+spring-web = { group = "org.springframework", name = "spring-web", version.ref = "spring-core" }
+spring-test = { group = "org.springframework", name = "spring-test", version.ref = "spring-core" }

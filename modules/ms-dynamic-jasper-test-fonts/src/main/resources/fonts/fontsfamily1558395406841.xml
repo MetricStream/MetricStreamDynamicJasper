@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+	<fontFamily name="Colonna MT">
+		<normal><![CDATA[fonts/ColonnaMT/COLONNA.TTF]]></normal>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+</fontFamilies>

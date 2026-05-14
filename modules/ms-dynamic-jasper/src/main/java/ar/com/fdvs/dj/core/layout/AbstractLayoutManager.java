@@ -1,0 +1,1402 @@
+/*
+ * DynamicJasper: A library for creating reports dynamically by specifying
+ * columns, groups, styles, etc. at runtime. It also saves a lot of development
+ * time in many cases! (http://sourceforge.net/projects/dynamicjasper)
+ *
+ * Copyright (C) 2008  FDV Solutions (http://www.fdvsolutions.com)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ *
+ * License as published by the Free Software Foundation; either
+ *
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ *
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ *
+ */
+
+package ar.com.fdvs.dj.core.layout;
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import ar.com.fdvs.dj.core.DJException;
+import ar.com.fdvs.dj.domain.DJChart;
+import ar.com.fdvs.dj.domain.DJChartOptions;
+import ar.com.fdvs.dj.domain.DJCrosstab;
+import ar.com.fdvs.dj.domain.DJWaterMark;
+import ar.com.fdvs.dj.domain.DynamicJasperDesign;
+import ar.com.fdvs.dj.domain.DynamicReport;
+import ar.com.fdvs.dj.domain.Style;
+import ar.com.fdvs.dj.domain.builders.DataSetFactory;
+import ar.com.fdvs.dj.domain.constants.Border;
+import ar.com.fdvs.dj.domain.constants.Transparency;
+import ar.com.fdvs.dj.domain.entities.DJColSpan;
+import ar.com.fdvs.dj.domain.entities.DJGroup;
+import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
+import ar.com.fdvs.dj.domain.entities.columns.BarCodeColumn;
+import ar.com.fdvs.dj.domain.entities.columns.ExpressionColumn;
+import ar.com.fdvs.dj.domain.entities.columns.ImageColumn;
+import ar.com.fdvs.dj.domain.entities.columns.PercentageColumn;
+import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
+import ar.com.fdvs.dj.domain.entities.conditionalStyle.ConditionalStyle;
+import ar.com.fdvs.dj.util.ExpressionUtils;
+import ar.com.fdvs.dj.util.HyperLinkUtil;
+import ar.com.fdvs.dj.util.LayoutUtils;
+import ar.com.fdvs.dj.util.Utils;
+import ar.com.fdvs.dj.util.WaterMarkRenderer;
+import net.sf.jasperreports.charts.base.JRBaseChartPlot;
+import net.sf.jasperreports.charts.design.JRDesignBarPlot;
+import net.sf.jasperreports.charts.design.JRDesignChart;
+import net.sf.jasperreports.charts.design.JRDesignChartDataset;
+import net.sf.jasperreports.charts.type.ChartTypeEnum;
+import net.sf.jasperreports.crosstabs.design.JRDesignCrosstab;
+import net.sf.jasperreports.engine.JRBand;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRGroup;
+import net.sf.jasperreports.engine.JRStyle;
+import net.sf.jasperreports.engine.JRTextElement;
+import net.sf.jasperreports.engine.design.JRDesignBand;
+import net.sf.jasperreports.engine.design.JRDesignConditionalStyle;
+import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JRDesignExpression;
+import net.sf.jasperreports.engine.design.JRDesignGraphicElement;
+import net.sf.jasperreports.engine.design.JRDesignGroup;
+import net.sf.jasperreports.engine.design.JRDesignImage;
+import net.sf.jasperreports.engine.design.JRDesignRectangle;
+import net.sf.jasperreports.engine.design.JRDesignSection;
+import net.sf.jasperreports.engine.design.JRDesignStyle;
+import net.sf.jasperreports.engine.design.JRDesignTextElement;
+import net.sf.jasperreports.engine.design.JRDesignTextField;
+import net.sf.jasperreports.engine.design.JRDesignVariable;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.type.CalculationEnum;
+import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
+import net.sf.jasperreports.engine.type.ModeEnum;
+import net.sf.jasperreports.engine.type.OnErrorTypeEnum;
+import net.sf.jasperreports.engine.type.PositionTypeEnum;
+import net.sf.jasperreports.engine.type.ResetTypeEnum;
+import net.sf.jasperreports.engine.type.ScaleImageEnum;
+import net.sf.jasperreports.engine.util.JRExpressionUtil;
+
+/**
+ * Abstract Class used as base for the different Layout Managers.<br>
+ * <br>
+ * A Layout Manager is always invoked after the entities registration stage.<br>
+ * A subclass should be created whenever we want to give the users the chance to <br>
+ * easily apply global layout changes to their reports. Example: Ignore groups <br>
+ * and styles for an Excel optimized report.
+ */
+public abstract class AbstractLayoutManager implements LayoutManager {
+
+    private static final Log log = LogFactory.getLog(AbstractLayoutManager.class);
+
+    protected static final String EXPRESSION_TRUE_WHEN_ODD = "new java.lang.Boolean(((Number)$V{REPORT_COUNT}).doubleValue() % 2 == 0)";
+
+    protected static final String EXPRESSION_TRUE_WHEN_EVEN = "new java.lang.Boolean(((Number)$V{REPORT_COUNT}).doubleValue() % 2 != 0)";
+
+    JasperDesign design;
+
+    private DynamicReport report;
+
+    protected abstract void transformDetailBandTextField(AbstractColumn column, JRDesignTextField textField);
+
+    private Map<String, JRStyle> reportStyles = new HashMap<>();
+
+    /**
+     * Holds the original groups binded to a column.
+     * Needed for later reference
+     * List<JRDesignGroup>
+     */
+    protected final List<JRGroup> realGroups = new ArrayList<>();
+
+    public Map<String, JRStyle> getReportStyles() {
+        return reportStyles;
+    }
+
+    public void setReportStyles(Map<String, JRStyle> reportStyles) {
+        this.reportStyles = reportStyles;
+    }
+
+    @Override
+    public void applyLayout(JasperDesign design, DynamicReport report) throws LayoutException {
+        log.debug("Applying Layout...");
+        try {
+            setDesign(design);
+            setReport(report);
+            ensureDJStyles();
+            startLayout();
+            applyWaterMark();
+            transformDetailBand();
+            setSummaryBand();
+            endLayout();
+            setWhenNoDataBand();
+            setBandsFinalHeight();
+            registerRemainingStyles();
+        } catch (final RuntimeException e) {
+            throw new LayoutException(e.getMessage(), e);
+        }
+    }
+
+    protected void applyWaterMark() {
+        final DynamicReport dr = getReport();
+        final JasperDesign jd = getDesign();
+
+        final DJWaterMark djWaterMark = dr.getWaterMark();
+
+        if ((djWaterMark == null) || Utils.isEmpty(djWaterMark.getText())) {
+            return;
+        }
+
+        JRDesignBand backgroundBand = (JRDesignBand) jd.getBackground();
+
+        if (backgroundBand == null) {
+            backgroundBand = new JRDesignBand();
+            jd.setBackground(backgroundBand);
+        }
+        final int printableHeight = jd.getPageHeight() - jd.getTopMargin() - jd.getBottomMargin();
+        final int printableWidth = jd.getPageWidth() - jd.getLeftMargin() - jd.getRightMargin();
+        backgroundBand.setHeight(printableHeight);
+
+        final JRDesignImage image = new JRDesignImage(new JRDesignStyle().getDefaultStyleProvider());
+        JRDesignExpression imageExp = null;
+
+        final int multiplier = 2;
+
+        final ar.com.fdvs.dj.domain.constants.Font font2 = (ar.com.fdvs.dj.domain.constants.Font) djWaterMark.getFont().clone();
+        font2.setFontSize(font2.getFontSize() * multiplier);
+
+        final BufferedImage watermark = WaterMarkRenderer.rotateText(djWaterMark.getText(),
+                font2.toAwtFont(),
+                printableWidth * multiplier,
+                printableHeight * multiplier,
+                djWaterMark.getAngle(), djWaterMark.getTextColor());
+        try {
+            final File outputFile = File.createTempFile("dynamicJasper", "watermark.png");
+            outputFile.deleteOnExit();
+            ImageIO.write(watermark, "png", outputFile);
+            final String absolutePath = outputFile.getAbsolutePath();
+            log.debug("Watermark Image: " + absolutePath);
+            final String escapeTextForExpression = Utils.escapeTextForExpression(absolutePath);
+            imageExp = ExpressionUtils.createStringExpression("\"" + escapeTextForExpression + "\"");
+        } catch (final IOException e) {
+            log.error("Could not create watermark image: " + e.getMessage(),e);
+        }
+
+        image.setExpression(imageExp);
+        image.setHeight(printableHeight);
+        image.setWidth(printableWidth);
+        image.setScaleImage(ScaleImageEnum.RETAIN_SHAPE);
+        image.setOnErrorType(OnErrorTypeEnum.BLANK);
+        backgroundBand.addElement(image);
+    }
+
+    protected void setSummaryBand() {
+    	final JRDesignBand summary = (JRDesignBand) getDesign().getSummary();
+    	// only support crosstab in summary so far
+    	for (final DJCrosstab djcross : getReport().getSummaryCrosstabs() ) {
+
+
+	    	final Dj2JrCrosstabBuilder djcb = new Dj2JrCrosstabBuilder();
+
+			final JRDesignCrosstab crosst = djcb.createCrosstab(djcross, this);
+
+			final int yOffset = LayoutUtils.findVerticalOffset(summary);
+			if (djcross.getTopSpace() != 0) {
+				final JRDesignRectangle rect = createBlankRectableCrosstab(djcross.getBottomSpace(), yOffset);
+				rect.setPositionType(PositionTypeEnum.FIX_RELATIVE_TO_TOP);
+				summary.addElement(rect);
+				crosst.setY(yOffset + djcross.getBottomSpace());
+			}
+
+			summary.addElement(crosst);
+
+			if (djcross.getBottomSpace() != 0) {
+				final JRDesignRectangle rect = createBlankRectableCrosstab(djcross.getBottomSpace(), crosst.getY() + crosst.getHeight());
+				summary.addElement(rect);
+			}
+    	}
+    }
+
+    protected JRDesignRectangle createBlankRectableCrosstab(int amount,int yOffset) {
+		final JRDesignRectangle rect = new JRDesignRectangle();
+
+        LayoutUtils.convertBorderToPen(Border.NO_BORDER(), rect.getLinePen());
+
+		rect.setMode(ModeEnum.values()[Transparency.TRANSPARENT.getValue()] );
+//		rect.setMode(Transparency.OPAQUE.getValue());
+//		rect.setBackcolor(Color.RED);
+		rect.setWidth(getReport().getOptions().getPrintableWidth());
+		rect.setHeight(amount);
+		rect.setY(yOffset);
+		rect.setPositionType( PositionTypeEnum.FLOAT );
+		return rect;
+	}
+
+    /**
+     * Creates the graphic element to be shown when the datasource is empty
+     */
+    protected void setWhenNoDataBand() {
+        log.debug("setting up WHEN NO DATA band");
+        final String whenNoDataText = getReport().getWhenNoDataText();
+        Style style = getReport().getWhenNoDataStyle();
+        if ((whenNoDataText == null) || "".equals(whenNoDataText)) {
+            return;
+        }
+        final JRDesignBand band = new JRDesignBand();
+        getDesign().setNoData(band);
+
+        final JRDesignTextField text = new JRDesignTextField();
+        final JRDesignExpression expression = ExpressionUtils.createStringExpression("\"" + whenNoDataText + "\"");
+        text.setExpression(expression);
+
+        if (style == null) {
+            style = getReport().getOptions().getDefaultDetailStyle();
+        }
+
+        if (getReport().isWhenNoDataShowTitle()) {
+            LayoutUtils.copyBandElements(band, getDesign().getTitle());
+            LayoutUtils.copyBandElements(band, getDesign().getPageHeader());
+        }
+        if (getReport().isWhenNoDataShowColumnHeader()) {
+            LayoutUtils.copyBandElements(band, getDesign().getColumnHeader());
+        }
+
+        final int offset = LayoutUtils.findVerticalOffset(band);
+        text.setY(offset);
+        applyStyleToElement(style, text);
+        text.setWidth(getReport().getOptions().getPrintableWidth());
+        text.setHeight(50);
+        band.addElement(text);
+        log.debug("OK setting up WHEN NO DATA band");
+
+    }
+
+    protected void startLayout() {
+        setColumnsFinalWidth();
+        realGroups.addAll(getDesign().getGroupsList()); //Hold the original groups
+    }
+
+    protected void endLayout() {
+        layoutCharts();
+        setBandsFinalHeight();
+    }
+
+    protected void registerRemainingStyles() {
+        //TODO: troll all elements in the JRDesing and for elements that has styles with null name
+        //or not registered, register them in the design
+    }
+
+    /**
+     * Sets a default style for every element that doesn't have one
+     *
+     * @throws JRException
+     */
+    protected void ensureDJStyles() {
+        //first of all, register all parent styles if any
+        for (final Style style : getReport().getStyles().values()) {
+            addStyleToDesign(style);
+        }
+
+        final Style defaultDetailStyle = getReport().getOptions().getDefaultDetailStyle();
+
+        final Style defaultHeaderStyle = getReport().getOptions().getDefaultHeaderStyle();
+        for (final AbstractColumn column : report.getColumns()) {
+            if (column.getStyle() == null) {
+                column.setStyle(defaultDetailStyle);
+            }
+            if (column.getHeaderStyle() == null) {
+                column.setHeaderStyle(defaultHeaderStyle);
+            }
+        }
+    }
+
+    /**
+     * @param style
+     * @throws JRException
+     */
+    public void addStyleToDesign(Style style) {
+        final JRDesignStyle jrstyle = style.transform();
+
+        if ((style.getFont() != null) && (style.getFont().getPdfFontEncoding() == null) && (getReport().getDefaultEncoding() != null)) {
+            style.getFont().setPdfFontEncoding(getReport().getDefaultEncoding());
+        }
+
+        try {
+            if (jrstyle.getName() == null) {
+                final String name = createUniqueStyleName();
+                jrstyle.setName(name);
+                style.setName(name);
+                getReportStyles().put(name, jrstyle);
+                design.addStyle(jrstyle);
+            }
+
+            final JRStyle old = design.getStylesMap().get(jrstyle.getName());
+            if ((old != null) && style.isOverridesExistingStyle()) {
+                log.debug("Overriding style with name \"" + style.getName() + "\"");
+
+                design.removeStyle(style.getName());
+                design.addStyle(jrstyle);
+            } else if (old == null) {
+                log.debug("Registering new style with name \"" + style.getName() + "\"");
+                design.addStyle(jrstyle);
+            } else if (style.getName() != null) {
+                log.debug("Using existing style for style with name \"" + style.getName() + "\"");
+            }
+        } catch (final JRException e) {
+            log.debug("Duplicated style (it's ok): " + e.getMessage());
+        }
+    }
+
+    protected String createUniqueStyleName() {
+        synchronized (this) {
+            final String tryName = "dj_style_" + Math.random() + "_"; //FIX for issue 3002761 @SF tracker
+            if (design.getStylesMap().get(tryName) != null) {
+                return createUniqueStyleName();
+            }
+            return tryName;
+        }
+    }
+
+    /**
+     * For each column, puts the elements in the detail band
+     */
+    protected void transformDetailBand() {
+        log.debug("transforming Detail Band...");
+
+        final JRDesignSection detailSection = (JRDesignSection) design.getDetailSection();
+
+        //TODO: With this new way, we can use template content as it comes, and add a new band for DJ on top or bellow it.
+        JRDesignBand detail;
+        if (detailSection.getBandsList().isEmpty()) {
+            detail = new JRDesignBand();
+            detailSection.getBandsList().add(detail);
+        } else {
+            detail = (JRDesignBand) detailSection.getBandsList().iterator().next();
+        }
+
+        detail.setHeight(report.getOptions().getDetailHeight());
+
+        for (final AbstractColumn column : getVisibleColumns()) {
+
+            /*
+              Barcode column
+             */
+            if (column instanceof BarCodeColumn) {
+                final BarCodeColumn barcodeColumn = (BarCodeColumn) column;
+                final JRDesignImage image = new JRDesignImage(new JRDesignStyle().getDefaultStyleProvider());
+                final JRDesignExpression imageExp = new JRDesignExpression();
+//				imageExp.setText("ar.com.fdvs.dj.core.BarcodeHelper.getBarcodeImage("+barcodeColumn.getBarcodeType() + ", "+ column.getTextForExpression()+ ", "+ barcodeColumn.isShowText() + ", " + barcodeColumn.isCheckSum() + ", " + barcodeColumn.getApplicationIdentifier() + ","+ column.getWidth() +", "+ report.getOptions().getDetailHeight().intValue() + " )" );
+
+                //Do not pass column height and width mecause barbecue
+                //generates the image with wierd dimensions. Pass 0 in both cases
+                String applicationIdentifier = barcodeColumn.getApplicationIdentifier();
+                if ((applicationIdentifier != null) && !"".equals(applicationIdentifier.trim())) {
+                    applicationIdentifier = "$F{" + applicationIdentifier + "}";
+                } else {
+                    applicationIdentifier = "\"\"";
+                }
+                imageExp.setText("ar.com.fdvs.dj.core.BarcodeHelper.getBarcodeImage(" + barcodeColumn.getBarcodeType() + ", " + column.getTextForExpression() + ", " + barcodeColumn.isShowText() + ", " + barcodeColumn.isCheckSum() + ", " + applicationIdentifier + ",0,0 )");
+
+
+                image.setExpression(imageExp);
+                image.setHeight(getReport().getOptions().getDetailHeight());
+                image.setWidth(column.getWidth());
+                image.setX(column.getPosX());
+                image.setScaleImage(ScaleImageEnum.values()[barcodeColumn.getScaleMode().getValue()]);
+
+                image.setOnErrorType(OnErrorTypeEnum.ICON); //FIXME should we provide control of this to the user?
+
+                if (column.getLink() != null) {
+                    final String name = "column_" + getReport().getColumns().indexOf(column);
+                    HyperLinkUtil.applyHyperLinkToElement((DynamicJasperDesign) getDesign(), column.getLink(), image, name);
+                }
+
+                applyStyleToElement(column.getStyle(), image);
+
+                detail.addElement(image);
+            }
+            /*
+              Image columns
+             */
+            else if (column instanceof ImageColumn) {
+                final ImageColumn imageColumn = (ImageColumn) column;
+                final JRDesignImage image = new JRDesignImage(new JRDesignStyle().getDefaultStyleProvider());
+                final JRDesignExpression imageExp = new JRDesignExpression();
+                imageExp.setText(column.getTextForExpression());
+
+                image.setExpression(imageExp);
+                image.setHeight(getReport().getOptions().getDetailHeight());
+                image.setWidth(column.getWidth());
+                image.setX(column.getPosX());
+                image.setScaleImage(ScaleImageEnum.values()[imageColumn.getScaleMode().getValue()]);
+
+                applyStyleToElement(column.getStyle(), image);
+
+                if (column.getLink() != null) {
+                    final String name = "column_" + getReport().getColumns().indexOf(column);
+                    HyperLinkUtil.applyHyperLinkToElement((DynamicJasperDesign) getDesign(), column.getLink(), image, name);
+                }
+
+                detail.addElement(image);
+            } else if (getReport().getOptions().isShowDetailBand()) {
+                final JRDesignTextField textField = generateTextFieldFromColumn(column, getReport().getOptions().getDetailHeight(), null);
+
+                if (column.getLink() != null) {
+                    final String name = getDesign().getName() + "_column_" + getReport().getColumns().indexOf(column);
+                    HyperLinkUtil.applyHyperLinkToElement((DynamicJasperDesign) getDesign(), column.getLink(), textField, name);
+                }
+
+                transformDetailBandTextField(column, textField);
+
+                if (textField.getExpression() != null) {
+                    detail.addElement(textField);
+                }
+            }
+
+        }
+    }
+
+
+//	/**
+//	 * Creates and returns the expression used to apply a conditional style.
+//	 * @param String paramName
+//	 * @param String textForExpression
+//	 * @return JRExpression
+//	 */
+    /*
+	 * MOVED INSIDE ExpressionUtils
+	protected JRDesignExpression getExpressionForConditionalStyle(ConditionalStyle condition, AbstractColumn column) {
+		//String text = "(("+CustomExpression.class.getName()+")$P{"+paramName+"})."+CustomExpression.EVAL_METHOD_NAME+"("+textForExpression+")";
+		String columExpression = column.getTextForExpression();
+		//condition.getCondition().setFieldToEvaluate(exprParams)
+
+		// PeS17 patch, 2008-11-29: put all fields to fields map, including "invisible" i.e. only registered ones
+
+		String fieldsMap = "(("+DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentFields()";
+		String parametersMap = "(("+DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentParams()";
+		String variablesMap = "(("+DJDefaultScriptlet.class.getName() + ")$P{REPORT_SCRIPTLET}).getCurrentVariables()";
+
+		String evalMethodParams =  fieldsMap +", " + variablesMap + ", " + parametersMap + ", " + columExpression;
+
+		String text = "(("+ConditionStyleExpression.class.getName()+")$P{"+condition.getName()+"})."+CustomExpression.EVAL_METHOD_NAME+"("+evalMethodParams+")";
+		JRDesignExpression expression = new JRDesignExpression();
+		expression.setValueClass(Boolean.class);
+		expression.setText(text);
+		return expression;
+	}
+	 */
+
+    protected void generateHeaderBand(JRDesignBand band) {
+        log.debug("Adding column names in header band.");
+        band.setHeight(report.getOptions().getHeaderHeight());
+
+        for (final AbstractColumn col : getVisibleColumns()) {
+
+            if (col.getTitle() == null) {
+                continue;
+            }
+
+            Style headerStyle = col.getHeaderStyle();
+            if (headerStyle == null) {
+                headerStyle = report.getOptions().getDefaultHeaderStyle();
+            }
+
+            generateColspanHeader(col, band);
+
+            final JRDesignExpression expression = new JRDesignExpression();
+            final JRDesignTextField textField = new JRDesignTextField();
+            expression.setText("\"" + col.getTitle() + "\"");
+
+            //sets header markup (if any)
+            if (col.getHeaderMarkup() != null) {
+                textField.setMarkup(col.getHeaderMarkup().toLowerCase());
+            }
+
+            textField.setKey("header_" + col.getTitle());
+            textField.setExpression(expression);
+
+            if (col.hasParentCol()) {
+                textField.setY(col.getPosY() + (band.getHeight() / 2));
+                textField.setHeight(band.getHeight() / 2);
+
+            } else {
+                textField.setY(col.getPosY());
+                textField.setHeight(band.getHeight());
+            }
+
+            textField.setX(col.getPosX());
+            textField.setWidth(col.getWidth());
+
+            textField.setPrintWhenDetailOverflows(true);
+            textField.setBlankWhenNull(true);
+
+            applyStyleToElement(headerStyle, textField);
+            band.addElement(textField);
+        }
+    }
+
+    private void generateColspanHeader(AbstractColumn col, JRDesignBand band) {
+
+        final DJColSpan colSpan = col.getColSpan();
+        if ((colSpan != null) && colSpan.isFirstColum(col)) {
+            //Set colspan
+            final JRDesignTextField spanTitle = new JRDesignTextField();
+            final JRDesignExpression colspanExpression = new JRDesignExpression();
+            colspanExpression.setText("\"" + col.getColSpan().getTitle() + "\"");
+
+            spanTitle.setExpression(colspanExpression);
+            spanTitle.setKey("colspan-header" + col.getTitle());
+
+            spanTitle.setX(col.getPosX());
+            spanTitle.setY(col.getPosY());
+            spanTitle.setHeight(band.getHeight() / 2);
+            spanTitle.setWidth(colSpan.getWidth());
+
+            Style spanStyle = colSpan.getColspanHeaderStyle();
+
+            if (spanStyle == null) {
+                spanStyle = report.getOptions().getDefaultHeaderStyle();
+            }
+
+            applyStyleToElement(spanStyle, spanTitle);
+            band.addElement(spanTitle);
+        }
+    }
+
+    /**
+     * Given a dj-Style, it is applied to the jasper element.
+     * If the style is being used by the first time, it is registered in the jasper-design,
+     * if it is the second time, the one created before is used  (cached one)
+     *
+     * @param style
+     * @param designElemen
+     */
+    public void applyStyleToElement(Style style, JRDesignElement designElemen) {
+        if (style == null) {
+//			log.warn("NULL style passed to object");
+            final JRDesignStyle style_ = new JRDesignStyle();
+            style_.setName(createUniqueStyleName());
+            designElemen.setStyle(style_);
+            try {
+                getDesign().addStyle(style_);
+            } catch (final JRException e) {
+                //duplicated style, its ok
+            }
+//			return null;
+            return;
+        }
+        final boolean existsInDesign = (style.getName() != null)
+                && (design.getStylesMap().get(style.getName()) != null);
+        //		&& !style.isOverridesExistingStyle();
+
+        JRDesignStyle jrstyle;
+        //Let's allways add a new JR style
+        if (existsInDesign && !style.isOverridesExistingStyle()) {
+            jrstyle = (JRDesignStyle) design.getStylesMap().get(style.getName());
+        } else {
+            addStyleToDesign(style); //Order maters. This line fist
+            jrstyle = style.transform();
+        }
+
+        designElemen.setStyle(jrstyle);
+        if (designElemen instanceof JRDesignTextElement) {
+            final JRDesignTextElement textField = (JRDesignTextElement) designElemen;
+            if (style.getStretchType() != null) {
+                textField.setStretchType(style.getStretchType());
+            }
+            textField.setPositionType(PositionTypeEnum.FLOAT);
+
+        }
+        if (designElemen instanceof JRDesignTextField) {
+            final JRDesignTextField textField = (JRDesignTextField) designElemen;
+            textField.setTextAdjust(style.getTextAdjust());
+
+            if (!textField.isBlankWhenNull() && style.isBlankWhenNull()) { //TODO Re check if this condition is ok
+            	textField.setBlankWhenNull(true);
+            }
+        }
+
+        if (designElemen instanceof JRDesignGraphicElement) {
+            final JRDesignGraphicElement graphicElement = (JRDesignGraphicElement) designElemen;
+            graphicElement.setStretchType(style.getStretchType());
+            graphicElement.setPositionType(PositionTypeEnum.FLOAT);
+        }
+    }
+
+
+    /**
+     * Sets the columns width by reading some report options like the
+     * printableArea and useFullPageWidth.
+     * columns with fixedWidth property set in TRUE will not be modified
+     */
+    protected void setColumnsFinalWidth() {
+        log.debug("Setting columns final width.");
+        float factor;
+        final int printableArea = report.getOptions().getColumnWidth();
+
+        //Create a list with only the visible columns.
+        final List visibleColums = getVisibleColumns();
+
+
+        if (report.getOptions().isUseFullPageWidth()) {
+            int columnsWidth = 0;
+            int notRezisableWidth = 0;
+
+            //Store in a variable the total with of all visible columns
+            for (final Object visibleColum : visibleColums) {
+                final AbstractColumn col = (AbstractColumn) visibleColum;
+                columnsWidth += col.getWidth();
+                if (col.isFixedWidth()) {
+                    notRezisableWidth += col.getWidth();
+                }
+            }
+
+
+            factor = (float) (printableArea - notRezisableWidth) / (float) (columnsWidth - notRezisableWidth);
+
+            log.debug("printableArea = " + printableArea
+                    + ", columnsWidth = " + columnsWidth
+                    + ", columnsWidth = " + columnsWidth
+                    + ", notRezisableWidth = " + notRezisableWidth
+                    + ", factor = " + factor);
+
+            int acumulated = 0;
+            int colFinalWidth;
+
+            //Select the non-resizable columns
+            final Collection resizableColumns = (Collection)visibleColums.stream().filter(i-> !((AbstractColumn)i).isFixedWidth())
+              .collect(Collectors.toList());
+
+            //Finally, set the new width to the resizable columns
+            for (final Iterator iter = resizableColumns.iterator(); iter.hasNext(); ) {
+                final AbstractColumn col = (AbstractColumn) iter.next();
+
+                if (!iter.hasNext()) {
+                    col.setWidth(printableArea - notRezisableWidth - acumulated);
+                } else {
+                    colFinalWidth = (Float.valueOf(col.getWidth() * factor)).intValue();
+                    acumulated += colFinalWidth;
+                    col.setWidth(colFinalWidth);
+                }
+            }
+        }
+
+        // If the columns width changed, the X position must be setted again.
+        int posx = 0;
+        for (final Object visibleColum : visibleColums) {
+            final AbstractColumn col = (AbstractColumn) visibleColum;
+            col.setPosX(posx);
+            posx += col.getWidth();
+        }
+    }
+
+    /**
+     * @return A list of visible columns
+     */
+    protected List<AbstractColumn> getVisibleColumns() {
+        return new ArrayList<>(report.getColumns());
+    }
+
+    /**
+     * Sets the necessary height for all bands in the report, to hold their children
+     */
+    protected void setBandsFinalHeight() {
+        log.debug("Setting bands final height...");
+
+        final List<JRBand> bands = new ArrayList<>();
+
+        Utils.addNotNull(bands, design.getPageHeader());
+        Utils.addNotNull(bands, design.getPageFooter());
+        Utils.addNotNull(bands, design.getColumnHeader());
+        Utils.addNotNull(bands, design.getColumnFooter());
+        Utils.addNotNull(bands, design.getSummary());
+        Utils.addNotNull(bands, design.getBackground());
+        bands.addAll(((JRDesignSection) design.getDetailSection()).getBandsList());
+        Utils.addNotNull(bands, design.getLastPageFooter());
+        Utils.addNotNull(bands, design.getTitle());
+        Utils.addNotNull(bands, design.getPageFooter());
+        Utils.addNotNull(bands, design.getNoData());
+
+        for (final JRGroup jrgroup : design.getGroupsList()) {
+            final DJGroup djGroup = (DJGroup) getReferencesMap().get(jrgroup.getName());
+            final JRDesignSection headerSection = (JRDesignSection) jrgroup.getGroupHeaderSection();
+            final JRDesignSection footerSection = (JRDesignSection) jrgroup.getGroupFooterSection();
+            if (djGroup != null) {
+                for (final JRBand headerBand : headerSection.getBandsList()) {
+                    setBandFinalHeight((JRDesignBand) headerBand, djGroup.getHeaderHeight(), djGroup.isFitHeaderHeightToContent());
+
+                }
+                for (final JRBand footerBand : footerSection.getBandsList()) {
+                    setBandFinalHeight((JRDesignBand) footerBand, djGroup.getFooterHeight(), djGroup.isFitFooterHeightToContent());
+
+                }
+            } else {
+                bands.addAll(headerSection.getBandsList());
+                bands.addAll(footerSection.getBandsList());
+            }
+        }
+
+        for (final JRBand jrDesignBand : bands) {
+            setBandFinalHeight((JRDesignBand) jrDesignBand);
+        }
+    }
+
+    /**
+     * Removes empty space when "fitToContent" is true and real height of object is
+     * taller than current bands height, otherwise, it is not modified
+     *
+     * @param band
+     * @param currHeigth
+     * @param fitToContent
+     */
+    private void setBandFinalHeight(JRDesignBand band, int currHeigth, boolean fitToContent) {
+        if (band != null) {
+            final int finalHeight = LayoutUtils.findVerticalOffset(band);
+            //noinspection StatementWithEmptyBody
+            if ((finalHeight < currHeigth) && !fitToContent) {
+                //nothing
+            } else {
+                band.setHeight(finalHeight);
+            }
+        }
+
+    }
+
+    /**
+     * Sets the band's height to hold all its children
+     *
+     * @param band Band to be resized
+     */
+    protected void setBandFinalHeight(JRDesignBand band) {
+        if (band != null) {
+            final int finalHeight = LayoutUtils.findVerticalOffset(band);
+            band.setHeight(finalHeight);
+        }
+    }
+
+    /**
+     * Creates a JasperReport DesignTextField from a DynamicJasper AbstractColumn.
+     *
+     * @param col
+     * @param height
+     * @param group
+     * @return JRDesignTextField
+     */
+    protected JRDesignTextField generateTextFieldFromColumn(AbstractColumn col, int height, DJGroup group) {
+        final JRDesignTextField textField = new JRDesignTextField();
+        final JRDesignExpression exp = new JRDesignExpression();
+
+        if ((col.getPattern() != null) && "".equals(col.getPattern().trim())) {
+            textField.setPattern(col.getPattern());
+        }
+
+        if (col.getTruncateSuffix() != null) {
+            textField.getPropertiesMap().setProperty(JRTextElement.PROPERTY_TRUNCATE_SUFFIX, col.getTruncateSuffix());
+        }
+
+        final List<DJGroup> columnsGroups = getReport().getColumnsGroups();
+        if (col instanceof PercentageColumn) {
+            final PercentageColumn pcol = (PercentageColumn) col;
+
+            if (group == null) { //we are in the detail band
+                final DJGroup innerMostGroup = columnsGroups.get(columnsGroups.size() - 1);
+                exp.setText(pcol.getTextForExpression(innerMostGroup));
+            } else {
+                exp.setText(pcol.getTextForExpression(group));
+            }
+
+            textField.setEvaluationTime(EvaluationTimeEnum.AUTO);
+        } else {
+            exp.setText(col.getTextForExpression());
+
+        }
+
+        textField.setExpression(exp);
+        textField.setWidth(col.getWidth());
+        textField.setX(col.getPosX());
+        textField.setY(col.getPosY());
+        textField.setHeight(height);
+
+        textField.setBlankWhenNull(col.isBlankWhenNull());
+
+        textField.setPattern(col.getPattern());
+
+        if (col.getMarkup() != null) {
+            textField.setMarkup(col.getMarkup().toLowerCase());
+        }
+
+        textField.setPrintRepeatedValues(col.isPrintRepeatedValues());
+		textField.setPrintWhenDetailOverflows(col.isPrintWhenDetailOverflows());
+
+        Style columnStyle = col.getStyle();
+        if (columnStyle == null) {
+            columnStyle = report.getOptions().getDefaultDetailStyle();
+        }
+
+        applyStyleToElement(columnStyle, textField);
+        final JRDesignStyle jrstyle = (JRDesignStyle) textField.getStyle();
+
+        if (group != null) {
+            final int index = columnsGroups.indexOf(group);
+//            JRDesignGroup previousGroup = (JRDesignGroup) getDesign().getGroupsList().get(index);
+            final JRDesignGroup previousGroup = getJRGroupFromDJGroup(group);
+            textField.setPrintWhenGroupChanges(previousGroup.getName());
+
+            /*
+              Since a group column can share the style with non group columns, if oddRow coloring is enabled,
+              we modified this shared style to have a colored background on odd rows. We don't want that for group
+              columns, that's why we create our own style from the existing one, and remove proper odd-row conditional
+              style if present
+             */
+            final JRDesignStyle groupStyle = Utils.cloneStyle(jrstyle);
+
+            groupStyle.setName(groupStyle.getFontName() + "_for_group_" + index + "_");
+            textField.setStyle(groupStyle);
+            try {
+                design.addStyle(groupStyle);
+            } catch (final JRException e) { /*e.printStackTrace(); //Already there, nothing to do **/}
+
+        } else {
+
+            final JRDesignStyle alternateStyle = Utils.cloneStyle(jrstyle);
+
+            alternateStyle.setName(alternateStyle.getFontName() + "_for_column_" + col.getName() + "_");
+            alternateStyle.getConditionalStyleList().clear();
+            textField.setStyle(alternateStyle);
+            try {
+                design.addStyle(alternateStyle);
+            } catch (final JRException e) { /*e.printStackTrace(); //Already there, nothing to do **/}
+
+
+            setUpConditionStyles(alternateStyle, col);
+        	/*
+        	if (getReport().getOptions().isPrintBackgroundOnOddRows() &&
+        			(jrstyle.getConditionalStyles() == null || jrstyle.getConditionalStyles().length == 0)) {
+	        	// No group column so this is a detail text field
+	    		JRDesignExpression expression = new JRDesignExpression();
+	    		expression.setValueClass(Boolean.class);
+	    		expression.setText(EXPRESSION_TRUE_WHEN_ODD);
+
+	    		Style oddRowBackgroundStyle = getReport().getOptions().getOddRowBackgroundStyle();
+
+	    		JRDesignConditionalStyle condStyle = new JRDesignConditionalStyle();
+	    		condStyle.setBackcolor(oddRowBackgroundStyle.getBackgroundColor());
+	    		condStyle.setMode(JRDesignElement.MODE_OPAQUE);
+
+	    		condStyle.setConditionExpression(expression);
+	    		jrstyle.addConditionalStyle(condStyle);
+        	}*/
+        }
+        return textField;
+    }
+
+    /**
+     * set up properly the final JRStyle of the column element (for detail band) upon condition style and odd-background
+     *
+     * @param jrstyle
+     * @param column
+     */
+    private void setUpConditionStyles(JRDesignStyle jrstyle, AbstractColumn column) {
+
+        if (getReport().getOptions().isPrintBackgroundOnOddRows() && Utils.isEmpty(column.getConditionalStyles())) {
+            final JRDesignExpression expression = new JRDesignExpression();
+            expression.setText(EXPRESSION_TRUE_WHEN_ODD);
+
+            final Style oddRowBackgroundStyle = getReport().getOptions().getOddRowBackgroundStyle();
+
+            final JRDesignConditionalStyle condStyle = new JRDesignConditionalStyle();
+            condStyle.setBackcolor(oddRowBackgroundStyle.getBackgroundColor());
+            condStyle.setMode(ModeEnum.OPAQUE);
+
+            condStyle.setConditionExpression(expression);
+            jrstyle.addConditionalStyle(condStyle);
+
+            return;
+        }
+
+        if (Utils.isEmpty(column.getConditionalStyles())) {
+            return;
+        }
+
+        for (final ConditionalStyle condition : column.getConditionalStyles()) {
+            if (getReport().getOptions().isPrintBackgroundOnOddRows()
+                    && (Transparency.TRANSPARENT == condition.getStyle().getTransparency())) { //condition style + odd row (only if conditional style's background is transparent)
+
+                final JRDesignExpression expressionForConditionalStyle = ExpressionUtils.getExpressionForConditionalStyle(condition, column.getTextForExpression());
+                final String expStr = JRExpressionUtil.getExpressionText(expressionForConditionalStyle);
+
+                //ODD
+                final JRDesignExpression expressionOdd = new JRDesignExpression();
+                expressionOdd.setText("new java.lang.Boolean(" + EXPRESSION_TRUE_WHEN_ODD + ".booleanValue() && ((java.lang.Boolean)" + expStr + ").booleanValue() )");
+
+                final Style oddRowBackgroundStyle = getReport().getOptions().getOddRowBackgroundStyle();
+
+                final JRDesignConditionalStyle condStyleOdd = makeConditionalStyle(condition.getStyle());
+//				Utils.copyProperties(condStyleOdd, condition.getStyle().transform());
+                condStyleOdd.setBackcolor(oddRowBackgroundStyle.getBackgroundColor());
+                condStyleOdd.setMode(ModeEnum.OPAQUE);
+                condStyleOdd.setConditionExpression(expressionOdd);
+                jrstyle.addConditionalStyle(condStyleOdd);
+
+                //EVEN
+                final JRDesignExpression expressionEven = new JRDesignExpression();
+                expressionEven.setText("new java.lang.Boolean(" + EXPRESSION_TRUE_WHEN_EVEN + ".booleanValue() && ((java.lang.Boolean)" + expStr + ").booleanValue() )");
+
+                final JRDesignConditionalStyle condStyleEven = makeConditionalStyle(condition.getStyle());
+                condStyleEven.setConditionExpression(expressionEven);
+                jrstyle.addConditionalStyle(condStyleEven);
+
+            } else { //No odd row, just the conditional style
+                final JRDesignExpression expression = ExpressionUtils.getExpressionForConditionalStyle(condition, column.getTextForExpression());
+                final JRDesignConditionalStyle condStyle = makeConditionalStyle(condition.getStyle());
+                condStyle.setConditionExpression(expression);
+                jrstyle.addConditionalStyle(condStyle);
+            }
+        }
+
+        //The last condition is the basic one
+        //ODD
+        if (getReport().getOptions().isPrintBackgroundOnOddRows()) {
+
+            final JRDesignExpression expressionOdd = new JRDesignExpression();
+            expressionOdd.setText(EXPRESSION_TRUE_WHEN_ODD);
+
+            final Style oddRowBackgroundStyle = getReport().getOptions().getOddRowBackgroundStyle();
+
+            final JRDesignConditionalStyle condStyleOdd = new JRDesignConditionalStyle();
+            condStyleOdd.setBackcolor(oddRowBackgroundStyle.getBackgroundColor());
+            condStyleOdd.setMode(ModeEnum.OPAQUE);
+            condStyleOdd.setConditionExpression(expressionOdd);
+
+            jrstyle.addConditionalStyle(condStyleOdd);
+
+            //EVEN
+            final JRDesignExpression expressionEven = new JRDesignExpression();
+            expressionEven.setText(EXPRESSION_TRUE_WHEN_EVEN);
+
+            final JRDesignConditionalStyle condStyleEven = new JRDesignConditionalStyle();
+            condStyleEven.setBackcolor(jrstyle.getBackcolor());
+            condStyleEven.setMode(jrstyle.getMode());
+            condStyleEven.setConditionExpression(expressionEven);
+
+            jrstyle.addConditionalStyle(condStyleEven);
+        }
+    }
+
+
+    protected JRDesignConditionalStyle makeConditionalStyle(Style style) {
+        return style.transformAsConditinalStyle();
+    }
+
+    /*
+     * Takes all the report's charts and inserts them in their corresponding bands
+     */
+    protected void layoutCharts() {
+        //Pre-sort charts by group column
+        final Map<DJGroup, List<DJChart>> mmap = new HashMap<>();
+        for (final DJChart djChart : getReport().getCharts()) {
+            mmap.computeIfAbsent(djChart.getColumnsGroup(), key -> new ArrayList<>()).add(djChart);
+        }
+
+        for (final DJGroup key : mmap.keySet()) {
+            final List<DJChart> charts = mmap.get(key);
+            final List<DJChart> l = new ArrayList<>(charts);
+            //Reverse iteration of the charts to meet insertion order
+            for (int i = l.size(); i > 0; i--) {
+                final DJChart djChart = l.get(i - 1);
+                final JRDesignChart chart = createChart(djChart);
+
+                //Charts has their own band, so they are added in the band at Y=0
+                final JRDesignBand band = createGroupForChartAndGetBand(djChart);
+                band.addElement(chart);
+            }
+        }
+
+        //Pre-sort charts by group column
+        final Map<PropertyColumn, List<ar.com.fdvs.dj.domain.chart.DJChart>> mmap2 = new HashMap<>();
+        for (final ar.com.fdvs.dj.domain.chart.DJChart djChart : getReport().getNewCharts()) {
+            mmap2.computeIfAbsent(djChart.getDataset().getColumnsGroup(), key -> new ArrayList<>()).add(djChart);
+        }
+
+        for (final PropertyColumn key : mmap2.keySet()) {
+            final List<ar.com.fdvs.dj.domain.chart.DJChart> charts = mmap2.get(key);
+            final ArrayList<ar.com.fdvs.dj.domain.chart.DJChart> l = new ArrayList<>(charts);
+            //Reverse iteration of the charts to meet insertion order
+            for (int i = l.size(); i > 0; i--) {
+                final ar.com.fdvs.dj.domain.chart.DJChart djChart = l.get(i - 1);
+                final String name = "chart_" + (i - 1) + new Date().getTime();
+                final JRDesignChart chart = createChart(djChart, name);
+
+                if (djChart.getLink() != null) {
+                    HyperLinkUtil.applyHyperLinkToElement((DynamicJasperDesign) getDesign(), djChart.getLink(), chart, name + "_hyperlink");
+                }
+
+                //Charts has their own band, so they are added in the band at Y=0
+                final JRDesignBand band = createGroupForChartAndGetBand(djChart);
+                band.addElement(chart);
+            }
+        }
+    }
+
+    protected JRDesignBand createGroupForChartAndGetBand(DJChart djChart) {
+        final JRDesignGroup jrGroup = getJRGroupFromDJGroup(djChart.getColumnsGroup());
+        final JRDesignGroup parentGroup = getParent(jrGroup);
+        JRDesignGroup jrGroupChart;
+        try {
+            jrGroupChart = new JRDesignGroup(); //FIXME nuevo 3.5.2
+            jrGroupChart.setExpression(parentGroup.getExpression());
+            ((JRDesignSection) jrGroupChart.getGroupFooterSection()).addBand(new JRDesignBand());
+            ((JRDesignSection) jrGroupChart.getGroupHeaderSection()).addBand(new JRDesignBand());
+            jrGroupChart.setName(jrGroupChart.getName() + "_Chart" + getReport().getCharts().indexOf(djChart));
+        } catch (final Exception e) {
+            throw new DJException("Problem creating band for chart: " + e.getMessage(), e);
+        }
+
+        //Charts should be added in its own band (to ensure page break, etc)
+        //To achieve that, we create a group and insert it right before to the criteria group.
+        //I need to find parent group of the criteria group, clone and insert after.
+        //The only precaution is that if parent == child (only one group in the report) the we insert before
+        if (jrGroup.equals(parentGroup)) {
+            jrGroupChart.setExpression(ExpressionUtils.createStringExpression("\"dummy_for_chart\""));
+            getDesign().getGroupsList().add(getDesign().getGroupsList().indexOf(jrGroup), jrGroupChart);
+        } else {
+            final int index = getDesign().getGroupsList().indexOf(parentGroup);
+            getDesign().getGroupsList().add(index, jrGroupChart);
+        }
+
+        JRDesignBand band = null;
+        switch (djChart.getOptions().getPosition()) {
+            case DJChartOptions.POSITION_HEADER:
+                band = (JRDesignBand) ((JRDesignSection) jrGroupChart.getGroupHeaderSection()).getBandsList().get(0);
+                break;
+            case DJChartOptions.POSITION_FOOTER:
+                band = (JRDesignBand) ((JRDesignSection) jrGroupChart.getGroupFooterSection()).getBandsList().get(0);
+        }
+        return band;
+    }
+
+    /**
+     * Creates the JRDesignChart from the DJChart. To do so it also creates needed variables and data-set
+     *
+     * @param djChart
+     * @return
+     */
+    protected JRDesignChart createChart(DJChart djChart) {
+        final JRDesignGroup jrGroupChart = getJRGroupFromDJGroup(djChart.getColumnsGroup());
+
+        final JRDesignChart chart = new JRDesignChart(new JRDesignStyle().getDefaultStyleProvider(), djChart.getType());
+        final JRDesignGroup parentGroup = getParent(jrGroupChart);
+        final List<JRDesignVariable> chartVariables = registerChartVariable(djChart);
+        final JRDesignChartDataset chartDataset = DataSetFactory.getDataset(djChart, jrGroupChart, parentGroup, chartVariables);
+        chart.setDataset(chartDataset);
+        interpeterOptions(djChart, chart);
+
+        chart.setEvaluationTime(EvaluationTimeEnum.GROUP);
+        chart.setEvaluationGroup(jrGroupChart.getName());
+        return chart;
+    }
+
+    protected void interpeterOptions(DJChart djChart, JRDesignChart chart) {
+        final DJChartOptions options = djChart.getOptions();
+
+        //size
+        if (options.isCentered()) {
+            chart.setWidth(getReport().getOptions().getPrintableWidth());
+        } else {
+            chart.setWidth(options.getWidth());
+        }
+
+        chart.setHeight(options.getHeight());
+
+        //position
+        chart.setX(options.getX());
+        //FIXME no more padding
+        //chart.setPadding(10);
+        chart.setY(options.getY());
+
+        //options
+        chart.setShowLegend(options.isShowLegend());
+        chart.setBackcolor(options.getBackColor());
+
+        //FIXME no more border, maybe setLineBox(...) or so
+        //chart.setBorder(options.getBorder());
+
+        //colors
+        if (options.getColors() != null) {
+            int i = 1;
+            for (final Iterator iter = options.getColors().iterator(); iter.hasNext(); i++) {
+                final Color color = (Color) iter.next();
+                chart.getPlot().getSeriesColors().add(new JRBaseChartPlot.JRBaseSeriesColor(i, color));
+            }
+        }
+        //Chart-dependent options
+        if (chart.getPlot() instanceof JRDesignBarPlot) {
+            ((JRDesignBarPlot) chart.getPlot()).setShowTickLabels(options.isShowLabels());
+        }
+    }
+
+
+    /**
+     * Creates and registers a variable to be used by the Chart
+     *
+     * @param chart Chart that needs a variable to be generated
+     * @return the generated variables
+     */
+    protected List<JRDesignVariable> registerChartVariable(DJChart chart) {
+        //FIXME aca hay que iterar por cada columna. Cambiar DJChart para que tome muchas
+        final JRDesignGroup group = getJRGroupFromDJGroup(chart.getColumnsGroup());
+        final List<JRDesignVariable> vars = new ArrayList<>();
+
+        int serieNum = 0;
+        for (final Object o : chart.getColumns()) {
+            final AbstractColumn col = (AbstractColumn) o;
+
+            Class clazz;
+
+            final JRDesignExpression expression = new JRDesignExpression();
+            if (col instanceof ExpressionColumn) {
+                try {
+                    clazz = Class.forName(((ExpressionColumn) col).getExpression().getClassName());
+                } catch (final ClassNotFoundException e) {
+                    throw new DJException("Exeption creating chart variable: " + e.getMessage(), e);
+                }
+
+                final ExpressionColumn expCol = (ExpressionColumn) col;
+                expression.setText(expCol.getTextForExpression());
+            } else {
+                try {
+                    clazz = Class.forName(((PropertyColumn) col).getColumnProperty().getValueClassName());
+                } catch (final ClassNotFoundException e) {
+                    throw new DJException("Exeption creating chart variable: " + e.getMessage(), e);
+                }
+
+                expression.setText("$F{" + ((PropertyColumn) col).getColumnProperty().getProperty() + "}");
+            }
+
+            final JRDesignVariable var = new JRDesignVariable();
+            var.setValueClass(clazz);
+            var.setExpression(expression);
+            var.setCalculation(CalculationEnum.values()[chart.getOperation()]);
+            var.setResetGroup(group.getName());
+            var.setResetType(ResetTypeEnum.GROUP);
+
+            //use the index as part of the name just because I may want 2
+            //different types of chart from the very same column (with the same operation also) making the variables name to be duplicated
+            final int chartIndex = getReport().getCharts().indexOf(chart);
+            var.setName("CHART_[" + chartIndex + "_s" + serieNum + "+]_" + group.getName() + "_" + col.getTitle() + "_" + chart.getOperation());
+
+            try {
+                getDesign().addVariable(var);
+                vars.add(var);
+            } catch (final JRException e) {
+                throw new LayoutException(e.getMessage(), e);
+            }
+            serieNum++;
+        }
+        return vars;
+    }
+
+    protected JRDesignGroup getChartColumnsGroup(ar.com.fdvs.dj.domain.chart.DJChart djChart) {
+        final PropertyColumn columnsGroup = djChart.getDataset().getColumnsGroup();
+        for (final DJGroup djGroup : getReport().getColumnsGroups()) {
+            if (djGroup.getColumnToGroupBy() == columnsGroup) {
+                return getJRGroupFromDJGroup(djGroup);
+            }
+        }
+        return null;
+    }
+
+    protected JRDesignBand createGroupForChartAndGetBand(ar.com.fdvs.dj.domain.chart.DJChart djChart) {
+        final JRDesignGroup jrGroup = getChartColumnsGroup(djChart);
+        final JRDesignGroup parentGroup = getParent(jrGroup);
+        JRDesignGroup jrGroupChart;
+        try {
+            jrGroupChart = new JRDesignGroup(); //FIXME nuevo 3.5.2
+            jrGroupChart.setExpression(parentGroup.getExpression());
+            ((JRDesignSection) jrGroupChart.getGroupFooterSection()).addBand(new JRDesignBand());
+            ((JRDesignSection) jrGroupChart.getGroupHeaderSection()).addBand(new JRDesignBand());
+            jrGroupChart.setName(jrGroupChart.getName() + "_Chart" + getReport().getCharts().indexOf(djChart));
+        } catch (final Exception e) {
+            throw new DJException("Problem creating band for chart: " + e.getMessage(), e);
+        }
+
+        //Charts should be added in its own band (to ensure page break, etc)
+        //To achieve that, we create a group and insert it right before to the criteria group.
+        //I need to find parent group of the criteria group, clone and insert after.
+        //The only precaution is that if parent == child (only one group in the report) the we insert before
+        if (jrGroup.equals(parentGroup)) {
+            jrGroupChart.setExpression(ExpressionUtils.createStringExpression("\"dummy_for_chart\""));
+            getDesign().getGroupsList().add(getDesign().getGroupsList().indexOf(jrGroup), jrGroupChart);
+        } else {
+            final int index = getDesign().getGroupsList().indexOf(parentGroup);
+            getDesign().getGroupsList().add(index, jrGroupChart);
+        }
+
+        JRDesignBand band = null;
+        switch (djChart.getOptions().getPosition()) {
+            case DJChartOptions.POSITION_HEADER:
+                band = (JRDesignBand) ((JRDesignSection) jrGroupChart.getGroupHeaderSection()).getBandsList().get(0);
+                break;
+            case DJChartOptions.POSITION_FOOTER:
+                band = (JRDesignBand) ((JRDesignSection) jrGroupChart.getGroupFooterSection()).getBandsList().get(0);
+        }
+        return band;
+    }
+
+    /**
+     * Creates the JRDesignChart from the DJChart. To do so it also creates needed variables and data-set
+     *
+     * @param djChart
+     * @return
+     */
+    protected JRDesignChart createChart(ar.com.fdvs.dj.domain.chart.DJChart djChart, String name) {
+        final JRDesignGroup jrGroupChart = getChartColumnsGroup(djChart);
+        final JRDesignGroup parentGroup = getParent(jrGroupChart);
+        final Map chartVariables = registerChartVariable(djChart);
+        return djChart.transform((DynamicJasperDesign) getDesign(), name, jrGroupChart, parentGroup, chartVariables, getReport().getOptions().getPrintableWidth());
+    }
+
+    /**
+     * Creates and registers a variable to be used by the Chart
+     *
+     * @param chart Chart that needs a variable to be generated
+     * @return the generated variables
+     */
+    protected Map<AbstractColumn, JRDesignVariable> registerChartVariable(ar.com.fdvs.dj.domain.chart.DJChart chart) {
+        //FIXME aca hay que iterar por cada columna. Cambiar DJChart para que tome muchas
+        final JRDesignGroup group = getChartColumnsGroup(chart);
+        final Map<AbstractColumn, JRDesignVariable> vars = new HashMap<>();
+
+        int serieNum = 0;
+        for (final Object o : chart.getDataset().getColumns()) {
+            final AbstractColumn col = (AbstractColumn) o;
+
+
+            Class clazz;
+//			try { clazz = Class.forName(col.getValueClassNameForExpression());
+//			} catch (ClassNotFoundException e) {
+//				throw new DJException("Exeption creating chart variable: " + e.getMessage(),e);
+//			}
+
+            final JRDesignExpression expression = new JRDesignExpression();
+            //FIXME Only PropertyColumn allowed?
+            if (col instanceof ExpressionColumn) {
+                try {
+                    clazz = Class.forName(((ExpressionColumn) col).getExpression().getClassName());
+                } catch (final ClassNotFoundException e) {
+                    throw new DJException("Exeption creating chart variable: " + e.getMessage(), e);
+                }
+
+                final ExpressionColumn expCol = (ExpressionColumn) col;
+                expression.setText(expCol.getTextForExpression());
+            } else {
+                try {
+                    clazz = Class.forName(((PropertyColumn) col).getColumnProperty().getValueClassName());
+                } catch (final ClassNotFoundException e) {
+                    throw new DJException("Exeption creating chart variable: " + e.getMessage(), e);
+                }
+
+                expression.setText("$F{" + ((PropertyColumn) col).getColumnProperty().getProperty() + "}");
+            }
+
+            final JRDesignVariable var = new JRDesignVariable();
+            var.setValueClass(clazz);
+            var.setExpression(expression);
+            var.setCalculation(CalculationEnum.values()[chart.getOperation()]);
+            var.setResetGroup(group.getName());
+            var.setResetType(ResetTypeEnum.GROUP);
+
+            //use the index as part of the name just because I may want 2
+            //different types of chart from the very same column (with the same operation also) making the variables name to be duplicated
+            final int chartIndex = getReport().getNewCharts().indexOf(chart);
+            var.setName("CHART_[" + chartIndex + "_s" + serieNum + "+]_" + group.getName() + "_" + col.getTitle() + "_" + chart.getOperation());
+
+            try {
+                getDesign().addVariable(var);
+                vars.put(col, var);
+            } catch (final JRException e) {
+                throw new LayoutException(e.getMessage(), e);
+            }
+            serieNum++;
+        }
+        return vars;
+    }
+
+    /**
+     * Finds the parent group of the given one and returns it
+     *
+     * @param group Group for which the parent is needed
+     * @return The parent group of the given one. If the given one is the first one, it returns the same group
+     */
+    protected JRDesignGroup getParent(JRDesignGroup group) {
+        final int index = realGroups.indexOf(group);
+        return (index > 0) ? (JRDesignGroup) realGroups.get(index - 1) : group;
+    }
+
+    /***
+     * Finds JRDesignGroup associated to a DJGroup
+     *
+     * @param group
+     * @return
+     */
+    protected JRDesignGroup getJRGroupFromDJGroup(DJGroup group) {
+        final int index = getReport().getColumnsGroups().indexOf(group);
+        return (JRDesignGroup) realGroups.get(index);
+    }
+
+
+    protected DJGroup getDJGroup(AbstractColumn col) {
+        for (final DJGroup group : getReport().getColumnsGroups()) {
+            if (group.getColumnToGroupBy().equals(col)) {
+                return group;
+            }
+        }
+        return null;
+    }
+
+
+    protected JasperDesign getDesign() {
+        return design;
+    }
+
+    protected void setDesign(JasperDesign design) {
+        this.design = design;
+    }
+
+    protected DynamicReport getReport() {
+        return report;
+    }
+
+    protected void setReport(DynamicReport report) {
+        this.report = report;
+    }
+
+}
