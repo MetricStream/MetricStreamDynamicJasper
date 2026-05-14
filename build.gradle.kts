@@ -1,5 +1,5 @@
 group = "com.metricstream.jasper"
-version = "1.0.0"
+version = "1.0.0-alpha.0"
 
 subprojects {
     group = rootProject.group
