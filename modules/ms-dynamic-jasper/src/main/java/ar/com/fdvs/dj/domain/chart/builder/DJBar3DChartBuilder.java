@@ -357,7 +357,6 @@ public class DJBar3DChartBuilder extends AbstractChartBuilder<DJBar3DChartBuilde
 
 	/**
 	 * Sets a user specified chart customizer class name.
-	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
 	@Override
     public DJBar3DChartBuilder setCustomizerClass(String customizerClass) {

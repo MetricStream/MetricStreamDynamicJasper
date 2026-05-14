@@ -411,10 +411,6 @@ public class DynamicReport extends DJBaseElement {
 		return properties;
 	}
 
-	/**
-	 * Must be a Map<String, String>
-	 * @param properties
-	 */
 	public void setProperties(Map<String, String> properties) {
 		this.properties = properties;
 	}
@@ -427,10 +423,6 @@ public class DynamicReport extends DJBaseElement {
 		this.reportName = reportName;
 	}
 
-	/**
-	 * Collects all the fields from columns and also the fields not bounds to columns
-	 * @return List<ColumnProperty>
-	 */
 	public List<ColumnProperty> getAllFields(){
 		final ArrayList<ColumnProperty> l = new ArrayList<>();
 		for (final AbstractColumn abstractColumn : getColumns()) {

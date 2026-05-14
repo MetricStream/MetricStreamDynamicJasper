@@ -35,10 +35,6 @@ import ar.com.fdvs.dj.core.layout.HorizontalBandAlignment;
 import ar.com.fdvs.dj.domain.entities.Entity;
 import net.sf.jasperreports.engine.JRExpression;
 
-/**
- * @author msimone
- *
- */
 public class AutoText extends DJBaseElement {
 
     private static final long serialVersionUID = Entity.SERIAL_VERSION_UID;
@@ -56,17 +52,10 @@ public class AutoText extends DJBaseElement {
     public static final byte AUTOTEXT_CUSTOM_MESSAGE = 4;
     public static final byte AUTOTEXT_JREXPRESSION = 5;
 
-    /**
-     * @Deprecated due to miss spell use ALIGNMENT_LEFT
-     */
     public static final byte ALIGMENT_LEFT = 1;
-    /**
-     * @Deprecated due to miss spell use ALIGNMENT_CENTER
-     */
+
     public static final byte ALIGMENT_CENTER = 2;
-    /**
-     * @Deprecated due to miss spell use ALIGNMENT_RIGHT
-     */
+
     public static final byte ALIGMENT_RIGHT = 3;
 
     public static final byte ALIGNMENT_LEFT = 1;

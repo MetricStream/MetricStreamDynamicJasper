@@ -9,6 +9,8 @@ description = "Maintained fork of DynamicJasper originally created by FDV Soluti
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.withType<JavaCompile> {
@@ -99,13 +101,10 @@ publishing {
 
                 developers {
                     developer {
-                        id.set("leonelfmfilho")
-                        name.set("Leonel Francisco Martins Filho")
-                        email.set("leonel.martins@nostrum.tech")
-                        organization.set("Nostrum Tech")
-                        organizationUrl.set("http://www.nostrum.tech/")
-                        roles.addAll(listOf("Project lead", "Java Developer"))
-                        timezone.set("-3")
+                        name.set("Prasadu Babu Dandu")
+                        email.set("prasadbabu@metricstream.com")
+                        organization.set("MetricStream Inc")
+                        organizationUrl.set("https://metricstream.com/")
                     }
                 }
 
@@ -123,8 +122,8 @@ publishing {
                 inceptionYear.set("2006")
 
                 organization {
-                    name.set("Nostrum Tech")
-                    url.set("http://www.nostrum.tech/")
+                    name.set("MetricStream Inc")
+                    url.set("https://metricstream.com/")
                 }
             }
         }

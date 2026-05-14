@@ -61,23 +61,13 @@ public class DJServletHelper {
      * &nbsp;	&lt;servlet-name&gt;image&lt;/servlet-name&gt;<br>
      * &nbsp; &lt;servlet-class&gt;net.sf.jasperreports.j2ee.servlets.ImageServlet&lt;/servlet-class&gt;<br>
      * &lt;/servlet&gt;<br>
-     * <p/>
+     *
      * &lt;servlet-mapping&gt;<br>
      * &nbsp;	&lt;servlet-name&gt;image&lt;/servlet-name&gt;<br>
      * &nbsp;	&lt;url-pattern&gt;/reports/image&lt;/url-pattern&gt;<br>
      * &lt;/servlet-mapping&gt;<br>
      * </code>
      *
-     * @param request
-     * @param response
-     * @param imageServletUrl the URI to reach net.sf.jasperreports.j2ee.servlets.ImageServlet servlet (in example it would be "reports/image")
-     * @param dynamicReport
-     * @param layoutManager
-     * @param ds
-     * @param parameters      Parameters for the DynamicReport
-     * @param exporterParams  Extra parameters for JasperReport's HTML exporter (HTMLJRHtmlExporter)
-     * @throws JRException
-     * @throws IOException
      */
     public static void exportToHtml(HttpServletRequest request,
                                     HttpServletResponse response,

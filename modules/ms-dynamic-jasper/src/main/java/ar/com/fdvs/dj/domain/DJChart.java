@@ -61,9 +61,6 @@ public class DJChart extends DJBaseElement{
 	private DJGroup columnsGroup;
 //	private AbstractColumn column;
 
-	/**
-	 * List<AbstractColumn>
-	 */
 	private List<AbstractColumn> columns = new ArrayList<>();
 
 

@@ -133,7 +133,6 @@ public abstract class AbstractLayoutManager implements LayoutManager {
     /**
      * Holds the original groups binded to a column.
      * Needed for later reference
-     * List<JRDesignGroup>
      */
     protected final List<JRGroup> realGroups = new ArrayList<>();
 
@@ -317,7 +316,6 @@ public abstract class AbstractLayoutManager implements LayoutManager {
     /**
      * Sets a default style for every element that doesn't have one
      *
-     * @throws JRException
      */
     protected void ensureDJStyles() {
         //first of all, register all parent styles if any
@@ -338,10 +336,6 @@ public abstract class AbstractLayoutManager implements LayoutManager {
         }
     }
 
-    /**
-     * @param style
-     * @throws JRException
-     */
     public void addStyleToDesign(Style style) {
         final JRDesignStyle jrstyle = style.transform();
 

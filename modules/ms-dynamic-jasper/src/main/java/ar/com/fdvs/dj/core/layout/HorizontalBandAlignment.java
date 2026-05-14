@@ -34,10 +34,6 @@ import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.type.HorizontalImageAlignEnum;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 
-/**
- * @author msimone
- *
- */
 public abstract class HorizontalBandAlignment {
 
 	/**

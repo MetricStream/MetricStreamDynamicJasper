@@ -357,7 +357,6 @@ public class DJScatterChartBuilder extends AbstractChartBuilder<DJScatterChartBu
 
 	/**
 	 * Sets a user specified chart customizer class name.
-	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
 	@Override
     public DJScatterChartBuilder setCustomizerClass(String customizerClass) {

@@ -290,7 +290,6 @@ public abstract class AbstractChartBuilder<T extends AbstractChartBuilder> {
 
 	/**
 	 * Sets a user specified chart customizer class name.
-	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
 	public abstract T setCustomizerClass(String customizerClass);
 

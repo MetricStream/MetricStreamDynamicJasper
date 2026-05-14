@@ -86,7 +86,6 @@ public class Subreport extends DJBaseElement {
 	private DJDataSource datasource;
 
 	/**
-	 * List<SubreportParamter>
 	 * The objects from the parent report that will be visible as parameters in the subreport
 	 */
 	private List<SubreportParameter> parameters = new ArrayList<SubreportParameter>();

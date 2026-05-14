@@ -39,10 +39,6 @@ import java.util.Locale;
 import ar.com.fdvs.dj.domain.AutoText;
 import net.sf.jasperreports.engine.design.JRDesignExpression;
 
-/**
- * @author msimone
- *
- */
 public abstract class AutoTextExpressionUtils {
 
 	private static final String PAGE_NUMBER_VAR = "$V{PAGE_NUMBER}";

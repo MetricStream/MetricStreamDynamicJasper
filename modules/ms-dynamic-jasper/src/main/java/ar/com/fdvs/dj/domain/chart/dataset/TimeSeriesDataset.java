@@ -138,8 +138,6 @@ public class TimeSeriesDataset extends AbstractDataset {
 	/**
 	 * Sets the time period class (YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, MILLISECOND).
 	 * Default DAY
-	 *
-	 * @param timePeriodClass one of the time period class constants in this class
 	 */
 	public void setTimePeriodValue(TimePeriodEnum timePeriodValue) {
 		this.timePeriodValue = timePeriodValue;

@@ -54,13 +54,6 @@ public class ReportWriterFactory {
         }
     }
 
-    /**
-     * Returns a ReportWriter that which will use memory or a file depending on the parameter PAGES_THRESHOLD
-     * @param _jasperPrint
-     * @param _format
-     * @param _parameters
-     * @return
-     */
     public ReportWriter getReportWriter(final JasperPrint _jasperPrint,
                                         final String _format,
                                         final ExporterConfiguration exporterConfiguration,

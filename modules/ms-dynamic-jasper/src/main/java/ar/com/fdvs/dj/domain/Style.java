@@ -246,10 +246,6 @@ public class Style implements Serializable, Cloneable {
 		this.padding = padding;
 	}
 
-	/**
-	 * @deprecated Use {@link #getStretchType(StretchTypeEnum)}
-	 * @return
-	 */
 	@Deprecated
 	public Stretching getStreching() {
 		if (StretchTypeEnum.NO_STRETCH.equals(stretchType)) {

@@ -355,10 +355,6 @@ public class DJXYAreaChartBuilder extends AbstractChartBuilder<DJXYAreaChartBuil
 		return this;
 	}
 
-	/**
-	 * Sets a user specified chart customizer class name.
-	 * @see net.sf.jasperreports.engine.JRChartCustomizer
- 	 */
 	@Override
     public DJXYAreaChartBuilder setCustomizerClass(String customizerClass) {
 		chart.getOptions().setCustomizerClass(customizerClass);

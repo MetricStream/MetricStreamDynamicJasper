@@ -926,11 +926,6 @@ public class DynamicReportBuilder {
         return this;
     }
 
-    /**
-     * Returns registered fields so far.
-     *
-     * @return List<ColumnProperty>
-     */
     public List<ColumnProperty> getFields() {
         return report.getFields();
     }

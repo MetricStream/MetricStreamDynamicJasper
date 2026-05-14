@@ -28,10 +28,7 @@ public class DJLabel extends DJBaseElement {
 		this.style = labelStyle;
 		this.isJasperExpression = isJasperExpression;
 	}
-	
-	/**
-	 * @Deprecated
-	 */	
+
 	public DJLabel(String text, Style labelStyle,
 			LabelPosition labelPosition) {
 		super();

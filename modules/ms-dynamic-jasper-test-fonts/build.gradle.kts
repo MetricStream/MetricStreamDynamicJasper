@@ -38,6 +38,15 @@ publishing {
                     }
                 }
 
+                developers {
+                    developer {
+                        name.set("Prasadu Babu Dandu")
+                        email.set("prasadbabu@metricstream.com")
+                        organization.set("MetricStream Inc")
+                        organizationUrl.set("https://metricstream.com/")
+                    }
+                }
+
                 scm {
                     connection.set("scm:git:git://github.com/MetricStream/MetricStreamDynamicJasper.git")
                     developerConnection.set("scm:git:ssh://github.com:MetricStream/MetricStreamDynamicJasper.git")

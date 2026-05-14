@@ -42,9 +42,6 @@ import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
 
-/**
- * @author msimone
- */
 public class CommonExpressionsHelper {
 
     private static final String KEY_autotext_page = "autotext.page";

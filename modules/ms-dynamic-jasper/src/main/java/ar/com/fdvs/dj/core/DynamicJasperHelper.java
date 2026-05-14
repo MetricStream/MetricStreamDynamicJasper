@@ -542,14 +542,6 @@ public class DynamicJasperHelper {
         return jr;
     }
 
-     /**
-     * Performs any needed operation on subreports after they are built like ensuring proper subreport with
-     * if "fitToParentPrintableArea" flag is set to true
-     *
-     * @param dr
-     * @param _parameters
-     * @throws JRException
-     */
     @SuppressWarnings("unchecked")
     protected static void visitSubreports(DynamicReport dr, Map _parameters) {
         for (DJGroup group : dr.getColumnsGroups()) {

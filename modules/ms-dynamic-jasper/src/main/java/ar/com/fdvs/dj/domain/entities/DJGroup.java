@@ -63,9 +63,6 @@ public class DJGroup extends DJBaseElement {
 		this.columnToGroupBy = columnToGroupBy;
 	}
 
-	/**
-	 * Map<Column, Style>
-	 */
 	private Map<AbstractColumn, Style> columnHeaderStyles = new HashMap<AbstractColumn, Style>();
 	private Style defaultColumnHeaederStyle;
 

@@ -358,7 +358,6 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 
 	/**
 	 * Sets a user specified chart customizer class name.
-	 * @see net.sf.jasperreports.engine.JRChartCustomizer
  	 */
 	@Override
     public DJTimeSeriesChartBuilder setCustomizerClass(String customizerClass) {
@@ -421,8 +420,6 @@ public class DJTimeSeriesChartBuilder extends AbstractChartBuilder<DJTimeSeriesC
 	/**
 	 * Sets the time period class (YEAR, QUARTER, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, MILLISECOND).
 	 * Default DAY
-	 *
-	 * @param timePeriodClass one of the time period class constants in TimeSeriesDataset class
 	 */
 	public DJTimeSeriesChartBuilder setTimePeriodValue(TimePeriodEnum timePeriodvalue) {
 		getDataset().setTimePeriodValue(timePeriodvalue);
